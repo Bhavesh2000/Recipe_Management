@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
+using Recipe_Management_System.Models;
 
 namespace Recipe_Management_System.AppDbContext
 {
@@ -9,5 +10,8 @@ namespace Recipe_Management_System.AppDbContext
         {
 
         }
+
+        public DbSet<User> Users { get; set; }
+        public DbSet<Recipe> Recipes { get; set; } 
     }
 }
