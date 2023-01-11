@@ -1,0 +1,41 @@
+﻿@model Recipe_Management_Frontend.Models.Register
+@{
+    ViewData["Title"] = "Index";
+}
+
+<div class="container d-flex justify-content-center align-items-center flex-column shadow  bg-white rounded py-3  " style="max-width:350px" >
+    <!-- Content here -->
+    <h4 class="p-3 text-center">Recipe Management System</h4>
+   
+    <form method="post" asp-action="RegisterOne" class="w-75">
+
+        <div class="p-3  text-center">
+            <input type="text" placeholder="Name" asp-for="Name" class="p-2 w-100 " />
+            @Html.ValidationMessage("Name",new {@class="text-danger"})
+        </div>
+    <div class="p-3 text-center" >
+            <input type="email" placeholder="Email Id" asp-for="Email" class=" p-2 w-100" />
+            @Html.ValidationMessage("Email",new {@class="text-danger"})
+    </div>
+        <div class="p-3  text-center">
+            <input type="password" placeholder="Password" asp-for="Password" class="p-2 w-100 " />
+            @Html.ValidationMessage("Password",new {@class="text-danger"})
+        </div>
+        <div class="p-3  text-center">
+            <input type="password" placeholder="Password" asp-for="ConfirmPassword" class="p-2 w-100 " />
+            @Html.ValidationMessage("ConfirmPassword",new {@class="text-danger"})
+        </div>
+        <div class="p-3 text-center mt-0 ">
+            <input type="submit" class="btn btn-primary w-100" >Register</input>
+            
+        </div>
+       
+      
+    </form>
+
+    <div class="p-3 text-center mt-2">
+        <button class="btn btn-primary w-100" asp-action="Index">Log In</button>
+    </div>
+    <p class="text-center mb-0">Or</p>
+</div>
+
