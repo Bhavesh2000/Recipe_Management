@@ -2009,19 +2009,19 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\bhavesh_pawar1\\.nuget\\packages\\": {}
+    "C:\\Users\\grishma_kadam\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "D:\\NewTextProject\\Recipe_Management\\Recipe_Management_System\\Recipe_Management_System\\Recipe_Management_System.csproj",
+      "projectUniqueName": "C:\\Users\\grishma_kadam\\Source\\Repos\\Recipe_Management\\Recipe_Management_System\\Recipe_Management_System\\Recipe_Management_System.csproj",
       "projectName": "Recipe_Management_System",
-      "projectPath": "D:\\NewTextProject\\Recipe_Management\\Recipe_Management_System\\Recipe_Management_System\\Recipe_Management_System.csproj",
-      "packagesPath": "C:\\Users\\bhavesh_pawar1\\.nuget\\packages\\",
-      "outputPath": "D:\\NewTextProject\\Recipe_Management\\Recipe_Management_System\\Recipe_Management_System\\obj\\",
+      "projectPath": "C:\\Users\\grishma_kadam\\Source\\Repos\\Recipe_Management\\Recipe_Management_System\\Recipe_Management_System\\Recipe_Management_System.csproj",
+      "packagesPath": "C:\\Users\\grishma_kadam\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\grishma_kadam\\Source\\Repos\\Recipe_Management\\Recipe_Management_System\\Recipe_Management_System\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "C:\\Users\\bhavesh_pawar1\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\grishma_kadam\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
@@ -2085,7 +2085,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.100\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.102\\RuntimeIdentifierGraph.json"
       }
     }
   }
