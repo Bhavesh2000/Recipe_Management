@@ -1,0 +1,108 @@
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
+using Recipe_Management_System.Models.Dto;
+using Recipe_Management_System.Models;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Text;
+
+namespace Recipe_Management_System.Controllers
+{
+    [Route("api/[controller]")]
+    [ApiController]
+    public class AccountController : ControllerBase
+    {
+        private readonly UserManager<IdentityUser> _userManager;
+        //private readonly JwtConfig _jwtConfig;
+        private readonly IConfiguration _configuration;
+
+        public AccountController(UserManager<IdentityUser> userManager, IConfiguration configuration)
+        {
+            _userManager = userManager;
+            //_jwtConfig = jwtConfig;
+            _configuration = configuration;
+        }
+
+        [HttpPost]
+        [Route("Register")]
+        public async Task<IActionResult> Register([FromBody] RegisterDto request)
+        {
+            //Validate the request
+            if (ModelState.IsValid)
+            {
+                //Check if email already exists.
+                var user_exist = await _userManager.FindByEmailAsync(request.Email);
+
+                if (user_exist != null)
+                {
+                    return BadRequest(new
+                    {
+                        Result = false,
+                        Errors = new List<string>()
+                        {
+                            "Email already exist"
+                        }
+                    });
+                }
+
+                //create user
+                var new_user = new User()
+                {
+                    Email = request.Email,
+                    UserName = request.Name,
+                    PhoneNumber = request.PhoneNum
+                };
+
+                var is_created = await _userManager.CreateAsync(new_user, request.Password);
+
+                if (is_created.Succeeded)
+                {
+                    var token = JwtTokenGenerator(new_user);
+
+                    return Ok(new
+                    {
+                        Token = token,
+                        Result = true
+                    });
+                }
+
+                return BadRequest(new
+                {
+                    Errors = new List<string>()
+                        {
+                            "Server Error"
+                        }
+                });
+
+
+            }
+
+            return BadRequest();
+        }
+
+        private string JwtTokenGenerator(IdentityUser user)
+        {
+            var jwtTokenHandler = new JwtSecurityTokenHandler();
+
+            var key = Encoding.UTF8.GetBytes(_configuration.GetSection("JwtConfig:Secret").Value);
+
+            var tokenDescriptor = new SecurityTokenDescriptor
+            {
+                Subject = new ClaimsIdentity(new[]
+                {
+                    new Claim("Id", user.Id),
+                    new Claim(JwtRegisteredClaimNames.Iat, DateTime.Now.ToUniversalTime().ToString())
+                }),
+                Expires = DateTime.Now.AddDays(1),
+                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256)
+            };
+
+            var token = jwtTokenHandler.CreateToken(tokenDescriptor);
+
+            return jwtTokenHandler.WriteToken(token);
+        }
+
+    }
+}

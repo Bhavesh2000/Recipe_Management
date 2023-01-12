@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "D:\\updateRecipeManagement\\Recipe_Management\\Recipe_Management_Frontend\\Recipe_Management_Frontend.csproj": {}
+    "D:\\0\\Recipe_Management\\Recipe_Management_Frontend\\Recipe_Management_Frontend.csproj": {}
   },
   "projects": {
-    "D:\\updateRecipeManagement\\Recipe_Management\\Recipe_Management_Frontend\\Recipe_Management_Frontend.csproj": {
+    "D:\\0\\Recipe_Management\\Recipe_Management_Frontend\\Recipe_Management_Frontend.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\updateRecipeManagement\\Recipe_Management\\Recipe_Management_Frontend\\Recipe_Management_Frontend.csproj",
+        "projectUniqueName": "D:\\0\\Recipe_Management\\Recipe_Management_Frontend\\Recipe_Management_Frontend.csproj",
         "projectName": "Recipe_Management_Frontend",
-        "projectPath": "D:\\updateRecipeManagement\\Recipe_Management\\Recipe_Management_Frontend\\Recipe_Management_Frontend.csproj",
-        "packagesPath": "C:\\Users\\vinay_l\\.nuget\\packages\\",
-        "outputPath": "D:\\updateRecipeManagement\\Recipe_Management\\Recipe_Management_Frontend\\obj\\",
+        "projectPath": "D:\\0\\Recipe_Management\\Recipe_Management_Frontend\\Recipe_Management_Frontend.csproj",
+        "packagesPath": "C:\\Users\\bhavesh_pawar1\\.nuget\\packages\\",
+        "outputPath": "D:\\0\\Recipe_Management\\Recipe_Management_Frontend\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\vinay_l\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\bhavesh_pawar1\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -51,7 +51,8 @@
             "net47",
             "net471",
             "net472",
-            "net48"
+            "net48",
+            "net481"
           ],
           "assetTargetFallback": true,
           "warn": true,
@@ -63,7 +64,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.201\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.100\\RuntimeIdentifierGraph.json"
         }
       }
     }
