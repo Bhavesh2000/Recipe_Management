@@ -18,6 +18,27 @@ namespace Recipe_Management_Frontend.Controllers
             return View();
         }
 
+        [HttpPost]
+        public IActionResult AddRecipe(string recipeName,string category,string ingredients,string cookingProcess)
+        {
+            Console.WriteLine(recipeName);
+
+            return RedirectToAction("Index");
+        }
+
+        [Route("recipe")]
+        public IActionResult GetRecipeById(int id)
+        {
+            Console.WriteLine(id);
+            return View();
+        }
+
+        [Route("myrecipes")]
+        public IActionResult GetRecipesByUser()
+        {
+            return View();
+        }
+
         public IActionResult Privacy()
         {
             return View();

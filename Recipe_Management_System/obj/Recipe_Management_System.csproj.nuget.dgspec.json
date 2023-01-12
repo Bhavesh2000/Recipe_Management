@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\grishma_kadam\\source\\repos\\Recipe_Management\\Recipe_Management_System\\Recipe_Management_System.csproj": {}
+    "C:\\Users\\umang_metri\\Source\\Repos\\Recipe_Management\\Recipe_Management_System\\Recipe_Management_System.csproj": {}
   },
   "projects": {
-    "C:\\Users\\grishma_kadam\\source\\repos\\Recipe_Management\\Recipe_Management_System\\Recipe_Management_System.csproj": {
+    "C:\\Users\\umang_metri\\Source\\Repos\\Recipe_Management\\Recipe_Management_System\\Recipe_Management_System.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\grishma_kadam\\source\\repos\\Recipe_Management\\Recipe_Management_System\\Recipe_Management_System.csproj",
+        "projectUniqueName": "C:\\Users\\umang_metri\\Source\\Repos\\Recipe_Management\\Recipe_Management_System\\Recipe_Management_System.csproj",
         "projectName": "Recipe_Management_System",
-        "projectPath": "C:\\Users\\grishma_kadam\\source\\repos\\Recipe_Management\\Recipe_Management_System\\Recipe_Management_System.csproj",
-        "packagesPath": "C:\\Users\\grishma_kadam\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\grishma_kadam\\source\\repos\\Recipe_Management\\Recipe_Management_System\\obj\\",
+        "projectPath": "C:\\Users\\umang_metri\\Source\\Repos\\Recipe_Management\\Recipe_Management_System\\Recipe_Management_System.csproj",
+        "packagesPath": "C:\\Users\\umang_metri\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\umang_metri\\Source\\Repos\\Recipe_Management\\Recipe_Management_System\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\grishma_kadam\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\umang_metri\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
