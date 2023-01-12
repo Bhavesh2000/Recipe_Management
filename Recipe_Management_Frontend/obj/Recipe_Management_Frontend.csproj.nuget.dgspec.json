@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\grishma_kadam\\source\\repos\\Recipe_Management\\Recipe_Management_Frontend\\Recipe_Management_Frontend.csproj": {}
+    "D:\\0\\Recipe_Management\\Recipe_Management_Frontend\\Recipe_Management_Frontend.csproj": {}
   },
   "projects": {
-    "C:\\Users\\grishma_kadam\\source\\repos\\Recipe_Management\\Recipe_Management_Frontend\\Recipe_Management_Frontend.csproj": {
+    "D:\\0\\Recipe_Management\\Recipe_Management_Frontend\\Recipe_Management_Frontend.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\grishma_kadam\\source\\repos\\Recipe_Management\\Recipe_Management_Frontend\\Recipe_Management_Frontend.csproj",
+        "projectUniqueName": "D:\\0\\Recipe_Management\\Recipe_Management_Frontend\\Recipe_Management_Frontend.csproj",
         "projectName": "Recipe_Management_Frontend",
-        "projectPath": "C:\\Users\\grishma_kadam\\source\\repos\\Recipe_Management\\Recipe_Management_Frontend\\Recipe_Management_Frontend.csproj",
-        "packagesPath": "C:\\Users\\grishma_kadam\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\grishma_kadam\\source\\repos\\Recipe_Management\\Recipe_Management_Frontend\\obj\\",
+        "projectPath": "D:\\0\\Recipe_Management\\Recipe_Management_Frontend\\Recipe_Management_Frontend.csproj",
+        "packagesPath": "C:\\Users\\bhavesh_pawar1\\.nuget\\packages\\",
+        "outputPath": "D:\\0\\Recipe_Management\\Recipe_Management_Frontend\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\grishma_kadam\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\bhavesh_pawar1\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -64,7 +64,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.102\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.100\\RuntimeIdentifierGraph.json"
         }
       }
     }
