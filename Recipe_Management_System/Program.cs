@@ -5,13 +5,13 @@ using Microsoft.IdentityModel.Tokens;
 using Recipe_Management_System.AppDbContext;
 using Recipe_Management_System.Configuration;
 using System.Text;
-//using Recipe_Management_System.Repository.Service;
+using Recipe_Management_System.Repository.Service;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-//builder.Services.AddScoped<IRecipeService, RecipeService>();
-//builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IRecipeService, RecipeService>();
+builder.Services.AddScoped<IUserService, UserService>();
 
 builder.Services.AddControllers();
 

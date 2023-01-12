@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Recipe_Management_System.Migrations
 {
-    public partial class AddedDatabase : Migration
+    public partial class addeddatabase : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -162,10 +162,11 @@ namespace Recipe_Management_System.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Category = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Ingredients = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Procedure = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     UserId = table.Column<string>(type: "nvarchar(450)", nullable: true),
-                    Status = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                    Status = table.Column<string>(type: "nvarchar(max)", nullable: true, defaultValue: "Pending")
                 },
                 constraints: table =>
                 {

@@ -1,12 +1,16 @@
-﻿//using Microsoft.AspNetCore.Mvc;
-//using Recipe_Management_System.Models;
-//using Recipe_Management_System.Repository.Base;
+﻿using Microsoft.AspNetCore.Mvc;
+using Recipe_Management_System.Models;
 
-//namespace Recipe_Management_System.Repository.Service
-//{
-//    public interface IRecipeService : IEntityBaseRepository<Recipe>
-//    {
-//        Task<ActionResult<IEnumerable<Recipe>>> GetRecipeByUserId(int id);
-//        Task<ActionResult<IEnumerable<Recipe>>> GetPendingRecipes();
-//    }
-//}
+namespace Recipe_Management_System.Repository.Service
+{
+    public interface IRecipeService 
+    {
+        Task<ActionResult<IEnumerable<Recipe>>> GetRecipeByUserId(string id);
+        Task<ActionResult<IEnumerable<Recipe>>> GetPendingRecipes();
+        Task<ActionResult<Recipe>> GetByIdAsync(int id);
+        Task AddAsync(Recipe entity);
+        Task UpdateAsync(int id, Recipe entity);
+        Task DeleteAsync(int id);
+        IEnumerable<Recipe> GetAllAsync();
+    }
+}

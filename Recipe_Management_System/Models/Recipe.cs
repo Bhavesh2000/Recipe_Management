@@ -5,10 +5,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Recipe_Management_System.Models
 {
-    public enum Category{
-        Veg,
-        Non_Veg
-    }
+    
     public class Recipe
     {
 
@@ -18,7 +15,7 @@ namespace Recipe_Management_System.Models
         [Required]
         public string Name { get; set; }
         [Required]
-        public Category Category { get; set; }
+        public string Category { get; set; }
         [Required]
         public string Ingredients { get; set; }
         [Required]
