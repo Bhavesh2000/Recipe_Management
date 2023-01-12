@@ -25,6 +25,11 @@ namespace Recipe_Management_System.Controllers
             _configuration = configuration;
         }
 
+
+
+        //We can add this attribute on top of our http methods to provide authorization.
+        //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
+
         [HttpPost]
         [Route("Register")]
         public async Task<IActionResult> Register([FromBody] RegisterDto request)
@@ -80,6 +85,54 @@ namespace Recipe_Management_System.Controllers
             }
 
             return BadRequest();
+        }
+
+
+        [HttpPost]
+        [Route("Login")]
+        public async Task<IActionResult> Login([FromBody] LoginDto loginRequest)
+        {
+            if (ModelState.IsValid)
+            {
+                //check if user exists
+                var existing_user = await _userManager.FindByEmailAsync(loginRequest.Email);
+
+                if (existing_user == null)
+                {
+                    return BadRequest(new
+                    {
+                        Result = false,
+
+                    });
+                }
+
+                var isCorrect = await _userManager.CheckPasswordAsync(existing_user, loginRequest.Password);
+
+                if (!isCorrect)
+                {
+                    return BadRequest(new
+                    {
+                        Result = false,
+                        Errors = new List<string>()
+                        {
+                            "Invalid Credentials"
+                        }
+                    });
+                }
+
+                var jwtToken = JwtTokenGenerator(existing_user);
+
+                return Ok(new
+                {
+                    Token = jwtToken,
+                    Result = true
+                });
+            }
+
+            return BadRequest(new
+            {
+                Message = "Invalid Payload"
+            });
         }
 
         private string JwtTokenGenerator(IdentityUser user)

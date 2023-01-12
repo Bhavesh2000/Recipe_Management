@@ -9061,11 +9061,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "D:\\0\\Recipe_Management\\Recipe_Management_Frontend\\Recipe_Management_Frontend.csproj",
+      "projectUniqueName": "D:\\0NewAProject\\Recipe_Management\\Recipe_Management_Frontend\\Recipe_Management_Frontend.csproj",
       "projectName": "Recipe_Management_Frontend",
-      "projectPath": "D:\\0\\Recipe_Management\\Recipe_Management_Frontend\\Recipe_Management_Frontend.csproj",
+      "projectPath": "D:\\0NewAProject\\Recipe_Management\\Recipe_Management_Frontend\\Recipe_Management_Frontend.csproj",
       "packagesPath": "C:\\Users\\bhavesh_pawar1\\.nuget\\packages\\",
-      "outputPath": "D:\\0\\Recipe_Management\\Recipe_Management_Frontend\\obj\\",
+      "outputPath": "D:\\0NewAProject\\Recipe_Management\\Recipe_Management_Frontend\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\bhavesh_pawar1\\AppData\\Roaming\\NuGet\\NuGet.Config",
