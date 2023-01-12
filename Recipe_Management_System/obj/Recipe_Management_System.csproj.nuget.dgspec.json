@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "D:\\0NewAProject\\Recipe_Management\\Recipe_Management_System\\Recipe_Management_System.csproj": {}
+    "D:\\NewlycreatedRecipemanagement\\Recipe_Management\\Recipe_Management_System\\Recipe_Management_System.csproj": {}
   },
   "projects": {
-    "D:\\0NewAProject\\Recipe_Management\\Recipe_Management_System\\Recipe_Management_System.csproj": {
+    "D:\\NewlycreatedRecipemanagement\\Recipe_Management\\Recipe_Management_System\\Recipe_Management_System.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\0NewAProject\\Recipe_Management\\Recipe_Management_System\\Recipe_Management_System.csproj",
+        "projectUniqueName": "D:\\NewlycreatedRecipemanagement\\Recipe_Management\\Recipe_Management_System\\Recipe_Management_System.csproj",
         "projectName": "Recipe_Management_System",
-        "projectPath": "D:\\0NewAProject\\Recipe_Management\\Recipe_Management_System\\Recipe_Management_System.csproj",
-        "packagesPath": "C:\\Users\\bhavesh_pawar1\\.nuget\\packages\\",
-        "outputPath": "D:\\0NewAProject\\Recipe_Management\\Recipe_Management_System\\obj\\",
+        "projectPath": "D:\\NewlycreatedRecipemanagement\\Recipe_Management\\Recipe_Management_System\\Recipe_Management_System.csproj",
+        "packagesPath": "C:\\Users\\vinay_l\\.nuget\\packages\\",
+        "outputPath": "D:\\NewlycreatedRecipemanagement\\Recipe_Management\\Recipe_Management_System\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\bhavesh_pawar1\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\vinay_l\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -93,8 +93,7 @@
             "net47",
             "net471",
             "net472",
-            "net48",
-            "net481"
+            "net48"
           ],
           "assetTargetFallback": true,
           "warn": true,
@@ -106,7 +105,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.100\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.201\\RuntimeIdentifierGraph.json"
         }
       }
     }
