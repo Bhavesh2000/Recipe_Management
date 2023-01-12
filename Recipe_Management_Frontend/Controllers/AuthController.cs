@@ -4,16 +4,19 @@ using Recipe_Management_Frontend.Models;
 
 namespace Recipe_Management_Frontend.Controllers
 {
+    
     public class AuthController : Controller
     {
         // GET: AuthController
+
+        [Route("/LogIn")]
         public ActionResult Index()
         {
             return View();
         }
 
-        
-      
+
+        [Route("/Register")]
         public IActionResult Register()
         {
             return View();
@@ -34,75 +37,16 @@ namespace Recipe_Management_Frontend.Controllers
 
         }
 
-
-
-        public ActionResult Details(int id)
+        [Route("/admin")]
+        public IActionResult Admin()
         {
-            return View();
+            return View("AdminLogIn");
         }
 
-        // GET: AuthController/Create
-        public ActionResult Create()
-        {
-            return View();
-        }
 
-        // POST: AuthController/Create
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
-        }
+        
 
-        // GET: AuthController/Edit/5
-        public ActionResult Edit(int id)
-        {
-            return View();
-        }
-
-        // POST: AuthController/Edit/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
-        }
-
-        // GET: AuthController/Delete/5
-        public ActionResult Delete(int id)
-        {
-            return View();
-        }
-
-        // POST: AuthController/Delete/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
-        }
+       
 
     }
 }
