@@ -16,6 +16,18 @@ build_property.GenerateRazorMetadataSourceChecksumAttributes =
 build_property.MSBuildProjectDirectory = C:\Users\umang_metri\Source\Repos\Recipe_Management\Recipe_Management_Frontend
 build_property._RazorSourceGeneratorDebug = 
 
+[C:/Users/umang_metri/Source/Repos/Recipe_Management/Recipe_Management_Frontend/Views/Auth/AdminLogIn.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQXV0aFxBZG1pbkxvZ0luLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/umang_metri/Source/Repos/Recipe_Management/Recipe_Management_Frontend/Views/Auth/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQXV0aFxJbmRleC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/umang_metri/Source/Repos/Recipe_Management/Recipe_Management_Frontend/Views/Auth/Register.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQXV0aFxSZWdpc3Rlci5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
 [C:/Users/umang_metri/Source/Repos/Recipe_Management/Recipe_Management_Frontend/Views/Home/GetRecipeById.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxHZXRSZWNpcGVCeUlkLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
