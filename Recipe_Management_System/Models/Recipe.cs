@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Recipe_Management_System.Repository.Base;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Recipe_Management_System.Models
@@ -7,7 +8,7 @@ namespace Recipe_Management_System.Models
         Veg,
         Non_Veg
     }
-    public class Recipe
+    public class Recipe : IEntityBase
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]

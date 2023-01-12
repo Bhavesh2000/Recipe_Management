@@ -1,16 +1,15 @@
-﻿using System.ComponentModel;
+﻿using Recipe_Management_System.Repository.Base;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Recipe_Management_System.Models
 {
-    public class User
+    public class User: IEntityBase
     {
-
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
-
         [Required]
         public string Name { get; set; }
         [Required]
