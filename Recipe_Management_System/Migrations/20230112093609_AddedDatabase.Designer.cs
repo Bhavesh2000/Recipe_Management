@@ -12,8 +12,8 @@ using Recipe_Management_System.AppDbContext;
 namespace Recipe_Management_System.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20230112053940_AddingDatabase")]
-    partial class AddingDatabase
+    [Migration("20230112093609_AddedDatabase")]
+    partial class AddedDatabase
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {

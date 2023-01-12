@@ -58,6 +58,17 @@ builder.Services.AddEndpointsApiExplorer();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
+//This will automatically create database if not present locally.
+using (var scope =
+    app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
+
+    var context = services.GetRequiredService<ApplicationDbContext>();
+    context.Database.EnsureCreated();
+    
+}
+
 
 if (app.Environment.IsDevelopment())
 {

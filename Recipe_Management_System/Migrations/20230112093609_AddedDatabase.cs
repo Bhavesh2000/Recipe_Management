@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Recipe_Management_System.Migrations
 {
-    public partial class AddingDatabase : Migration
+    public partial class AddedDatabase : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {

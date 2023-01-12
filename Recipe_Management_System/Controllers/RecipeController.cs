@@ -25,19 +25,19 @@
 //        [Route("GetAllRecipes")]
 //        public async Task<ActionResult<IEnumerable<RecipeDto>>> GetAllRecipes()
 //        {
-//            var recipes =service.GetAllAsync();
+//            var recipes = service.GetAllAsync();
 //            var result = new List<RecipeDto>();
 //            foreach (var recipe in recipes)
 //            {
-//                var users =  uservice.GetAllAsync();
+//                var users = uservice.GetAllAsync();
 //                result.Add(new RecipeDto()
 //                {
 //                    Ingredients = recipe.Ingredients,
 //                    name = recipe.Name,
 //                    Procedure = recipe.Procedure,
 //                    Status = recipe.Status,
-//                    Username =users.FirstOrDefault(n=>n.Id==recipe.UserId).Name
-//                }) ;
+//                    Username = users.FirstOrDefault(n => n.Id == recipe.UserId).Name
+//                });
 //            }
 
 //            return result;
@@ -47,12 +47,13 @@
 //        [Route("GetRecipeById")]
 //        public async Task<ActionResult<RecipeDto>> GetRecipeById(int id)
 //        {
-//            var recipe =await service.GetByIdAsync(id);
-//            var users =  uservice.GetAllAsync();
-//            RecipeDto result = new RecipeDto() { 
-//                Ingredients=recipe.Value.Ingredients,
+//            var recipe = await service.GetByIdAsync(id);
+//            var users = uservice.GetAllAsync();
+//            RecipeDto result = new RecipeDto()
+//            {
+//                Ingredients = recipe.Value.Ingredients,
 //                Procedure = recipe.Value.Procedure,
-//                name=users.FirstOrDefault(n=>n.Id==recipe.Value.UserId).Name,
+//                name = users.FirstOrDefault(n => n.Id == recipe.Value.UserId).Name,
 //            };
 
 //            if (result == null)
@@ -67,8 +68,8 @@
 //        [Route("GetRecipeByUserId")]
 //        public async Task<ActionResult<IEnumerable<RecipeDto>>> GetRecipeByUserId(int id)
 //        {
-//            var recipes =await service.GetRecipeByUserId(id);
-//            var users =  uservice.GetAllAsync();
+//            var recipes = await service.GetRecipeByUserId(id);
+//            var users = uservice.GetAllAsync();
 //            List<RecipeDto> result = new List<RecipeDto>();
 //            foreach (var recipe in recipes.Value)
 //            {
@@ -79,7 +80,7 @@
 //                    name = users.FirstOrDefault(n => n.Id == recipe.UserId).Name,
 //                });
 //            }
-           
+
 //            if (result == null)
 //            {
 //                return NotFound();
@@ -119,16 +120,16 @@
 //        [Route("AddRecipe")]
 //        public async Task AddRecipe(RecipeDto recipeDto)
 //        {
-//            var user=uservice.GetAllAsync().FirstOrDefault(n=>n.Name==recipeDto.Username);
+//            var user = uservice.GetAllAsync().FirstOrDefault(n => n.Name == recipeDto.Username);
 //            Recipe recipe = new Recipe()
 //            {
-//                Name=recipeDto.name,
-//                Ingredients=recipeDto.Ingredients,
-//                Procedure=recipeDto.Procedure,
-//                Status=recipeDto.Status,
-//                UserId=user.Id
+//                Name = recipeDto.name,
+//                Ingredients = recipeDto.Ingredients,
+//                Procedure = recipeDto.Procedure,
+//                Status = recipeDto.Status,
+//                UserId = user.Id
 //            };
-//           await service.AddAsync(recipe);
+//            await service.AddAsync(recipe);
 //        }
 //    }
 //}

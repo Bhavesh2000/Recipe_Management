@@ -7,6 +7,7 @@ using Recipe_Management_System.Models;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using System.Text.RegularExpressions;
 
 namespace Recipe_Management_System.Controllers
 {
@@ -34,9 +35,11 @@ namespace Recipe_Management_System.Controllers
         [Route("Register")]
         public async Task<IActionResult> Register([FromBody] RegisterDto request)
         {
+
             //Validate the request
             if (ModelState.IsValid)
             {
+
                 //Check if email already exists.
                 var user_exist = await _userManager.FindByEmailAsync(request.Email);
 
@@ -51,6 +54,7 @@ namespace Recipe_Management_System.Controllers
                         }
                     });
                 }
+
 
                 //create user
                 var new_user = new User()
@@ -157,5 +161,16 @@ namespace Recipe_Management_System.Controllers
             return jwtTokenHandler.WriteToken(token);
         }
 
+
+        private string CheckPasswordStregth(string password)
+        {
+            StringBuilder sb = new StringBuilder();
+            if (password.Length < 8 && (Regex.IsMatch(password, "[a-z]")) && (Regex.IsMatch(password, "[A-Z]"))
+                    && (Regex.IsMatch(password, "[0-9]")) )
+            {
+                sb.Append("Minimum Password Length should be 8 and password should be Aplhanumeric " + Environment.NewLine);
+            }
+            return sb.ToString();
+        }
     }
 }

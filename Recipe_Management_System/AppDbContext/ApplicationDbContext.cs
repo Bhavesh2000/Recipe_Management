@@ -12,6 +12,14 @@ namespace Recipe_Management_System.AppDbContext
 
         }
 
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Recipe>()
+                .Property(b => b.Status)
+                .HasDefaultValue("Pending");
+            base.OnModelCreating(modelBuilder);
+        }
+
         public DbSet<User> Users { get; set; }
         public DbSet<Recipe> Recipes { get; set; } 
     }

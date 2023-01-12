@@ -18,6 +18,8 @@ namespace Recipe_Management_System.Models
         [Required]
         public string Name { get; set; }
         [Required]
+        public Category Category { get; set; }
+        [Required]
         public string Ingredients { get; set; }
         [Required]
         public string Procedure { get; set; }
