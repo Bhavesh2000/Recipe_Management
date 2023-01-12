@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\umang_metri\\Source\\Repos\\Recipe_Management\\Recipe_Management_System\\Recipe_Management_System.csproj": {}
+    "D:\\nnnn\\Recipe_Management\\Recipe_Management_System\\Recipe_Management_System.csproj": {}
   },
   "projects": {
-    "C:\\Users\\umang_metri\\Source\\Repos\\Recipe_Management\\Recipe_Management_System\\Recipe_Management_System.csproj": {
+    "D:\\nnnn\\Recipe_Management\\Recipe_Management_System\\Recipe_Management_System.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\umang_metri\\Source\\Repos\\Recipe_Management\\Recipe_Management_System\\Recipe_Management_System.csproj",
+        "projectUniqueName": "D:\\nnnn\\Recipe_Management\\Recipe_Management_System\\Recipe_Management_System.csproj",
         "projectName": "Recipe_Management_System",
-        "projectPath": "C:\\Users\\umang_metri\\Source\\Repos\\Recipe_Management\\Recipe_Management_System\\Recipe_Management_System.csproj",
-        "packagesPath": "C:\\Users\\umang_metri\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\umang_metri\\Source\\Repos\\Recipe_Management\\Recipe_Management_System\\obj\\",
+        "projectPath": "D:\\nnnn\\Recipe_Management\\Recipe_Management_System\\Recipe_Management_System.csproj",
+        "packagesPath": "C:\\Users\\vinay_l\\.nuget\\packages\\",
+        "outputPath": "D:\\nnnn\\Recipe_Management\\Recipe_Management_System\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\umang_metri\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\vinay_l\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -40,6 +40,18 @@
         "net6.0": {
           "targetAlias": "net6.0",
           "dependencies": {
+            "Microsoft.AspNetCore.Authentication.JwtBearer": {
+              "target": "Package",
+              "version": "[6.0.0, )"
+            },
+            "Microsoft.AspNetCore.Identity.EntityFrameworkCore": {
+              "target": "Package",
+              "version": "[6.0.0, )"
+            },
+            "Microsoft.AspNetCore.Identity.UI": {
+              "target": "Package",
+              "version": "[6.0.0, )"
+            },
             "Microsoft.EntityFrameworkCore": {
               "target": "Package",
               "version": "[6.0.0, )"
@@ -57,6 +69,22 @@
               "suppressParent": "All",
               "target": "Package",
               "version": "[6.0.0, )"
+            },
+            "Swashbuckle.AspNetCore": {
+              "target": "Package",
+              "version": "[6.5.0, )"
+            },
+            "Swashbuckle.AspNetCore.Swagger": {
+              "target": "Package",
+              "version": "[6.5.0, )"
+            },
+            "Swashbuckle.AspNetCore.SwaggerGen": {
+              "target": "Package",
+              "version": "[6.5.0, )"
+            },
+            "Swashbuckle.AspNetCore.SwaggerUI": {
+              "target": "Package",
+              "version": "[6.5.0, )"
             }
           },
           "imports": [
@@ -65,8 +93,7 @@
             "net47",
             "net471",
             "net472",
-            "net48",
-            "net481"
+            "net48"
           ],
           "assetTargetFallback": true,
           "warn": true,
@@ -78,7 +105,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.102\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.201\\RuntimeIdentifierGraph.json"
         }
       }
     }

@@ -35,8 +35,9 @@ namespace Recipe_Management_System.Controllers
                     Ingredients = recipe.Ingredients,
                     name = recipe.Name,
                     Procedure = recipe.Procedure,
+                    Username = users.FirstOrDefault(n => n.Id == recipe.UserId).UserName,
+                    Category = recipe.Category,
                     Status = recipe.Status,
-                    Username = users.FirstOrDefault(n => n.Id == recipe.UserId).UserName
                 });
             }
 
@@ -54,6 +55,8 @@ namespace Recipe_Management_System.Controllers
                 Ingredients = recipe.Value.Ingredients,
                 Procedure = recipe.Value.Procedure,
                 Username = users.FirstOrDefault(n => n.Id == recipe.Value.UserId).UserName,
+                name = recipe.Value.Name,
+                Category = recipe.Value.Category,
                 Status = recipe.Value.Status,
             };
 
@@ -79,6 +82,8 @@ namespace Recipe_Management_System.Controllers
                     Ingredients = recipe.Ingredients,
                     Procedure = recipe.Procedure,
                     Username = users.FirstOrDefault(n => n.Id == recipe.UserId).UserName,
+                    name = recipe.Name,
+                    Category = recipe.Category,
                     Status = recipe.Status,
                 });
             }
@@ -105,6 +110,8 @@ namespace Recipe_Management_System.Controllers
                     Ingredients = recipe.Ingredients,
                     Procedure = recipe.Procedure,
                     Username = users.FirstOrDefault(n => n.Id == recipe.UserId).UserName,
+                    name = recipe.Name,
+                    Category = recipe.Category,
                     Status = recipe.Status,
                 });
             }
@@ -130,7 +137,8 @@ namespace Recipe_Management_System.Controllers
                 Ingredients = recipeDto.Ingredients,
                 Procedure = recipeDto.Procedure,
                 UserId = user.Id,
-                Category=recipeDto.Category,
+                Category = recipeDto.Category,
+                Status = recipeDto.Status,
             };
             await service.AddAsync(recipe);
         }

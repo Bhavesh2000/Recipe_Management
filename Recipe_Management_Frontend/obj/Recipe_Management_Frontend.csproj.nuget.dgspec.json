@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\umang_metri\\Source\\Repos\\Recipe_Management\\Recipe_Management_Frontend\\Recipe_Management_Frontend.csproj": {}
+    "D:\\nnnn\\Recipe_Management\\Recipe_Management_Frontend\\Recipe_Management_Frontend.csproj": {}
   },
   "projects": {
-    "C:\\Users\\umang_metri\\Source\\Repos\\Recipe_Management\\Recipe_Management_Frontend\\Recipe_Management_Frontend.csproj": {
+    "D:\\nnnn\\Recipe_Management\\Recipe_Management_Frontend\\Recipe_Management_Frontend.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\umang_metri\\Source\\Repos\\Recipe_Management\\Recipe_Management_Frontend\\Recipe_Management_Frontend.csproj",
+        "projectUniqueName": "D:\\nnnn\\Recipe_Management\\Recipe_Management_Frontend\\Recipe_Management_Frontend.csproj",
         "projectName": "Recipe_Management_Frontend",
-        "projectPath": "C:\\Users\\umang_metri\\Source\\Repos\\Recipe_Management\\Recipe_Management_Frontend\\Recipe_Management_Frontend.csproj",
-        "packagesPath": "C:\\Users\\umang_metri\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\umang_metri\\Source\\Repos\\Recipe_Management\\Recipe_Management_Frontend\\obj\\",
+        "projectPath": "D:\\nnnn\\Recipe_Management\\Recipe_Management_Frontend\\Recipe_Management_Frontend.csproj",
+        "packagesPath": "C:\\Users\\vinay_l\\.nuget\\packages\\",
+        "outputPath": "D:\\nnnn\\Recipe_Management\\Recipe_Management_Frontend\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\umang_metri\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\vinay_l\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -39,14 +39,19 @@
       "frameworks": {
         "net6.0": {
           "targetAlias": "net6.0",
+          "dependencies": {
+            "Microsoft.VisualStudio.Web.CodeGeneration.Design": {
+              "target": "Package",
+              "version": "[6.0.11, )"
+            }
+          },
           "imports": [
             "net461",
             "net462",
             "net47",
             "net471",
             "net472",
-            "net48",
-            "net481"
+            "net48"
           ],
           "assetTargetFallback": true,
           "warn": true,
@@ -58,7 +63,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.102\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.201\\RuntimeIdentifierGraph.json"
         }
       }
     }
