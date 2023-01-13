@@ -51,6 +51,7 @@ namespace Recipe_Management_Frontend.Controllers
         [Route("myrecipes")]
         public IActionResult GetRecipesByUser()
         {
+            Console.WriteLine("getUser");
             return View();
         }
 

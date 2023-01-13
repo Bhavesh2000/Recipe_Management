@@ -24,3 +24,37 @@ body {
     .grow:hover {
         transform: scale(1.05);
     }
+
+.scroll {
+    overflow-y: scroll;
+    display: inline-block;
+}
+
+    .scroll .inner {
+        height: 0%;
+        width: 100%;
+        content: '.';
+    }
+
+.scroll--simple::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+}
+
+.scroll--simple::-webkit-scrollbar-track {
+    border-radius: 10px;
+    background: rgba(0, 0, 0, 0.1);
+}
+
+.scroll--simple::-webkit-scrollbar-thumb {
+    border-radius: 10px;
+    background: rgba(0, 0, 0, 0.2);
+}
+
+    .scroll--simple::-webkit-scrollbar-thumb:hover {
+        background: rgba(0, 0, 0, 0.4);
+    }
+
+    .scroll--simple::-webkit-scrollbar-thumb:active {
+        background: rgba(0, 0, 0, 0.9);
+    }
