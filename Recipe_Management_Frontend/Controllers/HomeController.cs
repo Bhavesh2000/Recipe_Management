@@ -7,16 +7,31 @@ namespace Recipe_Management_Frontend.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
+        HttpClient client;
+
 
         public HomeController(ILogger<HomeController> logger)
         {
             _logger = logger;
+            client = new HttpClient();
         }
 
         public IActionResult Index()
         {
-            return View();
+            string token = Request.Cookies["token"];
+            var response = new HttpResponseMessage();
+            if (token != null)
+            {
+
+                return View();
+            }
+            else
+            {
+                return RedirectToAction("Index", "Auth");
+            }
+
         }
+
 
         [HttpPost]
         public IActionResult AddRecipe(string recipeName,string category,string ingredients,string cookingProcess)
