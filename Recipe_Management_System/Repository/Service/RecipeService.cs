@@ -28,18 +28,11 @@ namespace Recipe_Management_System.Repository.Service
             return recipes;
         }
 
-        public async Task AddAsync(Recipe entity)
+        public async Task<ActionResult<Recipe>> AddAsync(Recipe entity)
         {
-
-            try
-            {
-                await context.Set<Recipe>().AddAsync(entity);
-                await context.SaveChangesAsync();
-            }
-            catch (DbUpdateException)
-            {
-
-            }
+            await context.Set<Recipe>().AddAsync(entity);
+            await context.SaveChangesAsync();
+            return entity;
 
         }
 
@@ -53,8 +46,12 @@ namespace Recipe_Management_System.Repository.Service
 
         public IEnumerable<Recipe> GetAllAsync()
         {
+
             var actors = context.Set<Recipe>().ToList();
             return actors;
+
+
+
         }
 
         public async Task<ActionResult<Recipe>> GetByIdAsync(int id)

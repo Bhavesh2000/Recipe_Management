@@ -25,112 +25,172 @@ namespace Recipe_Management_System.Controllers
         [Route("GetAllRecipes")]
         public async Task<ActionResult<IEnumerable<RecipeDto>>> GetAllRecipes()
         {
-            var recipes = service.GetAllAsync();
-            var result = new List<RecipeDto>();
-            foreach (var recipe in recipes)
+            try
             {
-                var users = uservice.GetAllAsync();
-                result.Add(new RecipeDto()
+                var recipes = service.GetAllAsync();
+                var result = new List<RecipeDto>();
+                foreach (var recipe in recipes)
                 {
-                    Ingredients = recipe.Ingredients,
-                    name = recipe.Name,
-                    Procedure = recipe.Procedure,
-                    Username = users.FirstOrDefault(n => n.Id == recipe.UserId).UserName,
-                    Category = recipe.Category,
-                    Status = recipe.Status,
-                });
+                    var users = uservice.GetAllAsync();
+                    result.Add(new RecipeDto()
+                    {
+                        Id = recipe.Id,
+                        Ingredients = recipe.Ingredients,
+                        name = recipe.Name,
+                        Procedure = recipe.Procedure,
+                        Username = users.FirstOrDefault(n => n.Id == recipe.UserId).UserName,
+                        Category = recipe.Category,
+                        Status = recipe.Status,
+                    });
+                }
+
+                if (result == null)
+                {
+                    return NotFound();
+                }
+
+                return result;
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
             }
 
-            return result;
         }
 
         [HttpGet]
         [Route("GetRecipeById")]
         public async Task<ActionResult<RecipeDto>> GetRecipeById(int id)
         {
-            var recipe = await service.GetByIdAsync(id);
-            var users = uservice.GetAllAsync();
-            RecipeDto result = new RecipeDto()
-            {
-                Ingredients = recipe.Value.Ingredients,
-                Procedure = recipe.Value.Procedure,
-                Username = users.FirstOrDefault(n => n.Id == recipe.Value.UserId).UserName,
-                name = recipe.Value.Name,
-                Category = recipe.Value.Category,
-                Status = recipe.Value.Status,
-            };
 
-            if (result == null)
+            try
             {
-                return NotFound();
+                if (id == 0)
+                {
+                    return BadRequest("Id is not provided");
+                }
+
+                var recipe = await service.GetByIdAsync(id);
+                if (recipe.Value==null)
+                {
+                    return NotFound();
+                }
+                var users = uservice.GetAllAsync();
+                RecipeDto result = new RecipeDto()
+                {
+                    Id = id,
+                    Ingredients = recipe.Value.Ingredients,
+                    Procedure = recipe.Value.Procedure,
+                    Username = users.FirstOrDefault(n => n.Id == recipe.Value.UserId).UserName,
+                    name = recipe.Value.Name,
+                    Category = recipe.Value.Category,
+                    Status = recipe.Value.Status,
+                };
+                
+                return result;
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
             }
 
-            return result;
         }
 
         [HttpGet]
-        [Route("GetRecipeByUserId")]
-        public async Task<ActionResult<IEnumerable<RecipeDto>>> GetRecipeByUserId(string id)
+        [Route("GetRecipeByUserName")]
+        public async Task<ActionResult<IEnumerable<RecipeDto>>> GetRecipeByUserName(string Username)
         {
-            var recipes = await service.GetRecipeByUserId(id);
-            var users = uservice.GetAllAsync();
-            List<RecipeDto> result = new List<RecipeDto>();
-            foreach (var recipe in recipes.Value)
+            try
             {
-                result.Add(new RecipeDto()
+                if (Username == null)
                 {
-                    Ingredients = recipe.Ingredients,
-                    Procedure = recipe.Procedure,
-                    Username = users.FirstOrDefault(n => n.Id == recipe.UserId).UserName,
-                    name = recipe.Name,
-                    Category = recipe.Category,
-                    Status = recipe.Status,
-                });
-            }
+                    return BadRequest("UserName is not provided");
+                }
+                var user = uservice.GetAllAsync().FirstOrDefault(n=>n.UserName == Username);
+                if (user == null)
+                {
+                    return NotFound();
+                }
+                var recipes = await service.GetRecipeByUserId(user.Id);
+                if (recipes.Value == null)
+                {
+                    return NotFound();
+                }
+                List<RecipeDto> result = new List<RecipeDto>();
+                foreach (var recipe in recipes.Value)
+                {
+                    result.Add(new RecipeDto()
+                    {
+                        Id = recipe.Id,
+                        Ingredients = recipe.Ingredients,
+                        Procedure = recipe.Procedure,
+                        Username = Username,
+                        name = recipe.Name,
+                        Category = recipe.Category,
+                        Status = recipe.Status,
+                    });
+                }
 
-            if (result == null)
+
+
+                return result;
+            }
+            catch (Exception ex)
             {
-                return NotFound();
+                return BadRequest(ex.Message);
             }
 
-            return result;
+
         }
 
         [HttpGet]
         [Route("GetPendingRecipes")]
         public async Task<ActionResult<IEnumerable<RecipeDto>>> GetPendingRecipes()
         {
-            var recipes = await service.GetPendingRecipes();
-            var users = uservice.GetAllAsync();
-            List<RecipeDto> result = new List<RecipeDto>();
-            foreach (var recipe in recipes.Value)
+            try
             {
-                result.Add(new RecipeDto()
+                var recipes = await service.GetPendingRecipes();
+                if (recipes == null)
                 {
-                    Ingredients = recipe.Ingredients,
-                    Procedure = recipe.Procedure,
-                    Username = users.FirstOrDefault(n => n.Id == recipe.UserId).UserName,
-                    name = recipe.Name,
-                    Category = recipe.Category,
-                    Status = recipe.Status,
-                });
-            }
+                    return NotFound();
+                }
+                var users = uservice.GetAllAsync();
+                List<RecipeDto> result = new List<RecipeDto>();
+                foreach (var recipe in recipes.Value)
+                {
+                    result.Add(new RecipeDto()
+                    {
+                        Id = recipe.Id,
+                        Ingredients = recipe.Ingredients,
+                        Procedure = recipe.Procedure,
+                        Username = users.FirstOrDefault(n => n.Id == recipe.UserId).UserName,
+                        name = recipe.Name,
+                        Category = recipe.Category,
+                        Status = recipe.Status,
+                    });
+                }
 
-            if (result == null)
+                
+
+                return result;
+            }
+            catch (Exception ex)
             {
-                return NotFound();
+                return BadRequest(ex.Message);
             }
-
-            return result;
         }
 
 
 
         [HttpPost]
         [Route("AddRecipe")]
-        public async Task AddRecipe(RecipeDto recipeDto)
+        public async Task<ActionResult<AddRecipeDto>> AddRecipe(AddRecipeDto recipeDto)
         {
             var user = uservice.GetAllAsync().FirstOrDefault(n => n.UserName == recipeDto.Username);
+            if (user == null)
+            {
+                return BadRequest("Required fields are not provided");
+            }
             Recipe recipe = new Recipe()
             {
                 Name = recipeDto.name,
@@ -140,7 +200,18 @@ namespace Recipe_Management_System.Controllers
                 Category = recipeDto.Category,
                 Status = recipeDto.Status,
             };
-            await service.AddAsync(recipe);
+            try
+            {
+
+
+                await service.AddAsync(recipe);
+
+            }
+            catch (NullReferenceException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            return Ok(recipeDto);
         }
     }
 }
