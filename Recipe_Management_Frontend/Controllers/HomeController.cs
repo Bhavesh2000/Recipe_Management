@@ -9,7 +9,10 @@ namespace Recipe_Management_Frontend.Controllers
     {
         private readonly ILogger<HomeController> _logger;
         HttpClient client;
-
+        List<Recipe> r = new List<Recipe>()
+            {
+                new Recipe() {id=1,name="Biryani",Username="grishma",Procedure="cgjkm",Ingredients="xcvbn",Category="nonveg"}
+            };
 
         public HomeController(ILogger<HomeController> logger)
         {
@@ -31,7 +34,8 @@ namespace Recipe_Management_Frontend.Controllers
             else
             {
                 return RedirectToAction("Index", "Auth");
-            }
+             }
+                return View();
 
         }
 
@@ -57,26 +61,35 @@ namespace Recipe_Management_Frontend.Controllers
             Console.WriteLine("getUser");
             return View();
         }
-
+        [Route("/pending-requests/{id}")]
+        public IActionResult displaybyId(int id)
+        {
+            Recipe p = r.Find(x => x.id == id);
+            return View("PendingRequestById",p);
+        }
         [Route("/pending-requests")]
         public async Task<IActionResult> PendingRequest()
         {
-            
-            var response = client.GetAsync("/api/recipe/getpendingrecipes").Result;
-            
-            if (response.IsSuccessStatusCode)
-            {
-                var content = await response.Content.ReadAsStringAsync();
+           
+            //var response = client.GetAsync("/api/recipe/getpendingrecipes").Result;
 
-                List<Recipe> recipes=JsonConvert.DeserializeObject<List<Recipe>>(content);
-                return View("PendingRequest",recipes);
-            }
-            else
-            {
-                return View();
-            }
+            //if (response.IsSuccessStatusCode)
+            //{
+            //    var content = await response.Content.ReadAsStringAsync();
+
+            //    List<Recipe> recipes=JsonConvert.DeserializeObject<List<Recipe>>(content);
+            //    return View("PendingRequest",recipes);
+            //}
+            //else
+            //{
+            //    return View();
+            //}
+            return View("PendingRequest", r);
+
           
         }
+
+       
         public IActionResult Privacy()
         {
             return View();

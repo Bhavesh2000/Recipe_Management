@@ -81,7 +81,7 @@ namespace Recipe_Management_System.Controllers
                 var jwtToken = await _tokenGenerator.JwtTokenGenerator(new_user);
                 return Ok(new
                 {
-                    Token= jwtToken,
+                    UserToken= jwtToken,
                     Type = new_user.Type,
                     Message = "User is Added successfully",
                     Result = true
@@ -129,7 +129,7 @@ namespace Recipe_Management_System.Controllers
 
                 return Ok(new
                 {
-                    Token = jwtToken,
+                    UserToken = jwtToken,
                     Type = user.Type,
                     Result = true
                    // UserId = existing_user.Id

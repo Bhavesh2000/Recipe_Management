@@ -4,6 +4,7 @@ namespace Recipe_Management_Frontend.Models
 {
     public class Recipe
     {
+        public int id;
         public string name { get; set; }
         public string Ingredients { get; set; }
         public string Procedure { get; set; }
