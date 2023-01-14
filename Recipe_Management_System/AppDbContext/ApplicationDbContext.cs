@@ -15,6 +15,11 @@ namespace Recipe_Management_System.AppDbContext
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            base.OnModelCreating(modelBuilder);
+            //modelBuilder.Entity<User>()
+            //    .Property(b => b.Type)
+            //    .HasDefaultValue("User");
+
             modelBuilder.Entity<Recipe>()
                 .Property(b => b.Status)
                 .HasDefaultValue("Pending");
@@ -23,8 +28,14 @@ namespace Recipe_Management_System.AppDbContext
             modelBuilder.Entity<IdentityUser>()
                 .Ignore(u => u.PhoneNumberConfirmed);
 
+            modelBuilder.Ignore<IdentityRole>();
+            modelBuilder.Ignore<IdentityUserToken<string>>();
+            modelBuilder.Ignore<IdentityUserRole<string>>();
+            modelBuilder.Ignore<IdentityUserLogin<string>>();
+            modelBuilder.Ignore<IdentityUserClaim<string>>();
+            modelBuilder.Ignore<IdentityRoleClaim<string>>();
 
-            base.OnModelCreating(modelBuilder);
+            
         }
 
         public DbSet<RefreshToken> RefreshTokens { get; set; }

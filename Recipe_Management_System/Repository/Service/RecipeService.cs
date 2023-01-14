@@ -66,5 +66,15 @@ namespace Recipe_Management_System.Repository.Service
             entityEntry.State = EntityState.Modified;
             context.SaveChanges();
         }
+
+        public async Task Update_Status_Accept_Recipe(int id)
+        {
+            var recipe = await context.Recipes.FindAsync(id);
+
+            recipe.Status = "Accepted";
+
+            context.Update(recipe);
+            await context.SaveChangesAsync();
+        }
     }
 }

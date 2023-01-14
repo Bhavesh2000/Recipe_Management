@@ -16,6 +16,11 @@ namespace Recipe_Management_System.Repository.Service
             return actors;
         }
 
+        public async Task<User> GetUser(string id)
+        {
+            return await _Context.Users.FindAsync(id);
+        }
+
     }
 
 }
