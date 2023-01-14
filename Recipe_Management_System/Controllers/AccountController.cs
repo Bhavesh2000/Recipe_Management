@@ -20,13 +20,14 @@ namespace Recipe_Management_System.Controllers
         private readonly UserManager<IdentityUser> _userManager;
         //private readonly RoleManager<IdentityRole> _roleManager;
         private readonly ITokenGenerator _tokenGenerator;
+        private readonly IUserService _userService;
 
-        public AccountController(UserManager<IdentityUser> userManager, 
-           // RoleManager<IdentityRole> roleManager,
+        public AccountController(UserManager<IdentityUser> userManager,
+            IUserService userService,
             ITokenGenerator tokenGenerator)
         {
             _userManager = userManager;
-           // _roleManager = roleManager;
+            _userService = userService;
             _tokenGenerator = tokenGenerator;
         }
 
@@ -67,7 +68,7 @@ namespace Recipe_Management_System.Controllers
                     Email = request.Email,
                     UserName = request.Email,
                     Name = request.Name,
-
+                    Type = request.Type,
                 };
 
                 var is_created = await _userManager.CreateAsync(new_user, request.Password);
@@ -77,8 +78,11 @@ namespace Recipe_Management_System.Controllers
                                     new { Status = "Error", Message = "User creation failed! Please check user details and try again." });
                 }
 
+                var jwtToken = await _tokenGenerator.JwtTokenGenerator(new_user);
                 return Ok(new
                 {
+                    Token= jwtToken,
+                    Type = new_user.Type,
                     Message = "User is Added successfully",
                     Result = true
                 });
@@ -119,12 +123,14 @@ namespace Recipe_Management_System.Controllers
                         }
                     });
                 }
+                var user = await _userService.GetUser(existing_user.Id);
 
                 var jwtToken =await _tokenGenerator.JwtTokenGenerator(existing_user);
 
                 return Ok(new
                 {
                     Token = jwtToken,
+                    Type = user.Type,
                     Result = true
                    // UserId = existing_user.Id
                 });
@@ -164,7 +170,7 @@ namespace Recipe_Management_System.Controllers
 
         [HttpPost]
         [Route("RefreshToken")]
-        [Authorize(AuthenticationSchemes = "Bearer")]
+      //  [Authorize(AuthenticationSchemes = "Bearer")]
         public async Task<IActionResult> RefreshToken(TokenDto tokenRequest)
         {
             if (ModelState.IsValid)

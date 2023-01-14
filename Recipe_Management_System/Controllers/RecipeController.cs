@@ -189,7 +189,7 @@ namespace Recipe_Management_System.Controllers
 
         [HttpPost]
         [Route("AddRecipe")]
-        [Authorize(AuthenticationSchemes = "Bearer")]
+        //[Authorize(AuthenticationSchemes = "Bearer")]
         public async Task<ActionResult<AddRecipeDto>> AddRecipe(AddRecipeDto recipeDto)
         {
             var user = uservice.GetAllAsync().FirstOrDefault(n => n.UserName == recipeDto.Username);
@@ -197,6 +197,13 @@ namespace Recipe_Management_System.Controllers
             {
                 return BadRequest("Required fields are not provided");
             }
+            var recipeDuplicateName = service.GetAllAsync().Where(n=>n.UserId == user.Id).ToList();
+
+            if(recipeDuplicateName.Exists(n=>n.Name.ToUpper() == recipeDto.name.ToUpper()))
+            {
+                return BadRequest("Recipe already exists");
+            }
+
             Recipe recipe = new Recipe()
             {
                 Name = recipeDto.name,
@@ -219,5 +226,21 @@ namespace Recipe_Management_System.Controllers
             }
             return Ok(recipeDto);
         }
+
+        //[HttpPut]
+        //[Route("AcceptRecipe/{id:int}")]
+        //public async Task<IActionResult> AcceptedRecipe(int recipeId)
+        //{
+        //    //id is present in our recipe table
+
+        //    //
+        //}
+
+        //[HttpPut]
+        //[Route("RejectRecipe/{id:int}")]
+        //public async Task<IActionResult> RejectRecipe(int id)
+
+
+        //Get recipes which are accpeted.
     }
 }
