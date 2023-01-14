@@ -1,0 +1,57 @@
+﻿
+
+@model IEnumerable<Recipe_Management_Frontend.Models.Recipe>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<style>
+    .color{
+        color:#808080
+    }
+   .color:hover{
+       color:#487847
+    }
+</style>
+
+<div class="container ">
+    <div class="row gap">
+        <h2 class="m-2">Pending Requests</h2>
+        <div class="contact shadow m-3" data-aos="zoom-out" style="background: #fafbff; padding: 30px; height: 100%; border-radius:1%">
+            <div class="mt-3">
+                <div class="list-group">
+                    @for (int i = 0; i < Model.Count(); i++)
+                    {
+                       
+                        <div class=" list-group-item-action p-3 row time"  >
+                            <div class="col-md-7">
+                                <div class="d-flex w-100 justify-content-between align-items-center">
+                                    <a href="/pending-requests/1" class="text-decoration-none  color"><h5 class="mb-1 fw-bold">@Model.ElementAt(i).name</h5></a>
+                                    <p class="mb-1 ">@Model.ElementAt(i).Username</p>
+                                  
+                                </div>
+                                <small class="text-muted">@Model.ElementAt(i).Category</small>
+                            </div>
+                            <div class="col-md-1"></div>
+                            <div class="col-md-2">
+                                <a class="btn btn-outline-success w-100" asp-controller="Recipe" asp-action="Accept" asp-route-id="@Model.ElementAt(i).name">Accept</a>
+                            </div>
+                            <div class="col-md-2">
+                                <a class="btn btn-outline-danger w-100" asp-controller="Recipe" asp-action="Delete" asp-route-id="@Model.ElementAt(i).name">Decline</a>
+                            </div>
+                               
+                        </div>
+                       
+                        @if (i < Model.Count() - 1)
+                        {
+                            <hr style="margin:0;color:gray;" class="m-2" />
+                        }
+                    }
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Recipe_Management_Frontend.Models;
@@ -10,7 +11,23 @@ namespace Recipe_Management_Frontend.Controllers
 {
     public class HomeController : Controller
     {
+        private readonly ILogger<HomeController> _logger;
+        HttpClient client;
+        List<Recipe> r = new List<Recipe>()
+            {
+                new Recipe() {id=1,name="Biryani",Username="grishma",Procedure="cgjkm",Ingredients="xcvbn",Category="nonveg"}
+            };
+
+        public HomeController(ILogger<HomeController> logger)
         public async Task<ActionResult> Index()
+        {
+            _logger = logger;
+            client = new HttpClient();
+            client.BaseAddress = new Uri("http://localhost:5162");
+
+        }
+
+        public IActionResult Index()
         {
             
             IEnumerable<Recipe> recipes = null;
@@ -28,6 +45,15 @@ namespace Recipe_Management_Frontend.Controllers
                         Console.WriteLine("some error reported");
                         responseTask.Wait();
 
+                return View();
+            }
+            else
+            {
+                return RedirectToAction("Index", "Auth");
+             }
+                return View();
+
+        }
                         var result = responseTask.Result;
                         var readTask = await result.Content.ReadAsStringAsync();
                         Console.WriteLine(readTask.ToString());
@@ -170,7 +196,35 @@ namespace Recipe_Management_Frontend.Controllers
             }
             return RedirectToAction("Index");
         }
+        [Route("/pending-requests/{id}")]
+        public IActionResult displaybyId(int id)
+        {
+            Recipe p = r.Find(x => x.id == id);
+            return View("PendingRequestById",p);
+        }
+        [Route("/pending-requests")]
+        public async Task<IActionResult> PendingRequest()
+        {
+           
+            //var response = client.GetAsync("/api/recipe/getpendingrecipes").Result;
 
+            //if (response.IsSuccessStatusCode)
+            //{
+            //    var content = await response.Content.ReadAsStringAsync();
+
+            //    List<Recipe> recipes=JsonConvert.DeserializeObject<List<Recipe>>(content);
+            //    return View("PendingRequest",recipes);
+            //}
+            //else
+            //{
+            //    return View();
+            //}
+            return View("PendingRequest", r);
+
+          
+        }
+
+       
         public IActionResult Privacy()
         {
             return View();

@@ -6,13 +6,23 @@ using System.Text.RegularExpressions;
 
 namespace Recipe_Management_Frontend.Controllers
 {
+    struct userToken
+    {
+        public string token { get; set;}
+        public string refreshtoken { get; set;}
+        public bool result { get; set;}
+    }
     struct cu
     {
-        public string token;
+        public userToken UserToken;
         public bool result;
+        public string type;
+        public string message;
+        public string stautus;
         public List<string> errors;
     }
 
+   
     public class AuthController : Controller
     {
         // GET: AuthController
@@ -35,6 +45,8 @@ namespace Recipe_Management_Frontend.Controllers
         [HttpPost]
         public async Task<IActionResult> RegisterOne(Register r)
         {
+            
+
             if (!ModelState.IsValid)
             {
                 return View("Register", r);
@@ -65,7 +77,7 @@ namespace Recipe_Management_Frontend.Controllers
 
                     CookieOptions options = new CookieOptions();
                     options.Expires = DateTime.Today.AddDays(1);
-                    Response.Cookies.Append("token", objDeserializeObject.token, options);
+                    Response.Cookies.Append("token", objDeserializeObject.UserToken.token, options);
                     Response.Cookies.Append("type", "user");
                     return RedirectToAction("Index", "Home");
                 }
@@ -78,14 +90,19 @@ namespace Recipe_Management_Frontend.Controllers
                     var objDeserializeObject = JsonConvert.DeserializeObject<cu>(content);
                     TempData["errors"] = objDeserializeObject.errors[0];
                     TempData["type"] = "error";
+
+
+                    return View("Register", r);
+
                 }
-                return View("Register", r);
+
             }
-
-            return View();
-
+            return View("Register", r);
 
         }
+
+
+
 
         [Route("/admin")]
         public IActionResult Admin()
@@ -113,7 +130,8 @@ namespace Recipe_Management_Frontend.Controllers
 
                     CookieOptions options = new CookieOptions();
                     options.Expires = DateTime.Today.AddDays(1);
-                    Response.Cookies.Append("token", objDeserializeObject.token, options);
+                    userToken u = objDeserializeObject.UserToken;
+                    Response.Cookies.Append("token", u.token, options);
                     Response.Cookies.Append("type", "user");
 
                     return RedirectToAction("Index", "Home");

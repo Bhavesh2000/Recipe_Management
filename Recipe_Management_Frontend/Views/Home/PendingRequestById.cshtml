@@ -1,0 +1,40 @@
+﻿@model Recipe_Management_Frontend.Models.Recipe
+
+@{
+    ViewData["Title"] = "Recipe Name";
+}
+
+<div class="container shadow-sm p-4">
+    <div class="row">
+        <h2 class="col-md-8">@Model.name</h2>
+          <div class="col-md-2">
+                                <a class="btn btn-outline-success w-100" asp-controller="Recipe" asp-action="Accept" asp-route-id="@Model.id">Accept</a>
+                         </div>
+                            <div class="col-md-2">
+                                <a class="btn btn-outline-danger w-100" asp-controller="Recipe" asp-action="Delete" asp-route-id="@Model.id">Decline</a>
+             </div>
+
+    </div>
+   
+    <hr />
+    <div class="mt-4">
+        <h5>Ingredients</h5>
+        <div class="p-1 mt-3">
+            <span class="badge bg-info fs-6 m-2">Cumin</span>
+            <span class="badge bg-info fs-6 m-2">Cardamom</span>
+            <span class="badge bg-info fs-6 m-2">Garam masala</span>
+            <span class="badge bg-info fs-6 m-2">Turmeric</span>
+            <span class="badge bg-info fs-6 m-2">Coriander</span>
+            <span class="badge bg-info fs-6 m-2">Mustard seeds</span>
+        </div>
+    </div>
+    <div class="mt-5">
+        <h5>Cooking Procedure</h5>
+        <div class="p-1">
+            <p>
+                @Model.Procedure
+            </p>
+        </div>
+    </div>
+</div>
+
