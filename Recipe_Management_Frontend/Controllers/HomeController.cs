@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using Recipe_Management_Frontend.Models;
 using System.Diagnostics;
 
@@ -14,6 +15,8 @@ namespace Recipe_Management_Frontend.Controllers
         {
             _logger = logger;
             client = new HttpClient();
+            client.BaseAddress = new Uri("http://localhost:5162");
+
         }
 
         public IActionResult Index()
@@ -54,6 +57,25 @@ namespace Recipe_Management_Frontend.Controllers
             return View();
         }
 
+        [Route("/pending-requests")]
+        public async Task<IActionResult> PendingRequest()
+        {
+            
+            var response = client.GetAsync("/api/recipe/getpendingrecipes").Result;
+            
+            if (response.IsSuccessStatusCode)
+            {
+                var content = await response.Content.ReadAsStringAsync();
+
+                List<Recipe> recipes=JsonConvert.DeserializeObject<List<Recipe>>(content);
+                return View("PendingRequest",recipes);
+            }
+            else
+            {
+                return View();
+            }
+          
+        }
         public IActionResult Privacy()
         {
             return View();
