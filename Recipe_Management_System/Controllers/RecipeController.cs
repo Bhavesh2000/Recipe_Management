@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Recipe_Management_System.AppDbContext;
@@ -23,6 +24,7 @@ namespace Recipe_Management_System.Controllers
 
         [HttpGet]
         [Route("GetAllRecipes")]
+        [Authorize(AuthenticationSchemes = "Bearer")]
         public async Task<ActionResult<IEnumerable<RecipeDto>>> GetAllRecipes()
         {
             try
@@ -60,6 +62,7 @@ namespace Recipe_Management_System.Controllers
 
         [HttpGet]
         [Route("GetRecipeById")]
+        [Authorize(AuthenticationSchemes = "Bearer")]
         public async Task<ActionResult<RecipeDto>> GetRecipeById(int id)
         {
 
@@ -98,6 +101,7 @@ namespace Recipe_Management_System.Controllers
 
         [HttpGet]
         [Route("GetRecipeByUserName")]
+        [Authorize(AuthenticationSchemes = "Bearer")]
         public async Task<ActionResult<IEnumerable<RecipeDto>>> GetRecipeByUserName(string Username)
         {
             try
@@ -145,6 +149,7 @@ namespace Recipe_Management_System.Controllers
 
         [HttpGet]
         [Route("GetPendingRecipes")]
+        [Authorize(AuthenticationSchemes = "Bearer")]
         public async Task<ActionResult<IEnumerable<RecipeDto>>> GetPendingRecipes()
         {
             try
@@ -184,6 +189,7 @@ namespace Recipe_Management_System.Controllers
 
         [HttpPost]
         [Route("AddRecipe")]
+        [Authorize(AuthenticationSchemes = "Bearer")]
         public async Task<ActionResult<AddRecipeDto>> AddRecipe(AddRecipeDto recipeDto)
         {
             var user = uservice.GetAllAsync().FirstOrDefault(n => n.UserName == recipeDto.Username);

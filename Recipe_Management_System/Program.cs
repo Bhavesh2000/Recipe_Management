@@ -12,6 +12,7 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddScoped<IRecipeService, RecipeService>();
 builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<ITokenGenerator, TokenGenerator>();
 
 builder.Services.AddControllers();
 
@@ -21,6 +22,19 @@ builder.Services.AddDbContext<ApplicationDbContext>(
     );
 
 builder.Services.Configure<JwtConfig>(builder.Configuration.GetSection("JwtConfig"));
+
+
+var key = Encoding.ASCII.GetBytes(builder.Configuration.GetSection("JwtConfig:Secret").Value);
+
+var tokenValidationParameters = new TokenValidationParameters()
+{
+    ValidateIssuerSigningKey = true,
+    IssuerSigningKey = new SymmetricSecurityKey(key),
+    ValidateIssuer = false,
+    ValidateAudience = false,
+    RequireExpirationTime = false,
+    ValidateLifetime = true,
+};
 
 builder.Services.AddAuthentication(options =>
 {
@@ -33,17 +47,10 @@ builder.Services.AddAuthentication(options =>
     var key = Encoding.ASCII.GetBytes(builder.Configuration.GetSection("JwtConfig:Secret").Value);
 
     jwt.SaveToken = true;
-    jwt.TokenValidationParameters = new TokenValidationParameters()
-    {
-        ValidateIssuerSigningKey = true,
-        IssuerSigningKey = new SymmetricSecurityKey(key),
-        ValidateIssuer = false,
-        ValidateAudience = false,
-        RequireExpirationTime = false,
-        ValidateLifetime = true,
-
-    };
+    jwt.TokenValidationParameters = tokenValidationParameters;
 });
+
+builder.Services.AddSingleton(tokenValidationParameters);
 
 
 builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = false)

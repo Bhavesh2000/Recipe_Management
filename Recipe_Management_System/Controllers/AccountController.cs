@@ -8,6 +8,8 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using System.Text.RegularExpressions;
+using Recipe_Management_System.Repository.Service;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Recipe_Management_System.Controllers
 {
@@ -16,14 +18,16 @@ namespace Recipe_Management_System.Controllers
     public class AccountController : ControllerBase
     {
         private readonly UserManager<IdentityUser> _userManager;
-        //private readonly JwtConfig _jwtConfig;
-        private readonly IConfiguration _configuration;
+        //private readonly RoleManager<IdentityRole> _roleManager;
+        private readonly ITokenGenerator _tokenGenerator;
 
-        public AccountController(UserManager<IdentityUser> userManager, IConfiguration configuration)
+        public AccountController(UserManager<IdentityUser> userManager, 
+           // RoleManager<IdentityRole> roleManager,
+            ITokenGenerator tokenGenerator)
         {
             _userManager = userManager;
-            //_jwtConfig = jwtConfig;
-            _configuration = configuration;
+           // _roleManager = roleManager;
+            _tokenGenerator = tokenGenerator;
         }
 
 
@@ -35,6 +39,7 @@ namespace Recipe_Management_System.Controllers
         [Route("Register")]
         public async Task<IActionResult> Register([FromBody] RegisterDto request)
         {
+
 
             //Validate the request
             if (ModelState.IsValid)
@@ -60,32 +65,23 @@ namespace Recipe_Management_System.Controllers
                 var new_user = new User()
                 {
                     Email = request.Email,
-                    UserName = request.Name,
-                    PhoneNumber = request.PhoneNum
+                    UserName = request.Email,
+                    Name = request.Name,
+
                 };
 
                 var is_created = await _userManager.CreateAsync(new_user, request.Password);
-
-                if (is_created.Succeeded)
+                if (!is_created.Succeeded)
                 {
-                    var token = JwtTokenGenerator(new_user);
-
-                    return Ok(new
-                    {
-                        Token = token,
-                        Result = true
-                    });
+                    return StatusCode(StatusCodes.Status500InternalServerError,
+                                    new { Status = "Error", Message = "User creation failed! Please check user details and try again." });
                 }
 
-                return BadRequest(new
+                return Ok(new
                 {
-                    Errors = new List<string>()
-                        {
-                            "Server Error"
-                        }
+                    Message = "User is Added successfully",
+                    Result = true
                 });
-
-
             }
 
             return BadRequest();
@@ -124,12 +120,13 @@ namespace Recipe_Management_System.Controllers
                     });
                 }
 
-                var jwtToken = JwtTokenGenerator(existing_user);
+                var jwtToken =await _tokenGenerator.JwtTokenGenerator(existing_user);
 
                 return Ok(new
                 {
                     Token = jwtToken,
                     Result = true
+                   // UserId = existing_user.Id
                 });
             }
 
@@ -139,38 +136,55 @@ namespace Recipe_Management_System.Controllers
             });
         }
 
-        private string JwtTokenGenerator(IdentityUser user)
+        [HttpDelete]
+        [Route("LogoutJWT")]
+        [Authorize(AuthenticationSchemes = "Bearer")]
+        public async Task<object> Logout2()//string id)
         {
-            var jwtTokenHandler = new JwtSecurityTokenHandler();
 
-            var key = Encoding.UTF8.GetBytes(_configuration.GetSection("JwtConfig:Secret").Value);
+            //var userId = id;
+            var userId = User.FindFirstValue("id");
 
-            var tokenDescriptor = new SecurityTokenDescriptor
+            if (userId == null)
             {
-                Subject = new ClaimsIdentity(new[]
+                return Unauthorized(new
                 {
-                    new Claim("Id", user.Id),
-                    new Claim(JwtRegisteredClaimNames.Iat, DateTime.Now.ToUniversalTime().ToString())
-                }),
-                Expires = DateTime.Now.AddDays(1),
-                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256)
-            };
+                    Result = false,
 
-            var token = jwtTokenHandler.CreateToken(tokenDescriptor);
-
-            return jwtTokenHandler.WriteToken(token);
-        }
-
-
-        private string CheckPasswordStregth(string password)
-        {
-            StringBuilder sb = new StringBuilder();
-            if (password.Length < 8 && (Regex.IsMatch(password, "[a-z]")) && (Regex.IsMatch(password, "[A-Z]"))
-                    && (Regex.IsMatch(password, "[0-9]")) )
-            {
-                sb.Append("Minimum Password Length should be 8 and password should be Aplhanumeric " + Environment.NewLine);
+                });
             }
-            return sb.ToString();
+
+            await _tokenGenerator.DeleteAllRefreshTokenForUser(userId);
+
+            return Ok(new
+            {
+                Massage = "Logout Sucessfully"
+            });
         }
+
+        [HttpPost]
+        [Route("RefreshToken")]
+        [Authorize(AuthenticationSchemes = "Bearer")]
+        public async Task<IActionResult> RefreshToken(TokenDto tokenRequest)
+        {
+            if (ModelState.IsValid)
+            {
+                var result = await _tokenGenerator.VerifyAndGenerateToken(tokenRequest);
+
+                if (result == null)
+                {
+                    return BadRequest();
+                }
+                else
+                {
+                    return Ok(result);
+                }
+            }
+
+            return BadRequest();
+        }
+
+
+
     }
 }
