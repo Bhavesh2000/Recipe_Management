@@ -11,8 +11,7 @@ namespace Recipe_Management_System.Models.Dto
         public string Email { get; set; }
         [Required]
         public string Password { get; set; }
-        
-        public string PhoneNum { get; set; }
+     
         //Type is to identify normal User & Admin
         public string Type { get; set; }
     }
