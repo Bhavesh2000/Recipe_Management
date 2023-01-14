@@ -1,32 +1,42 @@
-﻿@{
+﻿@model Recipe_Management_Frontend.Models.Recipe
+@{
     ViewData["Title"] = "Recipe Name";
 }
 
 <div class="container shadow-sm p-4">
-    <h2>Recipe Name &nbsp;<img src="assets/icons/veg_icon.png" class="img-fluid" style="width:30px;" /></h2>
-    <hr />
+    <h2>@Model.Name &nbsp;@{
+            if (Model.Category == "Veg")
+            {
+                <img src="assets/icons/veg_icon.png" class="img-fluid" style="width:30px;" />
+            }
+            else if (Model.Category == "Non-Veg")
+            {
+                <img src="assets/icons/non_veg_icon.png" class="img-fluid" style="width:30px;" />
+            }
+            }
+    </h2>
+            <hr />
     <div class="mt-4">
         <h5>Ingredients</h5>
         <div class="p-1 mt-3">
-            <span class="badge bg-info fs-6 m-2">Cumin</span>
-            <span class="badge bg-info fs-6 m-2">Cardamom</span>
-            <span class="badge bg-info fs-6 m-2">Garam masala</span>
-            <span class="badge bg-info fs-6 m-2">Turmeric</span>
-            <span class="badge bg-info fs-6 m-2">Coriander</span>
-            <span class="badge bg-info fs-6 m-2">Mustard seeds</span>
+            @{
+                foreach(var item in Model.Ingredients.Split(","))
+                {
+                    <span class="badge bg-info fs-6 m-2">@item</span>
+                }
+            //<span class="badge bg-info fs-6 m-2">Cumin</span>
+            //<span class="badge bg-info fs-6 m-2">Cardamom</span>
+            //<span class="badge bg-info fs-6 m-2">Garam masala</span>
+            //<span class="badge bg-info fs-6 m-2">Turmeric</span>
+            //<span class="badge bg-info fs-6 m-2">Coriander</span>
+            //<span class="badge bg-info fs-6 m-2">Mustard seeds</span>
+            }
         </div>
     </div>
     <div class="mt-5">
         <h5>Cooking Procedure</h5>
         <div class="p-1">
-            <p>
-                Lorem ipsum dolor sit amet. Non consequuntur corporis vel galisum minima aut impedit quasi sit tempore assumenda est sint quisquam. Qui fugit impedit eos tempore officia et ratione voluptas id quidem illum!
-
-                Ut blanditiis natus est nesciunt debitis quo labore sapiente qui deleniti exercitationem ea inventore omnis aut consectetur accusantium! Vel suscipit voluptatem ea necessitatibus exercitationem qui reprehenderit rerum et rerum voluptas non labore quas in magni eius quo quia fuga.<br />
-
-                Nam consequatur quam sit ipsum sequi aut accusamus atque ab veritatis optio aut debitis consectetur eum expedita asperiores. Aut facere reiciendis est molestias error et maxime accusamus et ipsam aliquam ad omnis totam est quos quae aut quaerat repudiandae. Quo rerum laudantium est quidem vitae aut nobis soluta. Ad deleniti velit non facere iste est voluptas placeat ut unde error et consectetur officiis aut fugiat maxime.<br /><br />
-                In ante metus dictum at tempor commodo. Quis enim lobortis scelerisque fermentum dui faucibus in ornare quam. Odio eu feugiat pretium nibh ipsum consequat nisl vel. Vitae nunc sed velit dignissim sodales ut. Eget sit amet tellus cras. Nisi est sit amet facilisis magna etiam tempor orci eu. Ut pharetra sit amet aliquam id diam maecenas ultricies mi. Viverra maecenas accumsan lacus vel.
-            </p>
+            <p>@Model.Procedure</p>
         </div>
     </div>
 </div>
