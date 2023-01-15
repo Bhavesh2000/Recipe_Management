@@ -28,7 +28,7 @@ namespace Recipe_Management_Frontend.Controllers
                     {
                         client.BaseAddress = new Uri("https://localhost:7082/api/");
                         client.DefaultRequestHeaders.Add("Authorization","Bearer "+ token);
-                        var responseTask = client.GetAsync("Recipe/GetAllRecipes");
+                        var responseTask = client.GetAsync("Recipe/GetAcceptedRecipes");
                         responseTask.Wait();
 
                         var result = responseTask.Result;
@@ -120,7 +120,10 @@ namespace Recipe_Management_Frontend.Controllers
                         if (result.IsSuccessStatusCode)
                         {
                             var recipe = JsonConvert.DeserializeObject<Recipe>(readTask);
-                            return View(recipe); 
+                            if(recipe.Status == "Accepted")
+                            {
+                                return View(recipe); 
+                            }
                         }
                         TempData["message"] = "Failed to fetch recipe";
                         TempData["type"] = "error";
