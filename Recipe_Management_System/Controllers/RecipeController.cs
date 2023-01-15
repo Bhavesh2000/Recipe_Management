@@ -24,7 +24,7 @@ namespace Recipe_Management_System.Controllers
 
         [HttpGet]
         [Route("GetAllRecipes")]
-        [Authorize(AuthenticationSchemes = "Bearer")]
+       // [Authorize(AuthenticationSchemes = "Bearer")]
         public async Task<ActionResult<IEnumerable<RecipeDto>>> GetAllRecipes()
         {
             try
@@ -40,7 +40,7 @@ namespace Recipe_Management_System.Controllers
                         Ingredients = recipe.Ingredients,
                         name = recipe.Name,
                         Procedure = recipe.Procedure,
-                        Username = users.FirstOrDefault(n => n.Id == recipe.UserId).UserName,
+                        Username = users.FirstOrDefault(n => n.Id == recipe.UserId).Name,
                         Category = recipe.Category,
                         Status = recipe.Status,
                     });
@@ -62,7 +62,7 @@ namespace Recipe_Management_System.Controllers
 
         [HttpGet]
         [Route("GetRecipeById")]
-        [Authorize(AuthenticationSchemes = "Bearer")]
+       // [Authorize(AuthenticationSchemes = "Bearer")]
         public async Task<ActionResult<RecipeDto>> GetRecipeById(int id)
         {
 
@@ -84,7 +84,7 @@ namespace Recipe_Management_System.Controllers
                     Id = id,
                     Ingredients = recipe.Value.Ingredients,
                     Procedure = recipe.Value.Procedure,
-                    Username = users.FirstOrDefault(n => n.Id == recipe.Value.UserId).UserName,
+                    Username = users.FirstOrDefault(n => n.Id == recipe.Value.UserId).Name,
                     name = recipe.Value.Name,
                     Category = recipe.Value.Category,
                     Status = recipe.Value.Status,
@@ -101,7 +101,7 @@ namespace Recipe_Management_System.Controllers
 
         [HttpGet]
         [Route("GetRecipeByUserName")]
-        [Authorize(AuthenticationSchemes = "Bearer")]
+        //[Authorize(AuthenticationSchemes = "Bearer")]
         public async Task<ActionResult<IEnumerable<RecipeDto>>> GetRecipeByUserName(string Username)
         {
             try
@@ -110,7 +110,7 @@ namespace Recipe_Management_System.Controllers
                 {
                     return BadRequest("UserName is not provided");
                 }
-                var user = uservice.GetAllAsync().FirstOrDefault(n=>n.UserName == Username);
+                var user = uservice.GetAllAsync().FirstOrDefault(n=>n.Name == Username);
                 if (user == null)
                 {
                     return NotFound();
@@ -149,7 +149,7 @@ namespace Recipe_Management_System.Controllers
 
         [HttpGet]
         [Route("GetPendingRecipes")]
-        [Authorize(AuthenticationSchemes = "Bearer")]
+        //[Authorize(AuthenticationSchemes = "Bearer")]
         public async Task<ActionResult<IEnumerable<RecipeDto>>> GetPendingRecipes()
         {
             try
@@ -168,7 +168,7 @@ namespace Recipe_Management_System.Controllers
                         Id = recipe.Id,
                         Ingredients = recipe.Ingredients,
                         Procedure = recipe.Procedure,
-                        Username = users.FirstOrDefault(n => n.Id == recipe.UserId).UserName,
+                        Username = users.FirstOrDefault(n => n.Id == recipe.UserId).Name,
                         name = recipe.Name,
                         Category = recipe.Category,
                         Status = recipe.Status,
@@ -192,7 +192,7 @@ namespace Recipe_Management_System.Controllers
         //[Authorize(AuthenticationSchemes = "Bearer")]
         public async Task<ActionResult<AddRecipeDto>> AddRecipe(AddRecipeDto recipeDto)
         {
-            var user = uservice.GetAllAsync().FirstOrDefault(n => n.UserName == recipeDto.Username);
+            var user = uservice.GetAllAsync().FirstOrDefault(n => n.Name == recipeDto.Username);
             if (user == null)
             {
                 return BadRequest("Required fields are not provided");
@@ -227,20 +227,106 @@ namespace Recipe_Management_System.Controllers
             return Ok(recipeDto);
         }
 
-        //[HttpPut]
-        //[Route("AcceptRecipe/{id:int}")]
-        //public async Task<IActionResult> AcceptedRecipe(int recipeId)
-        //{
-        //    //id is present in our recipe table
+        [HttpPut]
+        [Route("Update_Status_Accept_Recipe")]
+        //  [Authorize(AuthenticationSchemes = "Bearer")]
+        public async Task<ActionResult<RecipeDto>> Update_Status_Accept_Recipe(int id)
+        {
 
-        //    //
-        //}
+            if (id == 0)
+            {
+                return BadRequest("Id is not provided");
+            }
 
-        //[HttpPut]
-        //[Route("RejectRecipe/{id:int}")]
-        //public async Task<IActionResult> RejectRecipe(int id)
+            var recipe = await service.Update_Status_Accept_Recipe(id);
+            if (recipe.Value == null)
+            {
+                return NotFound();
+            }
+            var users = uservice.GetAllAsync();
+            RecipeDto result = new RecipeDto()
+            {
+                Id = id,
+                Ingredients = recipe.Value.Ingredients,
+                Procedure = recipe.Value.Procedure,
+                Username = users.FirstOrDefault(n => n.Id == recipe.Value.UserId).Name,
+                name = recipe.Value.Name,
+                Category = recipe.Value.Category,
+                Status = recipe.Value.Status,
+            };
+
+            return Ok(result);
 
 
-        //Get recipes which are accpeted.
+        }
+
+        [HttpPut]
+        [Route("Update_Status_Reject_Recipe")]
+        //  [Authorize(AuthenticationSchemes = "Bearer")]
+        public async Task<ActionResult<RecipeDto>> Update_Status_Reject_Recipe(int id)
+        {
+            if (id == 0)
+            {
+                return BadRequest("Id is not provided");
+            }
+
+            var recipe = await service.Update_Status_Reject_Recipe(id);
+            if (recipe.Value == null)
+            {
+                return NotFound();
+            }
+            var users = uservice.GetAllAsync();
+            RecipeDto result = new RecipeDto()
+            {
+                Id = id,
+                Ingredients = recipe.Value.Ingredients,
+                Procedure = recipe.Value.Procedure,
+                Username = users.FirstOrDefault(n => n.Id == recipe.Value.UserId).Name,
+                name = recipe.Value.Name,
+                Category = recipe.Value.Category,
+                Status = recipe.Value.Status,
+            };
+
+            return Ok(result);
+
+        }
+
+        [HttpGet]
+        [Route("GetAcceptedRecipes")]
+        //[Authorize(AuthenticationSchemes = "Bearer")]
+        public async Task<ActionResult<IEnumerable<RecipeDto>>> GetAcceptedRecipes()
+        {
+            try
+            {
+                var recipes = await service.GetAcceptedRecipes();
+                if (recipes == null)
+                {
+                    return NotFound();
+                }
+                var users = uservice.GetAllAsync();
+                List<RecipeDto> result = new List<RecipeDto>();
+                foreach (var recipe in recipes.Value)
+                {
+                    result.Add(new RecipeDto()
+                    {
+                        Id = recipe.Id,
+                        Ingredients = recipe.Ingredients,
+                        Procedure = recipe.Procedure,
+                        Username = users.FirstOrDefault(n => n.Id == recipe.UserId).Name,
+                        name = recipe.Name,
+                        Category = recipe.Category,
+                        Status = recipe.Status,
+                    });
+                }
+
+
+
+                return result;
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
     }
 }

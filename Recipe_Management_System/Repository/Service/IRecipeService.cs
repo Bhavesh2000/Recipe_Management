@@ -12,5 +12,8 @@ namespace Recipe_Management_System.Repository.Service
         Task UpdateAsync(int id, Recipe entity);
         Task DeleteAsync(int id);
         IEnumerable<Recipe> GetAllAsync();
+        Task<ActionResult<Recipe>> Update_Status_Accept_Recipe(int id);
+        Task<ActionResult<Recipe>> Update_Status_Reject_Recipe(int id);
+        Task<ActionResult<IEnumerable<Recipe>>> GetAcceptedRecipes();
     }
 }
