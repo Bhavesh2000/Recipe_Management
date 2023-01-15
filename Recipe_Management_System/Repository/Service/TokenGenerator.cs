@@ -188,7 +188,7 @@ namespace Recipe_Management_System.Repository.Service
                 IsUsed = false,
             };
 
-            await _db.RefreshTokens.AddAsync(refreshToken);  //Added refresh token to database
+         //   await _db.RefreshTokens.AddAsync(refreshToken);  //Added refresh token to database
             await _db.SaveChangesAsync();
 
 
@@ -196,7 +196,7 @@ namespace Recipe_Management_System.Repository.Service
             var result = new
             {
                 Token = jwtToken,
-                RefreshToken = refreshToken.Token,
+              //  RefreshToken = refreshToken.Token,
                 Result = true
             };
 

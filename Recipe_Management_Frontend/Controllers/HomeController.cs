@@ -9,9 +9,45 @@ using Newtonsoft.Json.Linq;
 
 namespace Recipe_Management_Frontend.Controllers
 {
+   struct Token
+    {
+        public string token { get; set; }
+        public string refreshToken { get; set; }
+        public bool result { get; set; }
+    }
     public class HomeController : Controller
     {
        
+        public async Task<string> RefreshToken(string token,string refreshToken)
+        {
+            try
+            {
+
+                var client = new HttpClient();
+                client.BaseAddress = new Uri("https://localhost:7082/api/");
+                Token t = new Token();
+                t.token = token.ToString();
+                t.refreshToken=refreshToken.ToString();
+                HttpContent body = new StringContent(JsonConvert.SerializeObject(new {token=token,refreshToken=refreshToken}), System.Text.Encoding.UTF8, "application/json");
+
+                var response = client.PostAsync("account/RefreshToken",body).Result;
+
+                if (response.IsSuccessStatusCode)
+                {
+                    var content =await response.Content.ReadAsStringAsync();
+
+                    return content;
+                }
+              
+            }catch(Exception ex)
+            {
+                return "Something went wrong!!!";
+            }
+            return "Something went wrong!!!";
+
+
+
+        }
 
         public async Task<ActionResult> Index()
         {
@@ -22,6 +58,7 @@ namespace Recipe_Management_Frontend.Controllers
             {
                 try
                 {
+
                     using (var client = new HttpClient())
                     {
                         client.BaseAddress = new Uri("https://localhost:7082/api/");
@@ -35,6 +72,11 @@ namespace Recipe_Management_Frontend.Controllers
                         if (result.IsSuccessStatusCode)
                         {
                             recipes = JsonConvert.DeserializeObject<IList<Recipe>>(readTask);
+                            if (TempData["message"]!=null)
+                            {
+                                TempData["message"] = TempData["message"];
+                                TempData["type"] = TempData["type"];
+                            }
                             return View(recipes);
                         }
                         else
@@ -183,78 +225,90 @@ namespace Recipe_Management_Frontend.Controllers
         [Route("/pending-requests/{id}")]
         public async Task<IActionResult> displaybyId(int id)
         {
-            string token = Request.Cookies["token"];
+            string type = Request.Cookies["type"];
 
-            if (token != null)
+            string token = Request.Cookies["token"];
+            string refreshtoken = Request.Cookies["refreshtoken"];
+            if (token != null && type=="admin")
             {
                 try
                 {
-                    using (var client = new HttpClient())
-                    {
-                        client.BaseAddress = new Uri("https://localhost:7082/api/");
-                        client.DefaultRequestHeaders.Add("Authorization", "Bearer " + token);
-                        var responseTask = client.GetAsync("Recipe/GetRecipeById?id=" + id);
-                        responseTask.Wait();
+                    
+                   
+                            using (var client = new HttpClient())
+                            {
+                                client.BaseAddress = new Uri("https://localhost:7082/api/");
+                                client.DefaultRequestHeaders.Add("Authorization", "Bearer " + token);
+                                var responseTask = client.GetAsync("Recipe/GetRecipeById?id=" + id);
+                                responseTask.Wait();
 
-                        var result = responseTask.Result;
-                        var readTask = await result.Content.ReadAsStringAsync();
-                        if (result.IsSuccessStatusCode)
-                        {
-                            var recipe = JsonConvert.DeserializeObject<Recipe>(readTask);
-                            return View("PendingRequestById",recipe);
-                        }
-                        TempData["message"] = "Failed to fetch recipe";
-                        TempData["type"] = "error";
-
+                                var result = responseTask.Result;
+                                var readTask = await result.Content.ReadAsStringAsync();
+                                if (result.IsSuccessStatusCode)
+                                {
+                                    var recipe = JsonConvert.DeserializeObject<Recipe>(readTask);
+                                    return View("PendingRequestById", recipe);
+                                }
+                                TempData["message"] = "Failed to fetch recipe";
+                                TempData["type"] = "error";
+                                return RedirectToAction("Index");
+                            }
+                        
                     }
-                }
+                
                 catch (Exception ex)
                 {
                     Console.WriteLine(ex.Message);
-                    TempData["message"] = "Failed to fetch recipe";
+                    TempData["message"] = "Something went wrong!!!";
                     TempData["type"] = "error";
+                    
                 }
             }
-            return RedirectToAction("Index");
+            return RedirectToAction("LogOut", "Auth");
         }
 
         [Route("/pending-requests")]
         public async Task<IActionResult> PendingRequest()
         {
+            string type = Request.Cookies["type"];
+
             string token = Request.Cookies["token"];
-           string type = Request.Cookies["type"];
+            string refreshtoken = Request.Cookies["refreshtoken"];
 
             if (token != null && type=="admin")
             {
+
+
                 try
                 {
-                    var client = new HttpClient();
-                    client.BaseAddress = new Uri("https://localhost:7082/api/");
-                    client.DefaultRequestHeaders.Add("Authorization", "Bearer " + token);
+                    
+                        var client = new HttpClient();
+                        client.BaseAddress = new Uri("https://localhost:7082/api/");
+                        client.DefaultRequestHeaders.Add("Authorization", "Bearer " + token);
 
-                    var response = client.GetAsync("recipe/getpendingrecipes").Result;
+                        var response = client.GetAsync("recipe/getpendingrecipes").Result;
 
-                    if (response.IsSuccessStatusCode)
-                    {
-                        var content = await response.Content.ReadAsStringAsync();
+                        if (response.IsSuccessStatusCode)
+                        {
+                            var content = await response.Content.ReadAsStringAsync();
 
-                        List<Recipe> recipes = JsonConvert.DeserializeObject<List<Recipe>>(content);
-                        return View("PendingRequest", recipes);
-                    }
-                    TempData["message"] = "Failed to fetch pending requests";
-                    TempData["type"] = "error";
-                    return RedirectToAction("Index");
+                            List<Recipe> recipes = JsonConvert.DeserializeObject<List<Recipe>>(content);
+                            return View("PendingRequest", recipes);
+                        }
+                        TempData["message"] = "Failed to fetch pending requests";
+                        TempData["type"] = "error";
+                        return RedirectToAction("Index");
+                    
+                  
                 }
                 catch (Exception ex)
                 {
                     TempData["message"] = ex.Message == "UserName is not provided" ? "Login to view Recipes" : "Failed to fetch recipe";
                     TempData["type"] = "error";
-                    return View("Index", "Auth");
                 }
                
             }
-            return View("Index", "Auth");
-
+            return RedirectToAction("LogOut", "Auth");
 
 
 
@@ -280,7 +334,7 @@ namespace Recipe_Management_Frontend.Controllers
                     {
                         var content =response.Content.ReadAsStringAsync();
 
-                        return RedirectToAction("Index");
+                        return RedirectToAction("PendingRequest");
                     }
                     TempData["message"] = "Something went wrong!!!";
                     TempData["type"] = "error";
@@ -290,12 +344,11 @@ namespace Recipe_Management_Frontend.Controllers
                 {
                     TempData["message"] = ex.Message == "UserName is not provided" ? "Login to view Recipes" : "Failed to fetch recipe";
                     TempData["type"] = "error";
-                    return View("Index", "Auth");
+                    return RedirectToAction("LogOut", "Auth");
                 }
 
             }
-            return View("Index", "Auth");
-
+            return RedirectToAction("LogOut", "Auth");
 
 
         }
@@ -321,7 +374,7 @@ namespace Recipe_Management_Frontend.Controllers
                     {
                         var content =response.Content.ReadAsStringAsync();
 
-                        return RedirectToAction("Index");
+                        return RedirectToAction("PendingRequest");
                     }
                     TempData["message"] = "Something went wrong!!!";
                     TempData["type"] = "error";
@@ -331,12 +384,11 @@ namespace Recipe_Management_Frontend.Controllers
                 {
                     TempData["message"] = ex.Message == "UserName is not provided" ? "Login to view Recipes" : "Failed to fetch recipe";
                     TempData["type"] = "error";
-                    return View("Index", "Auth");
+                    return RedirectToAction("LogOut", "Auth");
                 }
 
             }
-            return View("Index", "Auth");
-
+            return RedirectToAction("LogOut", "Auth");
 
 
         }
