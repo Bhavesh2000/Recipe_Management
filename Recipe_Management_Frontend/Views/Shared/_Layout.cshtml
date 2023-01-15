@@ -38,11 +38,11 @@
                                     <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="PendingRequest">Pending requests</a>
                                 </li>
                                 <li class="nav-item">
-                                    <button class="nav-link btn btn-sm btn-primary text-light" asp-area="" asp-controller="Home" asp-action="Privacy"><i class="bi bi-box-arrow-left"></i>&nbsp; Logout</button>
+                                    <a class="nav-link btn btn-sm btn-primary text-light" asp-controller="Auth" asp-action="LogOut"><i class="bi bi-box-arrow-left"></i>&nbsp; Logout</a>
                                 </li>
                             </ul>
                         }
-                        else if(type=="user")
+                        else if(type=="User")
                         {
                             <ul class="navbar-nav px-2">
                                 <li class="nav-item">

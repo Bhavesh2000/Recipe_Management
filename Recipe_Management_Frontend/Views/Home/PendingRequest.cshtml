@@ -27,7 +27,7 @@
                         <div class=" list-group-item-action p-3 row time"  >
                             <div class="col-md-7">
                                 <div class="d-flex w-100 justify-content-between align-items-center">
-                                    <a href="/pending-requests/1" class="text-decoration-none  color"><h5 class="mb-1 fw-bold">@Model.ElementAt(i).Name</h5></a>
+                                    <a href="/pending-requests/@Model.ElementAt(i).Id" class="text-decoration-none  color"><h5 class="mb-1 fw-bold">@Model.ElementAt(i).Name</h5></a>
                                     <p class="mb-1 ">@Model.ElementAt(i).Username</p>
                                   
                                 </div>
@@ -35,10 +35,10 @@
                             </div>
                             <div class="col-md-1"></div>
                             <div class="col-md-2">
-                                <a class="btn btn-outline-success w-100" asp-controller="Recipe" asp-action="Accept" asp-route-id="@Model.ElementAt(i).Name">Accept</a>
+                                <a class="btn btn-outline-success w-100"  asp-action="Accept" asp-route-id="@Model.ElementAt(i).Id">Accept</a>
                             </div>
                             <div class="col-md-2">
-                                <a class="btn btn-outline-danger w-100" asp-controller="Recipe" asp-action="Delete" asp-route-id="@Model.ElementAt(i).Name">Decline</a>
+                                <a class="btn btn-outline-danger w-100"  asp-action="Delete" asp-route-id="@Model.ElementAt(i).Id">Reject</a>
                             </div>
                                
                         </div>

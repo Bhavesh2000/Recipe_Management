@@ -19,7 +19,7 @@ namespace Recipe_Management_Frontend.Controllers
         public bool result;
         public string type;
         public string message;
-        public string stautus;
+        public string status;
         public List<string> errors;
     }
 
@@ -60,44 +60,61 @@ namespace Recipe_Management_Frontend.Controllers
             }
 
 
-
-            var client = new HttpClient();
-            client.BaseAddress = new Uri("https://localhost:7082");
-            HttpContent body = new StringContent(JsonConvert.SerializeObject(new { Name = r.Name, Email = r.Email, Password = r.Password }), System.Text.Encoding.UTF8, "application/json");
-            var response = client.PostAsync("/api/account/Register", body).Result;
-
-            if (response.IsSuccessStatusCode)
+            try
             {
-                var content = await response.Content.ReadAsStringAsync();
 
-                if (!string.IsNullOrEmpty(content))
+                var client = new HttpClient();
+                client.BaseAddress = new Uri("https://localhost:7082");
+                HttpContent body = new StringContent(JsonConvert.SerializeObject(new { Name = r.Name, Email = r.Email, Password = r.Password }), System.Text.Encoding.UTF8, "application/json");
+                var response = client.PostAsync("/api/account/Register", body).Result;
+
+                if (response.IsSuccessStatusCode)
                 {
-                    var objDeserializeObject = JsonConvert.DeserializeObject<cu>(content);
+                    var content = await response.Content.ReadAsStringAsync();
+
+                    if (!string.IsNullOrEmpty(content))
+                    {
+                        var objDeserializeObject = JsonConvert.DeserializeObject<cu>(content);
 
 
 
-                    CookieOptions options = new CookieOptions();
-                    options.Expires = DateTime.Today.AddDays(1);
-                    Response.Cookies.Append("token", objDeserializeObject.UserToken.token, options);
-                    Response.Cookies.Append("type", "user");
-                    Response.Cookies.Append("username", objDeserializeObject.user_Name);
-                    return RedirectToAction("Index", "Home");
+                        CookieOptions options = new CookieOptions();
+                        options.Expires = DateTime.Today.AddDays(1);
+                        Response.Cookies.Append("token", objDeserializeObject.UserToken.token, options);
+
+                        Response.Cookies.Append("type", objDeserializeObject.type);
+
+
+                        Response.Cookies.Append("username", objDeserializeObject.user_Name);
+                        Response.Cookies.Append("refreshtoken", objDeserializeObject.UserToken.refreshtoken);
+                        return RedirectToAction("Index", "Home");
+                    }
+                }
+                else
+                {
+                    var content = await response.Content.ReadAsStringAsync();
+                    if (!string.IsNullOrEmpty(content))
+                    {
+                        var objDeserializeObject = JsonConvert.DeserializeObject<cu>(content);
+                        if (objDeserializeObject.errors != null)
+                        {
+                            TempData["errors"] = objDeserializeObject.errors[0];
+                        }
+                        else if (objDeserializeObject.status != null)
+                        {
+                            TempData["errors"] = objDeserializeObject.message;
+                        }
+
+                        return View("Register", r);
+
+                    }
+
                 }
             }
-            else
+            catch (Exception ex)
             {
-                var content = await response.Content.ReadAsStringAsync();
-                if (!string.IsNullOrEmpty(content))
-                {
-                    var objDeserializeObject = JsonConvert.DeserializeObject<cu>(content);
-                    TempData["errors"] = objDeserializeObject.errors[0];
-                    TempData["type"] = "error";
-
-
-                    return View("Register", r);
-
-                }
-
+                TempData["message"] = "Something went wrong";
+                TempData["type"] = "error";
             }
             return View("Register", r);
 
@@ -115,56 +132,62 @@ namespace Recipe_Management_Frontend.Controllers
         [HttpPost]
         public async Task<IActionResult> Login(string email, string password)
         {
-            var client = new HttpClient();
-            client.BaseAddress = new Uri("https://localhost:7082");
-            HttpContent body = new StringContent(JsonConvert.SerializeObject(new { Email = email, Password = password }), System.Text.Encoding.UTF8, "application/json");
-            var response = client.PostAsync("/api/account/login", body).Result;
+            
+                var client = new HttpClient();
+                client.BaseAddress = new Uri("https://localhost:7082");
+                HttpContent body = new StringContent(JsonConvert.SerializeObject(new { Email = email, Password = password }), System.Text.Encoding.UTF8, "application/json");
+                var response = client.PostAsync("/api/account/login", body).Result;
 
 
-            if (response.IsSuccessStatusCode)
-            {
-                var content = await response.Content.ReadAsStringAsync();
-                if (!string.IsNullOrEmpty(content))
+                if (response.IsSuccessStatusCode)
                 {
-                    var objDeserializeObject = JsonConvert.DeserializeObject<cu>(content);
+                    var content = await response.Content.ReadAsStringAsync();
+                    if (!string.IsNullOrEmpty(content))
+                    {
+                        var objDeserializeObject = JsonConvert.DeserializeObject<cu>(content);
 
 
 
-                    CookieOptions options = new CookieOptions();
-                    options.Expires = DateTime.Today.AddDays(1);
-                    userToken u = objDeserializeObject.UserToken;
-                    Response.Cookies.Append("token", u.token, options);
-                    Response.Cookies.Append("type", "user");
-                    Response.Cookies.Append("username", objDeserializeObject.user_Name);
+                        CookieOptions options = new CookieOptions();
+                        options.Expires = DateTime.Today.AddDays(1);
+                        userToken u = objDeserializeObject.UserToken;
+                        Response.Cookies.Append("token", u.token, options);
 
-                    return RedirectToAction("Index", "Home");
+                        Response.Cookies.Append("type", objDeserializeObject.type);
+                        Response.Cookies.Append("refreshtoken", u.refreshtoken);
+                        Response.Cookies.Append("username", objDeserializeObject.user_Name);
+                    TempData["info"] = "Logged in successfully!!";
+                        return RedirectToAction("Index", "Home");
+                    }
                 }
-            }
-            else
-            {
-                var content = await response.Content.ReadAsStringAsync();
-                if (!string.IsNullOrEmpty(content))
+                else
                 {
-                    var objDeserializeObject = JsonConvert.DeserializeObject<cu>(content);
-                    if (objDeserializeObject.errors != null)
+                    var content = await response.Content.ReadAsStringAsync();
+                    if (!string.IsNullOrEmpty(content))
                     {
-                        TempData["errors"] = objDeserializeObject.errors[0];
+                        var objDeserializeObject = JsonConvert.DeserializeObject<cu>(content);
+                        if (objDeserializeObject.errors != null)
+                        {
+                            TempData["errors"] = objDeserializeObject.errors[0];
+                        }
+                        else 
+                        {
+                            TempData["errors"] = "Invalid Email";
+                        }
+                        
                     }
-                    else
-                    {
-                        TempData["errors"] = "Invalid Email";
-                    }
-                    TempData["type"] = "error";
-                }
-                return View("Index");
+                    return View("Index");
 
-            }
+                }
+            
             return View("Index");
         }
 
         public IActionResult LogOut()
         {
             Response.Cookies.Delete("token");
+            Response.Cookies.Delete("refreshtoken");
+
             Response.Cookies.Delete("type");
             Response.Cookies.Delete("username");
             return RedirectToAction("Index","Auth");
