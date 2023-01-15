@@ -78,7 +78,7 @@ namespace Recipe_Management_Frontend.Controllers
                     CookieOptions options = new CookieOptions();
                     options.Expires = DateTime.Today.AddDays(1);
                     Response.Cookies.Append("token", objDeserializeObject.UserToken.token, options);
-                    Response.Cookies.Append("type", "user");
+                    Response.Cookies.Append("type", objDeserializeObject.type);
                     return RedirectToAction("Index", "Home");
                 }
             }
@@ -132,7 +132,7 @@ namespace Recipe_Management_Frontend.Controllers
                     options.Expires = DateTime.Today.AddDays(1);
                     userToken u = objDeserializeObject.UserToken;
                     Response.Cookies.Append("token", u.token, options);
-                    Response.Cookies.Append("type", "user");
+                    Response.Cookies.Append("type", objDeserializeObject.type);
 
                     return RedirectToAction("Index", "Home");
                 }
