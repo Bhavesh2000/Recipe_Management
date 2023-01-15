@@ -24,7 +24,7 @@ namespace Recipe_Management_System.Controllers
 
         [HttpGet]
         [Route("GetAllRecipes")]
-       // [Authorize(AuthenticationSchemes = "Bearer")]
+        [Authorize(AuthenticationSchemes = "Bearer")]
         public async Task<ActionResult<IEnumerable<RecipeDto>>> GetAllRecipes()
         {
             try
@@ -62,7 +62,7 @@ namespace Recipe_Management_System.Controllers
 
         [HttpGet]
         [Route("GetRecipeById")]
-       // [Authorize(AuthenticationSchemes = "Bearer")]
+        [Authorize(AuthenticationSchemes = "Bearer")]
         public async Task<ActionResult<RecipeDto>> GetRecipeById(int id)
         {
 
@@ -101,7 +101,7 @@ namespace Recipe_Management_System.Controllers
 
         [HttpGet]
         [Route("GetRecipeByUserName")]
-        //[Authorize(AuthenticationSchemes = "Bearer")]
+        [Authorize(AuthenticationSchemes = "Bearer")]
         public async Task<ActionResult<IEnumerable<RecipeDto>>> GetRecipeByUserName(string Username)
         {
             try
@@ -149,7 +149,7 @@ namespace Recipe_Management_System.Controllers
 
         [HttpGet]
         [Route("GetPendingRecipes")]
-        //[Authorize(AuthenticationSchemes = "Bearer")]
+        [Authorize(AuthenticationSchemes = "Bearer")]
         public async Task<ActionResult<IEnumerable<RecipeDto>>> GetPendingRecipes()
         {
             try
@@ -189,7 +189,7 @@ namespace Recipe_Management_System.Controllers
 
         [HttpPost]
         [Route("AddRecipe")]
-        //[Authorize(AuthenticationSchemes = "Bearer")]
+        [Authorize(AuthenticationSchemes = "Bearer")]
         public async Task<ActionResult<AddRecipeDto>> AddRecipe(AddRecipeDto recipeDto)
         {
             var user = uservice.GetAllAsync().FirstOrDefault(n => n.Name == recipeDto.Username);
@@ -229,7 +229,7 @@ namespace Recipe_Management_System.Controllers
 
         [HttpPut]
         [Route("Update_Status_Accept_Recipe")]
-        //  [Authorize(AuthenticationSchemes = "Bearer")]
+        [Authorize(AuthenticationSchemes = "Bearer")]
         public async Task<ActionResult<RecipeDto>> Update_Status_Accept_Recipe(int id)
         {
 
@@ -262,7 +262,7 @@ namespace Recipe_Management_System.Controllers
 
         [HttpPut]
         [Route("Update_Status_Reject_Recipe")]
-        //  [Authorize(AuthenticationSchemes = "Bearer")]
+        [Authorize(AuthenticationSchemes = "Bearer")]
         public async Task<ActionResult<RecipeDto>> Update_Status_Reject_Recipe(int id)
         {
             if (id == 0)
@@ -293,7 +293,7 @@ namespace Recipe_Management_System.Controllers
 
         [HttpGet]
         [Route("GetAcceptedRecipes")]
-        //[Authorize(AuthenticationSchemes = "Bearer")]
+        [Authorize(AuthenticationSchemes = "Bearer")]
         public async Task<ActionResult<IEnumerable<RecipeDto>>> GetAcceptedRecipes()
         {
             try

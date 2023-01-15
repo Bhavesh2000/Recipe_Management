@@ -15,6 +15,7 @@ namespace Recipe_Management_Frontend.Controllers
     struct cu
     {
         public userToken UserToken;
+        public string user_Name;
         public bool result;
         public string type;
         public string message;
@@ -79,6 +80,7 @@ namespace Recipe_Management_Frontend.Controllers
                     options.Expires = DateTime.Today.AddDays(1);
                     Response.Cookies.Append("token", objDeserializeObject.UserToken.token, options);
                     Response.Cookies.Append("type", "user");
+                    Response.Cookies.Append("username", objDeserializeObject.user_Name);
                     return RedirectToAction("Index", "Home");
                 }
             }
@@ -133,6 +135,7 @@ namespace Recipe_Management_Frontend.Controllers
                     userToken u = objDeserializeObject.UserToken;
                     Response.Cookies.Append("token", u.token, options);
                     Response.Cookies.Append("type", "user");
+                    Response.Cookies.Append("username", objDeserializeObject.user_Name);
 
                     return RedirectToAction("Index", "Home");
                 }
@@ -163,7 +166,8 @@ namespace Recipe_Management_Frontend.Controllers
         {
             Response.Cookies.Delete("token");
             Response.Cookies.Delete("type");
-            return RedirectToAction("Index");
+            Response.Cookies.Delete("username");
+            return RedirectToAction("Index","Auth");
         }
 
 

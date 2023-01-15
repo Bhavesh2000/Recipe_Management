@@ -41,8 +41,8 @@ namespace Recipe_Management_Frontend.Controllers
                         }
                         else
                         {
-                            Console.WriteLine("Failed to fetch Recipes with status");
-                            TempData["message"] = "Failed to fetch recipe";
+                            Console.WriteLine("Login to view Recipes");
+                            TempData["message"] = "Login to view Recipes";
                             TempData["type"] = "error";
                         }
                     }
@@ -55,7 +55,7 @@ namespace Recipe_Management_Frontend.Controllers
                     TempData["type"] = "error";
                 }
             }
-            //return View();
+            
             return RedirectToAction("Index", "Auth");
         }
 
@@ -170,7 +170,7 @@ namespace Recipe_Management_Frontend.Controllers
                 catch (Exception ex)
                 {
                     Console.WriteLine(ex.Message);
-                    TempData["message"] = "Failed to fetch recipe";
+                    TempData["message"] = ex.Message == "UserName is not provided" ? "Login to view Recipes" : "Failed to fetch recipe";
                     TempData["type"] = "error";
                 }
             }
