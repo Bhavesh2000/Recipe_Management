@@ -170,7 +170,9 @@ namespace Recipe_Management_System.Migrations
 
                     b.Property<string>("Type")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("nvarchar(max)")
+                        .HasDefaultValue("User");
 
                     b.HasDiscriminator().HasValue("User");
                 });

@@ -19,6 +19,9 @@ namespace Recipe_Management_System.AppDbContext
             //modelBuilder.Entity<User>()
             //    .Property(b => b.Type)
             //    .HasDefaultValue("User");
+            modelBuilder.Entity<User>()
+                .Property(b => b.Type)
+                .HasDefaultValue("User");
 
             modelBuilder.Entity<Recipe>()
                 .Property(b => b.Status)

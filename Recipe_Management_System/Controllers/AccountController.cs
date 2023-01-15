@@ -83,6 +83,7 @@ namespace Recipe_Management_System.Controllers
                 {
                     UserToken= jwtToken,
                     Type = new_user.Type,
+                    User_name = new_user.Name,
                     Message = "User is Added successfully",
                     Result = true
                 });
@@ -131,6 +132,7 @@ namespace Recipe_Management_System.Controllers
                 {
                     UserToken = jwtToken,
                     Type = user.Type,
+                    User_Name = user.Name,
                     Result = true
                    // UserId = existing_user.Id
                 });

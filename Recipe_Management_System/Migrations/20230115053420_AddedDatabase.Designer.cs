@@ -12,7 +12,7 @@ using Recipe_Management_System.AppDbContext;
 namespace Recipe_Management_System.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20230114143447_AddedDatabase")]
+    [Migration("20230115053420_AddedDatabase")]
     partial class AddedDatabase
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -172,7 +172,9 @@ namespace Recipe_Management_System.Migrations
 
                     b.Property<string>("Type")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("nvarchar(max)")
+                        .HasDefaultValue("User");
 
                     b.HasDiscriminator().HasValue("User");
                 });
