@@ -61,7 +61,7 @@ namespace Recipe_Management_Frontend.Controllers
 
 
             var client = new HttpClient();
-            client.BaseAddress = new Uri("http://localhost:5162");
+            client.BaseAddress = new Uri("https://localhost:7082");
             HttpContent body = new StringContent(JsonConvert.SerializeObject(new { Name = r.Name, Email = r.Email, Password = r.Password }), System.Text.Encoding.UTF8, "application/json");
             var response = client.PostAsync("/api/account/Register", body).Result;
 
@@ -114,7 +114,7 @@ namespace Recipe_Management_Frontend.Controllers
         public async Task<IActionResult> Login(string email, string password)
         {
             var client = new HttpClient();
-            client.BaseAddress = new Uri("http://localhost:5162");
+            client.BaseAddress = new Uri("https://localhost:7082");
             HttpContent body = new StringContent(JsonConvert.SerializeObject(new { Email = email, Password = password }), System.Text.Encoding.UTF8, "application/json");
             var response = client.PostAsync("/api/account/login", body).Result;
 
