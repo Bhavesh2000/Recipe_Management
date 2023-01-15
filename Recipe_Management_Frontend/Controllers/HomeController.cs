@@ -44,6 +44,7 @@ namespace Recipe_Management_Frontend.Controllers
                             Console.WriteLine("Login to view Recipes");
                             TempData["message"] = "Login to view Recipes";
                             TempData["type"] = "error";
+                            return RedirectToAction("LogOut", "Auth");
                         }
                     }
                     
