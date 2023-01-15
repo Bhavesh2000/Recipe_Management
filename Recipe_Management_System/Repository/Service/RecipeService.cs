@@ -50,8 +50,12 @@ namespace Recipe_Management_System.Repository.Service
             var actors = context.Set<Recipe>().ToList();
             return actors;
 
+        }
 
-
+        public async Task<ActionResult<IEnumerable<Recipe>>> GetAcceptedRecipes()
+        {
+            var recipes = await context.Recipes.Where(x => x.Status == "Accepted").ToListAsync();
+            return recipes;
         }
 
         public async Task<ActionResult<Recipe>> GetByIdAsync(int id)
@@ -67,14 +71,36 @@ namespace Recipe_Management_System.Repository.Service
             context.SaveChanges();
         }
 
-        public async Task Update_Status_Accept_Recipe(int id)
+        
+
+        public async Task<ActionResult<Recipe>> Update_Status_Accept_Recipe(int id)
         {
             var recipe = await context.Recipes.FindAsync(id);
-
+            
+            if (recipe == null)
+            {
+                return new BadRequestObjectResult("Not Found");
+            }
             recipe.Status = "Accepted";
 
-            context.Update(recipe);
+            context.Entry(recipe).State = EntityState.Modified;
             await context.SaveChangesAsync();
+            return recipe;
+        }
+
+        public async Task<ActionResult<Recipe>> Update_Status_Reject_Recipe(int id)
+        {
+            var recipe = await context.Recipes.FindAsync(id);
+            if (recipe == null)
+            {
+                return new BadRequestObjectResult("Not Found");
+            }
+
+            recipe.Status = "Rejected";
+
+            context.Entry(recipe).State = EntityState.Modified;
+            await context.SaveChangesAsync();
+            return recipe;
         }
     }
 }
