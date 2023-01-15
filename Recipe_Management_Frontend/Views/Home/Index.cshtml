@@ -21,7 +21,7 @@ background-size: cover; padding-top:10px; height:calc(100vh - 150px);">
         }
     </div>
 
-    <div class="mt-3 scroll scroll--simple" style="height:calc(100vh - 270px);overflow-y:scroll;overflow-x:hidden">
+    <div class="mt-3 scroll scroll--simple w-100" style="height:calc(100vh - 270px);overflow-y:scroll;overflow-x:hidden">
         <div class='inner'></div>
             <div class="row">
             @{
@@ -73,6 +73,8 @@ background-size: cover; padding-top:10px; height:calc(100vh - 150px);">
     </div>
 </div>
 
+
+@*Add recipe modal*@
 <div class="modal fade" id="addRecipeModal" tabindex="-1" aria-labelledby="addRecipeModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
@@ -82,34 +84,34 @@ background-size: cover; padding-top:10px; height:calc(100vh - 150px);">
             </div>
             <div class="modal-body">
                 <form class="p-1 pb-3" asp-action="AddRecipe" method="post">
-  <div class="mb-3">
-    <label for="recipeName" class="form-label">Recipe Name</label>
-    <input type="text" class="form-control" id="recipeName" name="recipeName" required>
-  </div>
-  <div class="mb-3">
+                    <div class="mb-3">
+                        <label for="recipeName" class="form-label">Recipe Name</label>
+                        <input type="text" class="form-control" id="recipeName" name="recipeName" required>
+                    </div>
+                    <div class="mb-3">
                         <label for="category" class="form-label">Category</label>
                         <select class="form-select" aria-label="category" id="category" name="category" required>
                             <option value="">Select category</option>
                             <option value="Veg">Veg</option>
                             <option value="Non-Veg">Non-Veg</option>
                         </select>
-                         
-  </div>
+
+                    </div>
                     <div class="mb-3">
                         <label for="ingredients" class="form-label">Ingredients</label>
                         <div class="form-floating">
                             <textarea class="form-control p-2" id="ingredients" name="ingredients" required></textarea>
                         </div>
-                        @*<span class="text-danger">*Please enter ingredient names seperated by comma</span>*@
+                        <span class="text-danger">*Please enter ingredient names seperated by comma</span>
                     </div>
-  <div class="mb-3">
+                    <div class="mb-3">
                         <label for="cookingProcess" class="form-label">Cooking Process</label>
                         <div class="form-floating">
                             <textarea class="form-control p-2" id="cookingProcess" name="cookingProcess" style="height: 150px" required></textarea>
                         </div>
                     </div>
-  <button type="submit" class="btn btn-primary w-100">Submit</button>
-</form>
+                    <button type="submit" class="btn btn-primary w-100">Submit</button>
+                </form>
             </div>
         </div>
     </div>
