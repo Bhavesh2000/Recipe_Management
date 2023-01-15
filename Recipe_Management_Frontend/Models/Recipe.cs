@@ -4,8 +4,8 @@ namespace Recipe_Management_Frontend.Models
 {
     public class Recipe
     {
-        public int id;
-        public string name { get; set; }
+        public int Id { get; set; }
+        public string Name { get; set; }
         public string Ingredients { get; set; }
         public string Procedure { get; set; }
         [DefaultValue("Pending")]

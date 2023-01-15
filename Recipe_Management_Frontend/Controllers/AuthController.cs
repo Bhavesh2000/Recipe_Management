@@ -15,6 +15,7 @@ namespace Recipe_Management_Frontend.Controllers
     struct cu
     {
         public userToken UserToken;
+        public string user_Name;
         public bool result;
         public string type;
         public string message;
@@ -61,7 +62,7 @@ namespace Recipe_Management_Frontend.Controllers
 
 
             var client = new HttpClient();
-            client.BaseAddress = new Uri("http://localhost:5162");
+            client.BaseAddress = new Uri("https://localhost:7082");
             HttpContent body = new StringContent(JsonConvert.SerializeObject(new { Name = r.Name, Email = r.Email, Password = r.Password }), System.Text.Encoding.UTF8, "application/json");
             var response = client.PostAsync("/api/account/Register", body).Result;
 
@@ -78,7 +79,8 @@ namespace Recipe_Management_Frontend.Controllers
                     CookieOptions options = new CookieOptions();
                     options.Expires = DateTime.Today.AddDays(1);
                     Response.Cookies.Append("token", objDeserializeObject.UserToken.token, options);
-                    Response.Cookies.Append("type", objDeserializeObject.type);
+                    Response.Cookies.Append("type", "user");
+                    Response.Cookies.Append("username", objDeserializeObject.user_Name);
                     return RedirectToAction("Index", "Home");
                 }
             }
@@ -114,7 +116,7 @@ namespace Recipe_Management_Frontend.Controllers
         public async Task<IActionResult> Login(string email, string password)
         {
             var client = new HttpClient();
-            client.BaseAddress = new Uri("http://localhost:5162");
+            client.BaseAddress = new Uri("https://localhost:7082");
             HttpContent body = new StringContent(JsonConvert.SerializeObject(new { Email = email, Password = password }), System.Text.Encoding.UTF8, "application/json");
             var response = client.PostAsync("/api/account/login", body).Result;
 
@@ -132,7 +134,8 @@ namespace Recipe_Management_Frontend.Controllers
                     options.Expires = DateTime.Today.AddDays(1);
                     userToken u = objDeserializeObject.UserToken;
                     Response.Cookies.Append("token", u.token, options);
-                    Response.Cookies.Append("type", objDeserializeObject.type);
+                    Response.Cookies.Append("type", "user");
+                    Response.Cookies.Append("username", objDeserializeObject.user_Name);
 
                     return RedirectToAction("Index", "Home");
                 }
@@ -163,7 +166,8 @@ namespace Recipe_Management_Frontend.Controllers
         {
             Response.Cookies.Delete("token");
             Response.Cookies.Delete("type");
-            return RedirectToAction("Index");
+            Response.Cookies.Delete("username");
+            return RedirectToAction("Index","Auth");
         }
 
 
