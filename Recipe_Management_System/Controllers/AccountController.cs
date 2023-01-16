@@ -135,6 +135,7 @@ namespace Recipe_Management_System.Controllers
                     UserToken = jwtToken,
                     Type = user.Type,
                     User_name = user.Name,
+                    User_Id = user.Id,
                     Result = true
                    // UserId = existing_user.Id
                 });

@@ -97,7 +97,7 @@ namespace Recipe_Management_Frontend.Controllers
                 }
             }
             
-            return RedirectToAction("Index", "Auth");
+            return RedirectToAction("LogOut", "Auth");
         }
 
 
@@ -106,12 +106,12 @@ namespace Recipe_Management_Frontend.Controllers
         {
             try
             {
-                string username = Request.Cookies["username"];
+               string userId = Request.Cookies["userId"];
                 string token = Request.Cookies["token"];
                 var client = new HttpClient();
                 client.BaseAddress = new Uri("https://localhost:7082/api/");
                 client.DefaultRequestHeaders.Add("Authorization", "Bearer " + token);
-                HttpContent body = new StringContent(JsonConvert.SerializeObject(new { name = recipeName, ingredients = ingredients, procedure = cookingProcess, username = username, category = category }), System.Text.Encoding.UTF8, "application/json");
+                HttpContent body = new StringContent(JsonConvert.SerializeObject(new { name = recipeName, ingredients = ingredients, procedure = cookingProcess, userId = userId, category = category }), System.Text.Encoding.UTF8, "application/json");
        
                 var response = client.PostAsync("Recipe/AddRecipe", body).Result;
 
@@ -129,6 +129,8 @@ namespace Recipe_Management_Frontend.Controllers
                 }
                 TempData["message"] = "Failed to add recipe";
                 TempData["type"] = "error";
+                return RedirectToAction("Index");
+            
             }
             catch(Exception ex) { 
                 Console.WriteLine(ex.Message);
@@ -136,7 +138,7 @@ namespace Recipe_Management_Frontend.Controllers
                 TempData["type"] = "error";
             }
             
-            return RedirectToAction("Index");
+            return RedirectToAction("LogOut","Auth");
         }
 
         [Route("recipe")]
@@ -167,7 +169,7 @@ namespace Recipe_Management_Frontend.Controllers
                         }
                         TempData["message"] = "Failed to fetch recipe";
                         TempData["type"] = "error";
-                        
+                        return RedirectToAction("Index");
                     }
                 }
                 catch (Exception ex)
@@ -177,14 +179,14 @@ namespace Recipe_Management_Frontend.Controllers
                     TempData["type"] = "error";
                 }
             }
-            return RedirectToAction("Index");
+            return RedirectToAction("LogOut","Auth");
         }
 
         [Route("myrecipes")]
         public async Task<ActionResult> GetRecipesByUser()
         {
             string token = Request.Cookies["token"];
-            string username = Request.Cookies["username"];
+            string userId = Request.Cookies["userId"];
             IEnumerable<Recipe> recipes = null;
 
             if (token != null)
@@ -195,7 +197,7 @@ namespace Recipe_Management_Frontend.Controllers
                     {
                         client.BaseAddress = new Uri("https://localhost:7082/api/");
                         client.DefaultRequestHeaders.Add("Authorization", "Bearer " + token);
-                        var responseTask = client.GetAsync("Recipe/GetRecipeByUserName?Username="+username);
+                        var responseTask = client.GetAsync("Recipe/GetRecipeByUserName?UserId="+userId);
                         responseTask.Wait();
 
                         var result = responseTask.Result;
@@ -208,7 +210,7 @@ namespace Recipe_Management_Frontend.Controllers
                         }
                         TempData["message"] = "Failed to fetch recipe";
                         TempData["type"] = "error";
-
+                        return RedirectToAction("Index");
                     }
                 }
                 catch (Exception ex)
@@ -218,7 +220,7 @@ namespace Recipe_Management_Frontend.Controllers
                     TempData["type"] = "error";
                 }
             }
-            return RedirectToAction("Index");
+            return RedirectToAction("LogOut","Auth");
         }
 
 
@@ -344,7 +346,6 @@ namespace Recipe_Management_Frontend.Controllers
                 {
                     TempData["message"] = ex.Message == "UserName is not provided" ? "Login to view Recipes" : "Failed to fetch recipe";
                     TempData["type"] = "error";
-                    return RedirectToAction("LogOut", "Auth");
                 }
 
             }
@@ -384,7 +385,7 @@ namespace Recipe_Management_Frontend.Controllers
                 {
                     TempData["message"] = ex.Message == "UserName is not provided" ? "Login to view Recipes" : "Failed to fetch recipe";
                     TempData["type"] = "error";
-                    return RedirectToAction("LogOut", "Auth");
+                 
                 }
 
             }
