@@ -55,7 +55,8 @@ namespace Recipe_Management_Frontend.Controllers
             bool y = CheckPasswordStregth(r.Password);
             if (!y)
             {
-                TempData["errors"] = "Minimum Password Length should be 8 and password should be Alphanumeric";
+                TempData["type"] = "error";
+                TempData["message"] = "Minimum Password Length should be 8 and password should be Alphanumeric";
                 return View("Register", r);
             }
 
@@ -79,8 +80,8 @@ namespace Recipe_Management_Frontend.Controllers
 
 
                         CookieOptions options = new CookieOptions();
-                        options.Expires = DateTime.Today.AddDays(1);
-                        Response.Cookies.Append("token", objDeserializeObject.UserToken.token, options);
+                        
+                        Response.Cookies.Append("token", objDeserializeObject.UserToken.token);
 
                         Response.Cookies.Append("type", objDeserializeObject.type);
 
@@ -97,14 +98,15 @@ namespace Recipe_Management_Frontend.Controllers
                     var content = await response.Content.ReadAsStringAsync();
                     if (!string.IsNullOrEmpty(content))
                     {
+                        TempData["type"] = "error";
                         var objDeserializeObject = JsonConvert.DeserializeObject<cu>(content);
                         if (objDeserializeObject.errors != null)
                         {
-                            TempData["errors"] = objDeserializeObject.errors[0];
+                            TempData["message"] = objDeserializeObject.errors[0];
                         }
                         else if (objDeserializeObject.status != null)
                         {
-                            TempData["errors"] = objDeserializeObject.message;
+                            TempData["message"] = objDeserializeObject.message;
                         }
 
                         return View("Register", r);
@@ -153,7 +155,7 @@ namespace Recipe_Management_Frontend.Controllers
 
                         CookieOptions options = new CookieOptions();
                         userToken u = objDeserializeObject.UserToken;
-                        Response.Cookies.Append("token", u.token, options);
+                        Response.Cookies.Append("token", u.token);
 
                         Response.Cookies.Append("type", objDeserializeObject.type);
                         //      Response.Cookies.Append("refreshtoken", u.refreshtoken);
@@ -168,14 +170,16 @@ namespace Recipe_Management_Frontend.Controllers
                     var content = await response.Content.ReadAsStringAsync();
                     if (!string.IsNullOrEmpty(content))
                     {
+                        TempData["type"] = "error";
+
                         var objDeserializeObject = JsonConvert.DeserializeObject<cu>(content);
                         if (objDeserializeObject.errors != null)
                         {
-                            TempData["errors"] = objDeserializeObject.errors[0];
+                            TempData["message"] = objDeserializeObject.errors[0];
                         }
                         else
                         {
-                            TempData["errors"] = "Invalid Email";
+                            TempData["message"] = "Invalid Email";
                         }
 
                     }
@@ -205,17 +209,26 @@ namespace Recipe_Management_Frontend.Controllers
                 client.DefaultRequestHeaders.Add("Authorization", "Bearer " + token);
                 var response = client.DeleteAsync("account/LogoutJWT").Result;
 
+               
                 if (response.IsSuccessStatusCode)
                 {
 
-                    Response.Cookies.Delete("token");
-                    //            Response.Cookies.Delete("refreshtoken");
-
-                    Response.Cookies.Delete("type");
-                    Response.Cookies.Delete("userId");
-                    TempData["message"] = "Logged out successfully!!!";
-                    TempData["type"] = "success";
+                    if (TempData["message"] != null)
+                    {
+                        TempData["message"] = TempData["message"];
+                        TempData["type"] = TempData["type"];
+                    }
+                    else
+                    {
+                        TempData["message"] = "Logged out successfully!!!";
+                        TempData["type"] = "success";
+                    }
                 }
+                Response.Cookies.Delete("token");
+                //            Response.Cookies.Delete("refreshtoken");
+
+                Response.Cookies.Delete("type");
+                Response.Cookies.Delete("userId");
 
 
             }
