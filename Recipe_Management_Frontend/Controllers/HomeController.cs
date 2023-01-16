@@ -234,7 +234,7 @@ namespace Recipe_Management_Frontend.Controllers
 
             string token = Request.Cookies["token"];
             string refreshtoken = Request.Cookies["refreshtoken"];
-            if (token != null && type=="admin")
+            if (token != null && type=="Admin")
             {
                 try
                 {
@@ -280,7 +280,7 @@ namespace Recipe_Management_Frontend.Controllers
             string token = Request.Cookies["token"];
             string refreshtoken = Request.Cookies["refreshtoken"];
 
-            if (token != null && type=="admin")
+            if (token != null && type=="Admin")
             {
 
 
@@ -326,7 +326,7 @@ namespace Recipe_Management_Frontend.Controllers
             string token = Request.Cookies["token"];
             string type = Request.Cookies["type"];
 
-            if (token != null && type == "admin")
+            if (token != null && type == "Admin")
             {
                 try
                 {
@@ -364,7 +364,7 @@ namespace Recipe_Management_Frontend.Controllers
             string token = Request.Cookies["token"];
             string type = Request.Cookies["type"];
 
-            if (token != null && type == "admin")
+            if (token != null && type == "Admin")
             {
                 try
                 {
