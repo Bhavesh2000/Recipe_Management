@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
-using NuGet.Common;
 using Recipe_Management_Frontend.Models;
 using System.Text.RegularExpressions;
 
@@ -80,14 +79,14 @@ namespace Recipe_Management_Frontend.Controllers
 
 
                         CookieOptions options = new CookieOptions();
-                        options.Expires = DateTime.Today.AddDays(1);
+                        options.Expires = DateTime.Today.AddMinutes(5);
                         Response.Cookies.Append("token", objDeserializeObject.UserToken.token, options);
 
                         Response.Cookies.Append("type", objDeserializeObject.type);
 
 
                         Response.Cookies.Append("username", objDeserializeObject.user_Name);
-                      //  Response.Cookies.Append("refreshtoken", objDeserializeObject.UserToken.refreshtoken);
+                        Response.Cookies.Append("refreshtoken", objDeserializeObject.UserToken.refreshtoken);
                         TempData["message"] = "User registered successfully!!!";
                         TempData["type"] = "success";
                         return RedirectToAction("Index", "Home");
@@ -135,94 +134,65 @@ namespace Recipe_Management_Frontend.Controllers
         [HttpPost]
         public async Task<IActionResult> Login(string email, string password)
         {
-            try
-            { var client = new HttpClient();
-            client.BaseAddress = new Uri("https://localhost:7082");
-            HttpContent body = new StringContent(JsonConvert.SerializeObject(new { Email = email, Password = password }), System.Text.Encoding.UTF8, "application/json");
-            var response = client.PostAsync("/api/account/login", body).Result;
+            
+                var client = new HttpClient();
+                client.BaseAddress = new Uri("https://localhost:7082");
+                HttpContent body = new StringContent(JsonConvert.SerializeObject(new { Email = email, Password = password }), System.Text.Encoding.UTF8, "application/json");
+                var response = client.PostAsync("/api/account/login", body).Result;
 
 
-            if (response.IsSuccessStatusCode)
-            {
-                var content = await response.Content.ReadAsStringAsync();
-                if (!string.IsNullOrEmpty(content))
+                if (response.IsSuccessStatusCode)
                 {
-                    var objDeserializeObject = JsonConvert.DeserializeObject<cu>(content);
+                    var content = await response.Content.ReadAsStringAsync();
+                    if (!string.IsNullOrEmpty(content))
+                    {
+                        var objDeserializeObject = JsonConvert.DeserializeObject<cu>(content);
 
 
 
-                    CookieOptions options = new CookieOptions();
-                    userToken u = objDeserializeObject.UserToken;
-                    Response.Cookies.Append("token", u.token, options);
+                        CookieOptions options = new CookieOptions();
+                        options.Expires = DateTime.Today.AddMinutes(5);
+                        userToken u = objDeserializeObject.UserToken;
+                        Response.Cookies.Append("token", u.token, options);
 
-                    Response.Cookies.Append("type", objDeserializeObject.type);
-              //      Response.Cookies.Append("refreshtoken", u.refreshtoken);
-                    Response.Cookies.Append("username", objDeserializeObject.user_Name);
-                    TempData["message"] = "Logged in successfully!!!";
-                    TempData["type"] = "success";
+                        Response.Cookies.Append("type", objDeserializeObject.type);
+                        Response.Cookies.Append("refreshtoken", u.refreshtoken);
+                        Response.Cookies.Append("username", objDeserializeObject.user_Name);
+                      TempData["message"] = "Logged in successfully!!!";
+                       TempData["type"] = "success";
                     return RedirectToAction("Index", "Home");
+                    }
                 }
-            }
-            else
-            {
-                var content = await response.Content.ReadAsStringAsync();
-                if (!string.IsNullOrEmpty(content))
+                else
                 {
-                    var objDeserializeObject = JsonConvert.DeserializeObject<cu>(content);
-                    if (objDeserializeObject.errors != null)
+                    var content = await response.Content.ReadAsStringAsync();
+                    if (!string.IsNullOrEmpty(content))
                     {
-                        TempData["errors"] = objDeserializeObject.errors[0];
+                        var objDeserializeObject = JsonConvert.DeserializeObject<cu>(content);
+                        if (objDeserializeObject.errors != null)
+                        {
+                            TempData["errors"] = objDeserializeObject.errors[0];
+                        }
+                        else 
+                        {
+                            TempData["errors"] = "Invalid Email";
+                        }
+                        
                     }
-                    else
-                    {
-                        TempData["errors"] = "Invalid Email";
-                    }
+                    return View("Index");
 
                 }
-               
-
-            }
-        }catch (Exception ex)
-            {
-                TempData["message"] = "Something went wrong";
-                TempData["type"] = "error";
-            }
-
-
+            
             return View("Index");
-
         }
 
         public IActionResult LogOut()
         {
-            try
-            {
-                string token = Request.Cookies["token"];
+            Response.Cookies.Delete("token");
+            Response.Cookies.Delete("refreshtoken");
 
-                var client = new HttpClient();
-                client.BaseAddress = new Uri("https://localhost:7082/api/");
-                client.DefaultRequestHeaders.Add("Authorization", "Bearer " + token);
-                var response = client.DeleteAsync("account/LogoutJWT").Result;
-
-                if (response.IsSuccessStatusCode)
-                {
-
-                    Response.Cookies.Delete("token");
-        //            Response.Cookies.Delete("refreshtoken");
-
-                    Response.Cookies.Delete("type");
-                    Response.Cookies.Delete("username");
-                    TempData["message"] = "Logged out successfully!!!";
-                    TempData["type"] = "success";
-                }
-                
-
-            }catch(Exception ex)
-            {
-                TempData["message"] = "Something went wrong";
-                TempData["type"] = "error";
-            }
-            
+            Response.Cookies.Delete("type");
+            Response.Cookies.Delete("username");
             return RedirectToAction("Index","Auth");
         }
 

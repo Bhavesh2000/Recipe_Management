@@ -132,7 +132,7 @@ namespace Recipe_Management_System.Controllers
                 {
                     UserToken = jwtToken,
                     Type = user.Type,
-                    User_name = user.Name,
+                    User_Name = user.Name,
                     Result = true
                    // UserId = existing_user.Id
                 });
@@ -162,7 +162,7 @@ namespace Recipe_Management_System.Controllers
                 });
             }
 
-         //   await _tokenGenerator.DeleteAllRefreshTokenForUser(userId);
+            await _tokenGenerator.DeleteAllRefreshTokenForUser(userId);
 
             return Ok(new
             {
