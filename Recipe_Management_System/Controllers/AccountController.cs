@@ -18,17 +18,19 @@ namespace Recipe_Management_System.Controllers
     public class AccountController : ControllerBase
     {
         private readonly UserManager<IdentityUser> _userManager;
-        //private readonly RoleManager<IdentityRole> _roleManager;
+        private readonly RoleManager<IdentityRole> _roleManager;
         private readonly ITokenGenerator _tokenGenerator;
         private readonly IUserService _userService;
 
         public AccountController(UserManager<IdentityUser> userManager,
+            RoleManager<IdentityRole> roleManager,
             IUserService userService,
             ITokenGenerator tokenGenerator)
         {
             _userManager = userManager;
             _userService = userService;
             _tokenGenerator = tokenGenerator;
+            _roleManager= roleManager;
         }
 
 
@@ -40,7 +42,11 @@ namespace Recipe_Management_System.Controllers
         [Route("Register")]
         public async Task<IActionResult> Register([FromBody] RegisterDto request)
         {
-
+            if (!_roleManager.RoleExistsAsync(Helper.Helper.Admin).GetAwaiter().GetResult())
+            {
+                await _roleManager.CreateAsync(new IdentityRole(Helper.Helper.Admin));
+                await _roleManager.CreateAsync(new IdentityRole(Helper.Helper.User));
+            }
 
             //Validate the request
             if (ModelState.IsValid)
@@ -77,6 +83,9 @@ namespace Recipe_Management_System.Controllers
                     return StatusCode(StatusCodes.Status500InternalServerError,
                                     new { Status = "Error", Message = "User creation failed! Please check user details and try again." });
                 }
+
+                await _userManager.AddToRoleAsync(new_user, request.Type);
+                
 
                 var user = await _userManager.FindByEmailAsync(new_user.Email);
 
@@ -126,9 +135,12 @@ namespace Recipe_Management_System.Controllers
                         }
                     });
                 }
+
+                
+
                 var user = await _userService.GetUser(existing_user.Id);
 
-                var jwtToken =await _tokenGenerator.JwtTokenGenerator(existing_user);
+                var jwtToken =await _tokenGenerator.JwtTokenGenerator(user);
 
                 return Ok(new
                 {
@@ -167,7 +179,7 @@ namespace Recipe_Management_System.Controllers
 
             await _tokenGenerator.DeleteAllRefreshTokenForUser(userId);
 
-            return Ok(new
+            return Ok(new 
             {
                 Massage = "Logout Sucessfully"
             });
