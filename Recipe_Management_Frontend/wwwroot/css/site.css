@@ -43,7 +43,7 @@ body {
 
 .scroll--simple::-webkit-scrollbar-track {
     border-radius: 10px;
-    background: rgba(0, 0, 0, 0.1);
+    background: rgba(0, 0, 0, 0);
 }
 
 .scroll--simple::-webkit-scrollbar-thumb {
