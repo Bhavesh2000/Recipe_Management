@@ -192,9 +192,10 @@ namespace Recipe_Management_System.Controllers
         [Authorize(AuthenticationSchemes = "Bearer")]
         public async Task<ActionResult<AddRecipeDto>> AddRecipe(AddRecipeDto recipeDto)
         {
-            if (recipeDto.UserId == null)
+            var user = uservice.GetAllAsync().FirstOrDefault(n => n.Id == recipeDto.UserId);
+            if (user == null)
             {
-                return BadRequest("Required fields are not provided");
+                return BadRequest("User doesn't exists");
             }
             var recipeDuplicateName = service.GetAllAsync().Where(n => n.UserId == recipeDto.UserId).ToList();
 
