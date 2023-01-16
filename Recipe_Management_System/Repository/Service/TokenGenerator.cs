@@ -80,6 +80,7 @@ namespace Recipe_Management_System.Repository.Service
                         }
                     };
                 }
+
                 if (storedToken.IsUsed)
                 {
                     return new
@@ -204,6 +205,28 @@ namespace Recipe_Management_System.Repository.Service
 
             return result;
 
+        }
+
+        public async Task<string> VerifyJwtAndGetUserId(string jwt)
+        {
+            var jwtTokenHandler = new JwtSecurityTokenHandler();
+
+            var tokenInVerification = jwtTokenHandler.ValidateToken(jwt, _tokenValidationParameters, out var validatedToken);
+
+            if (validatedToken is JwtSecurityToken jwtSecurityToken)
+            {
+                var result = jwtSecurityToken.Header.Alg.Equals(SecurityAlgorithms.HmacSha256,
+                                StringComparison.InvariantCultureIgnoreCase);
+
+                if (result == false)
+                {
+                    return null;
+                }
+            }
+
+            string userId = validatedToken.Id.ToString();
+
+            return userId;
         }
 
 

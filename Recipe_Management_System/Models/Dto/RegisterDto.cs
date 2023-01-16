@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 
 namespace Recipe_Management_System.Models.Dto
 {
@@ -11,8 +12,9 @@ namespace Recipe_Management_System.Models.Dto
         public string Email { get; set; }
         [Required]
         public string Password { get; set; }
-     
+
         //Type is to identify normal User & Admin
-        public string Type { get; set; }
+        //[DefaultValue("User")]
+        //public string Type { get; set; }
     }
 }

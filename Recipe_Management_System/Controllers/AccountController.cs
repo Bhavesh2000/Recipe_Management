@@ -31,6 +31,7 @@ namespace Recipe_Management_System.Controllers
             _userService = userService;
             _tokenGenerator = tokenGenerator;
             _roleManager= roleManager;
+
         }
 
 
@@ -74,7 +75,7 @@ namespace Recipe_Management_System.Controllers
                     Email = request.Email,
                     UserName = request.Email,
                     Name = request.Name,
-                    Type = request.Type,
+                    Type = "User",
                 };
 
                 var is_created = await _userManager.CreateAsync(new_user, request.Password);
@@ -84,7 +85,7 @@ namespace Recipe_Management_System.Controllers
                                     new { Status = "Error", Message = "User creation failed! Please check user details and try again." });
                 }
 
-                await _userManager.AddToRoleAsync(new_user, request.Type);
+                await _userManager.AddToRoleAsync(new_user, "User");
                 
 
                 var user = await _userManager.FindByEmailAsync(new_user.Email);
@@ -208,6 +209,71 @@ namespace Recipe_Management_System.Controllers
         }
 
 
+        [HttpPost]
+        [Route("RegisterAdmin")]
+        [Authorize(AuthenticationSchemes ="Bearer", Roles ="Admin")]
+        public async Task<IActionResult> RegisterAdmin([FromBody] RegisterDto request)
+        {
+            if (!_roleManager.RoleExistsAsync(Helper.Helper.Admin).GetAwaiter().GetResult())
+            {
+                await _roleManager.CreateAsync(new IdentityRole(Helper.Helper.Admin));
+                await _roleManager.CreateAsync(new IdentityRole(Helper.Helper.User));
+            }
+
+            //Validate the request
+            if (ModelState.IsValid)
+            {
+
+                //Check if email already exists.
+                var user_exist = await _userManager.FindByEmailAsync(request.Email);
+
+                if (user_exist != null)
+                {
+                    return BadRequest(new
+                    {
+                        Result = false,
+                        Errors = new List<string>()
+                        {
+                            "Email already exist"
+                        }
+                    });
+                }
+
+
+                //create user
+                var new_user = new User()
+                {
+                    Email = request.Email,
+                    UserName = request.Email,
+                    Name = request.Name,
+                    Type = "Admin",
+                };
+
+                var is_created = await _userManager.CreateAsync(new_user, request.Password);
+                if (!is_created.Succeeded)
+                {
+                    return StatusCode(StatusCodes.Status500InternalServerError,
+                                    new { Status = "Error", Message = "User creation failed! Please check user details and try again." });
+                }
+
+                await _userManager.AddToRoleAsync(new_user, "Admin");
+
+
+                var user = await _userManager.FindByEmailAsync(new_user.Email);
+
+                var jwtToken = await _tokenGenerator.JwtTokenGenerator(new_user);
+                return Ok(new
+                {
+                    UserToken = jwtToken,
+                    Type = new_user.Type,
+                    User_Id = user.Id,
+                    Message = "Admin is Added successfully",
+                    Result = true
+                });
+            }
+
+            return BadRequest();
+        }
 
     }
 }
