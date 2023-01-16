@@ -100,22 +100,22 @@ namespace Recipe_Management_System.Controllers
         }
 
         [HttpGet]
-        [Route("GetRecipeByUserName")]
+        [Route("GetRecipeByUserId")]
         [Authorize(AuthenticationSchemes = "Bearer")]
-        public async Task<ActionResult<IEnumerable<RecipeDto>>> GetRecipeByUserName(string Username)
+        public async Task<ActionResult<IEnumerable<RecipeDto>>> GetRecipeByUserId(string UserId)
         {
             try
             {
-                if (Username == null)
+                if (UserId == null)
                 {
-                    return BadRequest("UserName is not provided");
+                    return BadRequest("UserId is not provided");
                 }
-                var user = uservice.GetAllAsync().FirstOrDefault(n=>n.Name == Username);
+                var user = uservice.GetAllAsync().FirstOrDefault(n => n.Id == UserId);
                 if (user == null)
                 {
                     return NotFound();
                 }
-                var recipes = await service.GetRecipeByUserId(user.Id);
+                var recipes = await service.GetRecipeByUserId(UserId);
                 if (recipes.Value == null)
                 {
                     return NotFound();
@@ -128,7 +128,7 @@ namespace Recipe_Management_System.Controllers
                         Id = recipe.Id,
                         Ingredients = recipe.Ingredients,
                         Procedure = recipe.Procedure,
-                        Username = Username,
+                        Username = user.Name,
                         name = recipe.Name,
                         Category = recipe.Category,
                         Status = recipe.Status,
@@ -192,14 +192,13 @@ namespace Recipe_Management_System.Controllers
         [Authorize(AuthenticationSchemes = "Bearer")]
         public async Task<ActionResult<AddRecipeDto>> AddRecipe(AddRecipeDto recipeDto)
         {
-            var user = uservice.GetAllAsync().FirstOrDefault(n => n.Name == recipeDto.Username);
-            if (user == null)
+            if (recipeDto.UserId == null)
             {
                 return BadRequest("Required fields are not provided");
             }
-            var recipeDuplicateName = service.GetAllAsync().Where(n=>n.UserId == user.Id).ToList();
+            var recipeDuplicateName = service.GetAllAsync().Where(n => n.UserId == recipeDto.UserId).ToList();
 
-            if(recipeDuplicateName.Exists(n=>n.Name.ToUpper() == recipeDto.name.ToUpper()))
+            if (recipeDuplicateName.Exists(n => n.Name.ToUpper() == recipeDto.name.ToUpper()))
             {
                 return BadRequest("Recipe already exists");
             }
@@ -209,7 +208,7 @@ namespace Recipe_Management_System.Controllers
                 Name = recipeDto.name,
                 Ingredients = recipeDto.Ingredients,
                 Procedure = recipeDto.Procedure,
-                UserId = user.Id,
+                UserId = recipeDto.UserId,
                 Category = recipeDto.Category,
                 Status = recipeDto.Status,
             };
