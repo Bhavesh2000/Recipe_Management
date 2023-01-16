@@ -78,12 +78,14 @@ namespace Recipe_Management_System.Controllers
                                     new { Status = "Error", Message = "User creation failed! Please check user details and try again." });
                 }
 
+                var user = await _userManager.FindByEmailAsync(new_user.Email);
+
                 var jwtToken = await _tokenGenerator.JwtTokenGenerator(new_user);
                 return Ok(new
                 {
                     UserToken= jwtToken,
                     Type = new_user.Type,
-                    User_name = new_user.Name,
+                    User_Id = user.Id,
                     Message = "User is Added successfully",
                     Result = true
                 });
@@ -132,7 +134,7 @@ namespace Recipe_Management_System.Controllers
                 {
                     UserToken = jwtToken,
                     Type = user.Type,
-                    User_Name = user.Name,
+                    User_name = user.Name,
                     Result = true
                    // UserId = existing_user.Id
                 });
@@ -147,7 +149,7 @@ namespace Recipe_Management_System.Controllers
         [HttpDelete]
         [Route("LogoutJWT")]
         [Authorize(AuthenticationSchemes = "Bearer")]
-        public async Task<object> Logout2()//string id)
+        public async Task<object> Logout2()
         {
 
             //var userId = id;
