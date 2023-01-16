@@ -39,7 +39,7 @@ var tokenValidationParameters = new TokenValidationParameters()
 builder.Services.AddAuthentication(options =>
 {
     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-    options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+  //  options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
     options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme; ;
 
 }).AddJwtBearer(jwt =>
@@ -53,10 +53,12 @@ builder.Services.AddAuthentication(options =>
 builder.Services.AddSingleton(tokenValidationParameters);
 
 
-builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = false)
+builder.Services.AddIdentity<IdentityUser,IdentityRole>(options => options.SignIn.RequireConfirmedAccount = false)
                 .AddEntityFrameworkStores<ApplicationDbContext>();
 
-
+//builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = false)
+//                .AddRoles<IdentityRole>()
+//                .AddEntityFrameworkStores<ApplicationDbContext>();
 
 builder.Services.AddSwaggerGen();
 

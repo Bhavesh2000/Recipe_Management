@@ -136,7 +136,7 @@ namespace Recipe_Management_System.Repository.Service
                 _db.RefreshTokens.Update(storedToken);
                 await _db.SaveChangesAsync();
 
-                var dbUser = await _userManager.FindByIdAsync(storedToken.UserId);
+                var dbUser = await _db.Users.FindAsync(storedToken.UserId);
 
                 return await JwtTokenGenerator(dbUser);
 
@@ -155,7 +155,7 @@ namespace Recipe_Management_System.Repository.Service
         }
 
 
-        public async Task<object> JwtTokenGenerator(IdentityUser user)
+        public async Task<object> JwtTokenGenerator(User user)
         {
             var jwtTokenHandler = new JwtSecurityTokenHandler();
 
@@ -167,7 +167,9 @@ namespace Recipe_Management_System.Repository.Service
                 {
                     new Claim("Id", user.Id),
                     new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-                    new Claim(JwtRegisteredClaimNames.Iat, DateTime.Now.ToString())
+                    new Claim(JwtRegisteredClaimNames.Iat, DateTime.Now.ToString()),
+                    new Claim(ClaimTypes.Role , user.Type.ToString()),
+                    
                 }),
                 Expires = DateTime.Now.Add(TimeSpan.Parse(_configuration.GetSection("JwtConfig:ExpiryTimeFrame").Value)),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256)
@@ -177,16 +179,16 @@ namespace Recipe_Management_System.Repository.Service
 
             var jwtToken = jwtTokenHandler.WriteToken(token);
 
-            var refreshToken = new RefreshToken()
-            {
-                JwtId = token.Id,     //Giving same Id as JWT token Id
-                Token = RandomStringGenerator(23),  //Actual RefreshToken generated
-                AddedDate = DateTime.Now,     //Refresh token Generated time
-                ExpireDate = DateTime.Now.AddHours(1),  //Expiry of refresh token
-                UserId = user.Id,   //User info for whom we generated this token
-                IsRevoked = false,
-                IsUsed = false,
-            };
+            //var refreshToken = new RefreshToken()
+            //{
+            //    JwtId = token.Id,     //Giving same Id as JWT token Id
+            //    Token = RandomStringGenerator(23),  //Actual RefreshToken generated
+            //    AddedDate = DateTime.Now,     //Refresh token Generated time
+            //    ExpireDate = DateTime.Now.AddHours(1),  //Expiry of refresh token
+            //    UserId = user.Id,   //User info for whom we generated this token
+            //    IsRevoked = false,
+            //    IsUsed = false,
+            //};
 
          //   await _db.RefreshTokens.AddAsync(refreshToken);  //Added refresh token to database
           //  await _db.SaveChangesAsync();

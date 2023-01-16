@@ -31,9 +31,9 @@ namespace Recipe_Management_System.AppDbContext
             modelBuilder.Entity<IdentityUser>()
                 .Ignore(u => u.PhoneNumberConfirmed);
 
-            modelBuilder.Ignore<IdentityRole>();
+          //  modelBuilder.Ignore<IdentityRole>();
             modelBuilder.Ignore<IdentityUserToken<string>>();
-            modelBuilder.Ignore<IdentityUserRole<string>>();
+           // modelBuilder.Ignore<IdentityUserRole<string>>();
             modelBuilder.Ignore<IdentityUserLogin<string>>();
             modelBuilder.Ignore<IdentityUserClaim<string>>();
             modelBuilder.Ignore<IdentityRoleClaim<string>>();

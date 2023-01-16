@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using Recipe_Management_System.Models;
 using Recipe_Management_System.Models.Dto;
 
 namespace Recipe_Management_System.Repository.Service
@@ -7,7 +8,7 @@ namespace Recipe_Management_System.Repository.Service
     {
         Task<object> VerifyAndGenerateToken(TokenDto tokenRequest);
 
-        Task<object> JwtTokenGenerator(IdentityUser user);
+        Task<object> JwtTokenGenerator(User user);
 
         Task DeleteAllRefreshTokenForUser(string userId);
     }
