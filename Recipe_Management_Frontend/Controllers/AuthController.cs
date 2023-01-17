@@ -56,7 +56,7 @@ namespace Recipe_Management_Frontend.Controllers
             if (!y)
             {
                 TempData["type"] = "error";
-                TempData["message"] = "Minimum Password Length should be 8 and password should be Alphanumeric";
+                TempData["message"] = "Minimum Password Length should be 8 and password should be combination of uppercase, lowercase, special characters and numbers";
                 return View("Register", r);
             }
 

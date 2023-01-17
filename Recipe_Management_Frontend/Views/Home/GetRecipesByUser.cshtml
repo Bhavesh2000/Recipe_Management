@@ -2,7 +2,7 @@
 @{
     ViewData["Title"] = "Recipes Posted By User";
 }
-
+<body>
 <div class="container">
     <div class="p-1">
         <h4 class="text-center">My Recipes</h4>
@@ -22,9 +22,10 @@
                             if (recipes[i].Status == "Pending")
                             {
                                 <div class="accordion-item" style="border-radius:5px">
+
                                     <h2 class="accordion-header" id="headingOne">
                                         <button class="accordion-button " type="button" data-bs-toggle="collapse" style="background-color:white;box-shadow: none" data-bs-target="#collapseOne_@recipes[i].Id" aria-expanded="true" aria-controls="collapseOne">
-                                            @{
+                                        <div> @{
                                                 if (recipes[i].Category == "Veg")
                                                 {
                                                     <img src="assets/icons/veg_icon.png" class="img-fluid" style="width:20px;" />
@@ -34,7 +35,9 @@
                                                     <img src="assets/icons/non_veg_icon.png" class="img-fluid" style="width:20px;" />
                                                 }
                                             }&nbsp;&nbsp;@recipes[i].Name
+                                            </div>
                                         </button>
+                                        
                                     </h2>
                                     <div id="collapseOne_@recipes[i].Id" class="@(i==0?"accordion-collapse p-3 collapse show":"accordion-collapse p-3 collapse")" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
                                         <div class="accordion-body">
@@ -49,10 +52,20 @@
                                                     </ul>
                                                 </div>
 
-                                                <div class="col-sm-8 ms-sm-2">
+                                                <div class="col-sm-6 ms-sm-2">
                                                     <h6>Cooking Procedure</h6>
                                                     <p>@recipes[i].Procedure</p>
                                                 </div>
+                                                <div class="col-sm-2 ms-sm-2 me-md-2 d-flex justify-content-between align-items-baseline  justify-content-sm-center">
+                                                    <button type="button" class="btn btn-outline-primary " data-bs-toggle="modal" data-bs-target="#editModal" onclick='openModal(  `@recipes[i].Name`,`@recipes[i].Category `,`@recipes[i].Ingredients`,`@recipes[i].Procedure`)'>
+                                                        Edit
+                                                    </button>
+                                                    <a class="btn btn-outline-danger mx-2" asp-action="DeleteRecipe" asp-route-id="@recipes[i].Id">Delete</a>
+                                                </div>
+
+
+
+
                                             </div>
                                         </div>
                                     </div>
@@ -111,10 +124,18 @@
                                                     </ul>
                                                 </div>
 
-                                                <div class="col-sm-8 ms-sm-2">
+                                                <div class="col-sm-6 ms-sm-2">
                                                     <h6>Cooking Procedure</h6>
                                                     <p>@recipes[i].Procedure</p>
                                                 </div>
+
+                                                    <div class="col-sm-2 ms-sm-2 me-md-2 d-flex justify-content-between align-items-baseline  justify-content-sm-center">
+                                                        <button type="button" class="btn btn-outline-primary " data-bs-toggle="modal" data-bs-target="#editModal" onclick='openModal(  `@recipes[i].Name`,`@recipes[i].Category `,`@recipes[i].Ingredients`,`@recipes[i].Procedure`)'>
+                                                            Edit
+                                                        </button>
+                                                        <a class="btn btn-outline-danger mx-2" asp-action="DeleteRecipe" asp-route-id="@recipes[i].Id">Delete</a>
+                                                    </div>
+
                                             </div>
                                         </div>
                                     </div>
@@ -173,10 +194,18 @@
                                                     </ul>
                                                 </div>
 
-                                                <div class="col-sm-8 ms-sm-2">
+                                                <div class="col-sm-6 ms-sm-2">
                                                     <h6>Cooking Procedure</h6>
                                                     <p>@recipes[i].Procedure</p>
                                                 </div>
+
+                                                    <div class="col-sm-2 ms-sm-2 me-md-2 d-flex justify-content-between align-items-baseline  justify-content-sm-center">
+                                                        <button type="button" class="btn btn-outline-primary " data-bs-toggle="modal" data-bs-target="#editModal" onclick='openModal(  `@recipes[i].Name`,`@recipes[i].Category `,`@recipes[i].Ingredients`,`@recipes[i].Procedure`)'>
+                                                            Edit
+                                                        </button>
+                                                        <a class="btn btn-outline-danger mx-2" asp-action="DeleteRecipe" asp-route-id="@recipes[i].Id">Delete</a>
+                                                    </div>
+
                                             </div>
                                         </div>
                                     </div>
@@ -193,3 +222,52 @@
         }
     </div>
 </div>
+
+@*Edit modal*@
+<div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editRecipeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="editRecipeModalLabel">Edit recipe</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form class="p-1 pb-3" asp-action="EditRecipe" method="post" >
+                    <div class="mb-3">
+                        <label for="recipeName" class="form-label">Recipe Name</label>
+                        <input type="text" class="form-control" id="recipeName" name="recipeName" disabled required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="category" class="form-label">Category</label>
+
+                            <input type="text" class="form-control" id="category" name="category" disabled required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="ingredients" class="form-label">Ingredients</label>
+                        <div class="form-floating">
+                            <textarea class="form-control p-2" id="ingredients" name="ingredients" required></textarea>
+                        </div>
+                        <span class="text-danger">*Please enter ingredient names seperated by comma</span>
+                    </div>
+                    <div class="mb-3">
+                        <label for="cookingProcess" class="form-label">Cooking Process</label>
+                        <div class="form-floating">
+                            <textarea class="form-control p-2" id="cookingProcess" name="cookingProcess" style="height: 150px" required></textarea>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100">Submit</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+        function openModal(name,category,ingredients,procedure) {
+            document.getElementById("recipeName").value = "" +name  + ""
+            document.getElementById('category').value = category;
+            document.getElementById("ingredients").value = ""+ingredients+""
+            document.getElementById("cookingProcess").value = ""+procedure+""
+           
+        }
+    </script>
+</body>

@@ -4,7 +4,7 @@ namespace Recipe_Management_Frontend.Models
 {
     public class Register
     {
-        [Required(ErrorMessage ="* Name Required")]
+        [Required(ErrorMessage ="* UserName Required")]
         public string Name { get; set; }
 
         [Required(ErrorMessage = "* Email Required")]

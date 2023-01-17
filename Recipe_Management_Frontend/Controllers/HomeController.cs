@@ -144,6 +144,85 @@ namespace Recipe_Management_Frontend.Controllers
             return RedirectToAction("LogOut","Auth");
         }
 
+        [HttpPut]
+        public async Task<IActionResult> EditRecipe(string recipeName, string category, string ingredients, string cookingProcess)
+        {
+            try
+            {
+                string userId = Request.Cookies["userId"];
+                string token = Request.Cookies["token"];
+                var client = new HttpClient();
+                client.BaseAddress = new Uri("https://localhost:7082/api/");
+                client.DefaultRequestHeaders.Add("Authorization", "Bearer " + token);
+                HttpContent body = new StringContent(JsonConvert.SerializeObject(new { name = recipeName, ingredients = ingredients, procedure = cookingProcess, userId = userId, category = category }), System.Text.Encoding.UTF8, "application/json");
+
+                var response = client.PutAsync("Recipe/EditRecipe", body).Result;
+
+                var content = await response.Content.ReadAsStringAsync();
+                if (response.IsSuccessStatusCode)
+                {
+                    Console.WriteLine(content);
+                    if (!string.IsNullOrEmpty(content))
+                    {
+                        Console.WriteLine("Recipe Edited Successfully.");
+                        TempData["message"] = "Recipe Edited successfully";
+                        TempData["type"] = "success";
+                        return RedirectToAction("GetRecipesByUser");
+                    }
+
+
+                }
+                TempData["message"] = content;
+                TempData["type"] = "error";
+                return RedirectToAction("Index");
+            }
+
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                TempData["message"] = "Something went wrong!";
+                TempData["type"] = "error";
+            }
+
+            return RedirectToAction("LogOut", "Auth");
+        }
+
+        [HttpDelete]
+        public IActionResult DeleteRecipe(int id)
+        {
+                string userId = Request.Cookies["userId"];
+                string token = Request.Cookies["token"];
+                try
+                {
+                    var client = new HttpClient();
+                    client.BaseAddress = new Uri("https://localhost:7082/api/");
+                    client.DefaultRequestHeaders.Add("Authorization", "Bearer " + token);
+
+                    var response = client.DeleteAsync("recipe/deleterecipe?id=" + id).Result;
+
+                    if (response.IsSuccessStatusCode)
+                    {
+                        var content = response.Content.ReadAsStringAsync();
+
+                    TempData["message"] = "Recipe deleted successfully";
+                    TempData["type"] = "success";
+                    return RedirectToAction("GetRecipesByUser");
+                     }
+                    TempData["message"] = "Something went wrong!!!";
+                    TempData["type"] = "error";
+                    return RedirectToAction("Index");
+                }
+                catch (Exception ex)
+                {
+                    TempData["message"] = ex.Message == "UserName is not provided" ? "Login to view Recipes" : "Failed to fetch recipe";
+                    TempData["type"] = "error";
+
+                }
+
+   
+            return RedirectToAction("LogOut", "Auth");
+        }
+
         [Route("recipe")]
         public async Task<ActionResult> GetRecipeById(int id)
         {
@@ -319,7 +398,7 @@ namespace Recipe_Management_Frontend.Controllers
 
         }
         
-
+        
 
         public IActionResult Accept(int id)
         {
