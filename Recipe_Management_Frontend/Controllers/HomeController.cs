@@ -102,8 +102,9 @@ namespace Recipe_Management_Frontend.Controllers
 
 
         [HttpPost]
-        public async Task<ActionResult> AddRecipe(string recipeName,string category,string ingredients,string cookingProcess)
+        public async Task<ActionResult> AddRecipe(string recipeName,string category,string ingredientsList, string cookingProcess)
         {
+            Console.WriteLine(ingredientsList);
             try
             {
                 string userId = Request.Cookies["userId"];
@@ -111,7 +112,7 @@ namespace Recipe_Management_Frontend.Controllers
                 var client = new HttpClient();
                 client.BaseAddress = new Uri("https://localhost:7082/api/");
                 client.DefaultRequestHeaders.Add("Authorization", "Bearer " + token);
-                HttpContent body = new StringContent(JsonConvert.SerializeObject(new { name = recipeName, ingredients = ingredients, procedure = cookingProcess, userId = userId, category = category }), System.Text.Encoding.UTF8, "application/json");
+                HttpContent body = new StringContent(JsonConvert.SerializeObject(new { name = recipeName, ingredients = ingredientsList, procedure = cookingProcess, userId = userId, category = category }), System.Text.Encoding.UTF8, "application/json");
 
                 var response = client.PostAsync("Recipe/AddRecipe", body).Result;
 

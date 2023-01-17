@@ -36,13 +36,7 @@ namespace Recipe_Management_System.Repository.Service
 
         }
 
-        public async Task DeleteAsync(int id)
-        {
-            var entity = await context.Set<Recipe>().FirstOrDefaultAsync(n => n.Id == id);
-            EntityEntry entityEntry = context.Entry<Recipe>(entity);
-            entityEntry.State = EntityState.Deleted;
-            context.SaveChanges();
-        }
+        
 
         public IEnumerable<Recipe> GetAllAsync()
         {
@@ -64,14 +58,34 @@ namespace Recipe_Management_System.Repository.Service
             return actor;
         }
 
-        public async Task UpdateAsync(int id, Recipe entity)
+        public async Task<ActionResult<Recipe>> UpdateAsync(int id, Recipe addRecipeDto)
         {
-            EntityEntry entityEntry = context.Entry<Recipe>(entity);
-            entityEntry.State = EntityState.Modified;
-            context.SaveChanges();
+
+            if (id != addRecipeDto.Id)
+            {
+                return new BadRequestObjectResult("Not Found");
+            }
+
+            context.Entry(addRecipeDto).State = EntityState.Modified;
+            await context.SaveChangesAsync();
+            return addRecipeDto;
         }
 
-        
+        public async Task<ActionResult<Recipe>> DeleteRecipe(int id)
+        {
+            var recipe = await context.Recipes.FindAsync(id);
+            if (recipe == null)
+            {
+                return new BadRequestObjectResult("Not Found");
+            }
+
+            context.Recipes.Remove(recipe);
+            await context.SaveChangesAsync();
+
+            return recipe;
+        }
+
+
 
         public async Task<ActionResult<Recipe>> Update_Status_Accept_Recipe(int id)
         {
