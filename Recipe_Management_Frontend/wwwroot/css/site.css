@@ -58,3 +58,8 @@ body {
     .scroll--simple::-webkit-scrollbar-thumb:active {
         background: rgba(0, 0, 0, 0.9);
     }
+
+.close-btn {
+    font-size: 9px;
+    color: #ffffff;
+}

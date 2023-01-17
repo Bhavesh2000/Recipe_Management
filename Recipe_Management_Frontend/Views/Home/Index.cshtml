@@ -86,7 +86,7 @@ background-size: cover; padding-top:10px; height:calc(100vh - 150px);">
                 <form class="p-1 pb-3" asp-action="AddRecipe" method="post">
                     <div class="mb-3">
                         <label for="recipeName" class="form-label">Recipe Name</label>
-                        <input type="text" class="form-control" id="recipeName" name="recipeName" required>
+                        <input type="text" class="form-control" id="recipeName" name="recipeName" minLength="3" required>
                     </div>
                     <div class="mb-3">
                         <label for="category" class="form-label">Category</label>
@@ -98,16 +98,24 @@ background-size: cover; padding-top:10px; height:calc(100vh - 150px);">
 
                     </div>
                     <div class="mb-3">
-                        <label for="ingredients" class="form-label">Ingredients</label>
-                        <div class="form-floating">
-                            <textarea class="form-control p-2" id="ingredients" name="ingredients" required></textarea>
+                        <label for="exampleInputEmail1" class="form-label">Ingredients</label>
+                        <div id="ingredientslist"></div>
+                        <div class="row d-flex align-items-center">
+                            <input type="hidden" id="ingredientsList" name="ingredientsList" />
+                            <div class="col-sm-6 ">
+                                <input type="text" class="form-control" id="ingredients" required />
+                            </div>
+                            <div class="col-sm-3">
+                                <button type="button" class="btn btn-primary my-2" minLength="2" onclick="addingredint()">
+                                    Add Ingredient
+                                </button>
+                            </div>
                         </div>
-                        <span class="text-danger">*Please enter ingredient names seperated by comma</span>
                     </div>
                     <div class="mb-3">
                         <label for="cookingProcess" class="form-label">Cooking Process</label>
                         <div class="form-floating">
-                            <textarea class="form-control p-2" id="cookingProcess" name="cookingProcess" style="height: 150px" required></textarea>
+                            <textarea class="form-control p-2" id="cookingProcess" name="cookingProcess"  style="height: 150px" minLength="50" required></textarea>
                         </div>
                     </div>
                     <button type="submit" class="btn btn-primary w-100">Submit</button>
@@ -116,3 +124,51 @@ background-size: cover; padding-top:10px; height:calc(100vh - 150px);">
         </div>
     </div>
 </div>
+
+<script>
+    let ingredients = [];
+
+    const createIngredientList = () => {
+        let ingredientslist = document.createElement("div");
+        ingredients.forEach((e, i) => {
+            let ingredient = document.createElement("span");
+            ingredient.setAttribute("class", "badge bg-success px-2 mb-2 me-2 text-capitalize");
+            ingredient.innerHTML = e;
+            let closebtn = document.createElement("button");
+            closebtn.setAttribute("class", "btn-close btn-close-white close-btn p-1 ms-1");
+            closebtn.setAttribute("type", "button");
+            closebtn.setAttribute("onclick", "deleteingredient(this)");
+            closebtn.setAttribute("id", e);
+            ingredient.appendChild(closebtn);
+            ingredientslist.appendChild(ingredient);
+        });
+
+        document.getElementById("ingredientslist").innerHTML = null;
+        document.getElementById("ingredientslist").appendChild(ingredientslist);
+    };
+
+    const addingredint = () => {
+        if (document.getElementById("ingredients").value.trim() === "")
+        {
+            return
+        }
+        ingredients.push(document.getElementById("ingredients").value.toLowerCase());
+        ingredients = Array.from(new Set(ingredients));
+        document.getElementById("ingredientsList").value = ingredients.join(",");
+        console.log(ingredients);
+        document.getElementById("ingredients").value = "";
+        document.getElementById("ingredients").required = false;
+        createIngredientList();
+    };
+
+    const deleteingredient = (e) => {
+        ingredients = ingredients.filter((i) => i != e.getAttribute("id"));
+        console.log(ingredients);
+        createIngredientList();
+        document.getElementById("ingredientsList").value = ingredients.join(",");
+        if(ingredients.length == 0)
+        {
+            document.getElementById("ingredients").required = true;
+        }
+    };
+</script>
