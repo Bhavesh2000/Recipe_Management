@@ -328,5 +328,68 @@ namespace Recipe_Management_System.Controllers
                 return BadRequest(ex.Message);
             }
         }
+
+
+        [HttpDelete]
+        [Route("DeleteRecipe")]
+        //[Authorize(AuthenticationSchemes = "Bearer", Roles = "User")]
+        public async Task<ActionResult<Recipe>> DeleteRecipe(int id)
+        {
+
+            if (id == null)
+            {
+                return new BadRequestObjectResult("Id not provided");
+            }
+
+            var recipe = await service.DeleteRecipe(id);
+
+            return recipe;
+        }
+        [HttpPut]
+        [Route("UpdateRecipe")]
+        //[Authorize(AuthenticationSchemes = "Bearer", Roles = "User")]
+        public async Task<ActionResult<AddRecipeDto>> UpdateRecipe(int id, AddRecipeDto addRecipeDto)
+        {
+
+            if (id == 0)
+            {
+                return BadRequest("Id is not provided");
+            }
+
+            var user = uservice.GetAllAsync().FirstOrDefault(n => n.Id == addRecipeDto.UserId);
+            if (user == null)
+            {
+                return BadRequest("User doesn't exists");
+            }
+            
+            var recipe = new Recipe()
+            {
+                Id = id,
+                Name = addRecipeDto.name,
+                Ingredients = addRecipeDto.Ingredients,
+                Procedure = addRecipeDto.Procedure,
+                UserId = addRecipeDto.UserId,
+                Category = addRecipeDto.Category,
+                Status = "Pending",
+
+            };
+
+            try
+            {
+
+
+                await service.UpdateAsync(id, recipe);
+
+            }
+            catch (NullReferenceException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            
+            return addRecipeDto;
+        }
+
+
+
     }
 }
