@@ -40,7 +40,7 @@ namespace Recipe_Management_System.Controllers
                         Ingredients = recipe.Ingredients,
                         name = recipe.Name,
                         Procedure = recipe.Procedure,
-                        Username = users.FirstOrDefault(n => n.Id == recipe.UserId).Name,
+                        Username = users.FirstOrDefault(n => n.Id == recipe.UserId).UserName,
                         Category = recipe.Category,
                         Status = recipe.Status,
                     });
@@ -74,7 +74,7 @@ namespace Recipe_Management_System.Controllers
                 }
 
                 var recipe = await service.GetByIdAsync(id);
-                if (recipe.Value==null)
+                if (recipe.Value == null)
                 {
                     return NotFound();
                 }
@@ -84,12 +84,12 @@ namespace Recipe_Management_System.Controllers
                     Id = id,
                     Ingredients = recipe.Value.Ingredients,
                     Procedure = recipe.Value.Procedure,
-                    Username = users.FirstOrDefault(n => n.Id == recipe.Value.UserId).Name,
+                    Username = users.FirstOrDefault(n => n.Id == recipe.Value.UserId).UserName,
                     name = recipe.Value.Name,
                     Category = recipe.Value.Category,
                     Status = recipe.Value.Status,
                 };
-                
+
                 return result;
             }
             catch (Exception ex)
@@ -128,7 +128,7 @@ namespace Recipe_Management_System.Controllers
                         Id = recipe.Id,
                         Ingredients = recipe.Ingredients,
                         Procedure = recipe.Procedure,
-                        Username = user.Name,
+                        Username = user.UserName,
                         name = recipe.Name,
                         Category = recipe.Category,
                         Status = recipe.Status,
@@ -149,7 +149,7 @@ namespace Recipe_Management_System.Controllers
 
         [HttpGet]
         [Route("GetPendingRecipes")]
-        [Authorize(AuthenticationSchemes = "Bearer", Roles ="Admin")]
+        [Authorize(AuthenticationSchemes = "Bearer", Roles = "Admin")]
         public async Task<ActionResult<IEnumerable<RecipeDto>>> GetPendingRecipes()
         {
             try
@@ -168,14 +168,14 @@ namespace Recipe_Management_System.Controllers
                         Id = recipe.Id,
                         Ingredients = recipe.Ingredients,
                         Procedure = recipe.Procedure,
-                        Username = users.FirstOrDefault(n => n.Id == recipe.UserId).Name,
+                        Username = users.FirstOrDefault(n => n.Id == recipe.UserId).UserName,
                         name = recipe.Name,
                         Category = recipe.Category,
                         Status = recipe.Status,
                     });
                 }
 
-                
+
 
                 return result;
             }
@@ -229,7 +229,7 @@ namespace Recipe_Management_System.Controllers
 
         [HttpPut]
         [Route("Update_Status_Accept_Recipe")]
-        [Authorize(AuthenticationSchemes = "Bearer",Roles ="Admin")]
+        [Authorize(AuthenticationSchemes = "Bearer", Roles = "Admin")]
         public async Task<ActionResult<RecipeDto>> Update_Status_Accept_Recipe(int id)
         {
 
@@ -249,7 +249,7 @@ namespace Recipe_Management_System.Controllers
                 Id = id,
                 Ingredients = recipe.Value.Ingredients,
                 Procedure = recipe.Value.Procedure,
-                Username = users.FirstOrDefault(n => n.Id == recipe.Value.UserId).Name,
+                Username = users.FirstOrDefault(n => n.Id == recipe.Value.UserId).UserName,
                 name = recipe.Value.Name,
                 Category = recipe.Value.Category,
                 Status = recipe.Value.Status,
@@ -281,7 +281,7 @@ namespace Recipe_Management_System.Controllers
                 Id = id,
                 Ingredients = recipe.Value.Ingredients,
                 Procedure = recipe.Value.Procedure,
-                Username = users.FirstOrDefault(n => n.Id == recipe.Value.UserId).Name,
+                Username = users.FirstOrDefault(n => n.Id == recipe.Value.UserId).UserName,
                 name = recipe.Value.Name,
                 Category = recipe.Value.Category,
                 Status = recipe.Value.Status,
@@ -312,7 +312,7 @@ namespace Recipe_Management_System.Controllers
                         Id = recipe.Id,
                         Ingredients = recipe.Ingredients,
                         Procedure = recipe.Procedure,
-                        Username = users.FirstOrDefault(n => n.Id == recipe.UserId).Name,
+                        Username = users.FirstOrDefault(n => n.Id == recipe.UserId).UserName,
                         name = recipe.Name,
                         Category = recipe.Category,
                         Status = recipe.Status,

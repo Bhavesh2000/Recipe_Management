@@ -8,8 +8,6 @@ namespace Recipe_Management_System.Models
     public class User : IdentityUser
     {
         [Required]
-        public string Name { get; set; }
-        [Required]
         public string Type { get; set; }
        
     }

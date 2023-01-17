@@ -200,7 +200,6 @@ namespace Recipe_Management_System.Repository.Service
             {
                 Token = jwtToken,
               //  RefreshToken = refreshToken.Token,
-                Result = true
             };
 
             return result;

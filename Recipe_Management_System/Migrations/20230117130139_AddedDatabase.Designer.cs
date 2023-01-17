@@ -12,7 +12,7 @@ using Recipe_Management_System.AppDbContext;
 namespace Recipe_Management_System.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20230116044937_AddedDatabase")]
+    [Migration("20230117130139_AddedDatabase")]
     partial class AddedDatabase
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -207,10 +207,6 @@ namespace Recipe_Management_System.Migrations
             modelBuilder.Entity("Recipe_Management_System.Models.User", b =>
                 {
                     b.HasBaseType("Microsoft.AspNetCore.Identity.IdentityUser");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Type")
                         .IsRequired()
