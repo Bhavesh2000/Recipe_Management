@@ -19,6 +19,7 @@ namespace Recipe_Management_System.Controllers
     {
         private readonly UserManager<IdentityUser> _userManager;
         private readonly RoleManager<IdentityRole> _roleManager;
+        ResponseDto _response;
         private readonly ITokenGenerator _tokenGenerator;
         private readonly IUserService _userService;
 
@@ -30,7 +31,8 @@ namespace Recipe_Management_System.Controllers
             _userManager = userManager;
             _userService = userService;
             _tokenGenerator = tokenGenerator;
-            _roleManager= roleManager;
+            _roleManager = roleManager;
+            _response = new ResponseDto();
 
         }
 
@@ -41,123 +43,134 @@ namespace Recipe_Management_System.Controllers
 
         [HttpPost]
         [Route("Register")]
-        public async Task<IActionResult> Register([FromBody] RegisterDto request)
+        public async Task<object> Register([FromBody] RegisterDto request)
         {
             if (!_roleManager.RoleExistsAsync(Helper.Helper.Admin).GetAwaiter().GetResult())
             {
                 await _roleManager.CreateAsync(new IdentityRole(Helper.Helper.Admin));
                 await _roleManager.CreateAsync(new IdentityRole(Helper.Helper.User));
             }
-
-            //Validate the request
-            if (ModelState.IsValid)
+            try
             {
-
-                //Check if email already exists.
-                var user_exist = await _userManager.FindByEmailAsync(request.Email);
-
-                if (user_exist != null)
+                if (ModelState.IsValid)
                 {
-                    return BadRequest(new
+
+                    var IsUserNamePresent = await _userManager.FindByNameAsync(request.Name);
+                    var IsEmailPresent = await _userManager.FindByEmailAsync(request.Email);
+                    if (IsUserNamePresent != null)
                     {
-                        Result = false,
-                        Errors = new List<string>()
+                        _response.IsSuccess = false;
+                        _response.Result = BadRequest();
+                        _response.DisplayMessage = "UserName Already Present";
+                    }
+                    else if (IsEmailPresent != null)
+                    {
+                        _response.IsSuccess = false;    
+                        _response.Result = BadRequest();
+                        _response.DisplayMessage = "Email Already Present";
+                    }
+                    else
+                    {
+                        var new_user = new User()
                         {
-                            "Email already exist"
+                            Email = request.Email,
+                            UserName = request.Name,
+                            Type = "User",
+                        };
+                        var result = await _userManager.CreateAsync(new_user, request.Password);
+
+                        if (result.Succeeded)
+                        {
+                            await _userManager.AddToRoleAsync(new_user, "User");
+
+                            var user = await _userManager.FindByEmailAsync(new_user.Email);
+
+                            var jwtToken = await _tokenGenerator.JwtTokenGenerator(new_user);
+
+                            _response.Result = new
+                            {
+                                UserToken = jwtToken,
+                                Type = new_user.Type,
+                                User_Id = user.Id,
+                            };
                         }
-                    });
+                    }
+
                 }
-
-
-                //create user
-                var new_user = new User()
+                else
                 {
-                    Email = request.Email,
-                    UserName = request.Email,
-                    Name = request.Name,
-                    Type = "User",
-                };
-
-                var is_created = await _userManager.CreateAsync(new_user, request.Password);
-                if (!is_created.Succeeded)
-                {
-                    return StatusCode(StatusCodes.Status500InternalServerError,
-                                    new { Status = "Error", Message = "User creation failed! Please check user details and try again." });
+                    _response.IsSuccess = false;
+                    _response.Result = BadRequest();
+                    _response.DisplayMessage = "Invalid request";
+                    //_response.ErrorMessages = new List<string>() { ex.ToString() };
                 }
-
-                await _userManager.AddToRoleAsync(new_user, "User");
-                
-
-                var user = await _userManager.FindByEmailAsync(new_user.Email);
-
-                var jwtToken = await _tokenGenerator.JwtTokenGenerator(new_user);
-                return Ok(new
-                {
-                    UserToken= jwtToken,
-                    Type = new_user.Type,
-                    User_Id = user.Id,
-                    Message = "User is Added successfully",
-                    Result = true
-                });
+            }
+            catch (Exception ex)
+            {
+                _response.IsSuccess = false;
+                _response.ErrorMessages = new List<string>() { ex.ToString() };
             }
 
-            return BadRequest();
+            return _response;
+
         }
 
 
         [HttpPost]
         [Route("Login")]
-        public async Task<IActionResult> Login([FromBody] LoginDto loginRequest)
+        public async Task<object> Login([FromBody] LoginDto loginRequest)
         {
-            if (ModelState.IsValid)
+            try
             {
-                //check if user exists
-                var existing_user = await _userManager.FindByEmailAsync(loginRequest.Email);
-
-                if (existing_user == null)
+                if (!ModelState.IsValid)
                 {
-                    return BadRequest(new
-                    {
-                        Result = false,
-
-                    });
+                    _response.IsSuccess = false;
+                    _response.Result = BadRequest();
+                    _response.DisplayMessage = "Invalid model state";
+                    return _response;
                 }
-
-                var isCorrect = await _userManager.CheckPasswordAsync(existing_user, loginRequest.Password);
-
-                if (!isCorrect)
+                else
                 {
-                    return BadRequest(new
+                    var existing_user = await _userManager.FindByEmailAsync(loginRequest.Email);
+                    if (existing_user == null)
                     {
-                        Result = false,
-                        Errors = new List<string>()
-                        {
-                            "Invalid Credentials"
-                        }
-                    });
+                        _response.IsSuccess = false;
+                        _response.Result = Unauthorized();
+                        _response.DisplayMessage = "User Does not Exist";
+                        return _response;
+                    }
+                    var isCorrect = await _userManager.CheckPasswordAsync(existing_user, loginRequest.Password);
+                    if (!isCorrect)
+                    {
+                        _response.IsSuccess = false;
+                        _response.Result = Unauthorized();
+                        _response.DisplayMessage = "Password Incorrect";
+                        return _response;
+                    }
+
+                    var user = await _userService.GetUser(existing_user.Id);
+
+                    var jwtToken = await _tokenGenerator.JwtTokenGenerator(user);
+
+                    _response.Result = new
+                    {
+                        UserToken = jwtToken,
+                        Type = user.Type,
+                        User_name = user.UserName,
+                        User_Id = user.Id,
+                        Result = true
+                        // UserId = existing_user.Id
+                    };
                 }
-
-                
-
-                var user = await _userService.GetUser(existing_user.Id);
-
-                var jwtToken =await _tokenGenerator.JwtTokenGenerator(user);
-
-                return Ok(new
-                {
-                    UserToken = jwtToken,
-                    Type = user.Type,
-                    User_name = user.Name,
-                    User_Id = user.Id,
-                    Result = true
-                   // UserId = existing_user.Id
-                });
             }
-
-            return BadRequest(new
+            catch (Exception ex)
             {
-                Message = "Invalid Payload"
-            });
+                _response.IsSuccess = false;
+                _response.ErrorMessages = new List<string>() { ex.ToString() };
+            }
+            _response.DisplayMessage = "Logged In successfully";
+            return (_response);
+
         }
 
         [HttpDelete]
@@ -180,7 +193,7 @@ namespace Recipe_Management_System.Controllers
 
             await _tokenGenerator.DeleteAllRefreshTokenForUser(userId);
 
-            return Ok(new 
+            return Ok(new
             {
                 Massage = "Logout Sucessfully"
             });
@@ -188,7 +201,7 @@ namespace Recipe_Management_System.Controllers
 
         [HttpPost]
         [Route("RefreshToken")]
-      //  [Authorize(AuthenticationSchemes = "Bearer")]
+        //  [Authorize(AuthenticationSchemes = "Bearer")]
         public async Task<IActionResult> RefreshToken(TokenDto tokenRequest)
         {
             if (ModelState.IsValid)
@@ -211,8 +224,8 @@ namespace Recipe_Management_System.Controllers
 
         [HttpPost]
         [Route("RegisterAdmin")]
-        [Authorize(AuthenticationSchemes ="Bearer", Roles ="Admin")]
-        public async Task<IActionResult> RegisterAdmin([FromBody] RegisterDto request)
+        [Authorize(AuthenticationSchemes = "Bearer", Roles = "Admin")]
+        public async Task<object> RegisterAdmin([FromBody] RegisterDto request)
         {
             if (!_roleManager.RoleExistsAsync(Helper.Helper.Admin).GetAwaiter().GetResult())
             {
@@ -220,59 +233,66 @@ namespace Recipe_Management_System.Controllers
                 await _roleManager.CreateAsync(new IdentityRole(Helper.Helper.User));
             }
 
-            //Validate the request
-            if (ModelState.IsValid)
+            try
             {
-
-                //Check if email already exists.
-                var user_exist = await _userManager.FindByEmailAsync(request.Email);
-
-                if (user_exist != null)
+                if (ModelState.IsValid)
                 {
-                    return BadRequest(new
+
+                    var IsUserNamePresent = await _userManager.FindByNameAsync(request.Name);
+                    var IsEmailPresent = await _userManager.FindByEmailAsync(request.Email);
+                    if (IsUserNamePresent != null)
                     {
-                        Result = false,
-                        Errors = new List<string>()
+                        _response.Result = BadRequest();
+                        _response.DisplayMessage = "UserName Already Present";
+                    }
+                    else if (IsEmailPresent != null)
+                    {
+                        _response.Result = BadRequest();
+                        _response.DisplayMessage = "Email Already Present";
+                    }
+                    else
+                    {
+                        var new_user = new User()
                         {
-                            "Email already exist"
+                            Email = request.Email,
+                            UserName = request.Name,
+                            Type = "Admin",
+                        };
+                        var result = await _userManager.CreateAsync(new_user, request.Password);
+
+                        if (result.Succeeded)
+                        {
+                            await _userManager.AddToRoleAsync(new_user, "Admin");
+
+                            var user = await _userManager.FindByEmailAsync(new_user.Email);
+
+                            var jwtToken = await _tokenGenerator.JwtTokenGenerator(new_user);
+
+                            _response.Result = new
+                            {
+                                UserToken = jwtToken,
+                                Type = new_user.Type,
+                                User_Id = user.Id,
+                            };
                         }
-                    });
+                    }
+
                 }
-
-
-                //create user
-                var new_user = new User()
+                else
                 {
-                    Email = request.Email,
-                    UserName = request.Email,
-                    Name = request.Name,
-                    Type = "Admin",
-                };
-
-                var is_created = await _userManager.CreateAsync(new_user, request.Password);
-                if (!is_created.Succeeded)
-                {
-                    return StatusCode(StatusCodes.Status500InternalServerError,
-                                    new { Status = "Error", Message = "User creation failed! Please check user details and try again." });
+                    _response.IsSuccess = false;
+                    _response.Result = BadRequest();
+                    _response.DisplayMessage = "Invalid request";
+                    //_response.ErrorMessages = new List<string>() { ex.ToString() };
                 }
-
-                await _userManager.AddToRoleAsync(new_user, "Admin");
-
-
-                var user = await _userManager.FindByEmailAsync(new_user.Email);
-
-                var jwtToken = await _tokenGenerator.JwtTokenGenerator(new_user);
-                return Ok(new
-                {
-                    UserToken = jwtToken,
-                    Type = new_user.Type,
-                    User_Id = user.Id,
-                    Message = "Admin is Added successfully",
-                    Result = true
-                });
+            }
+            catch (Exception ex)
+            {
+                _response.IsSuccess = false;
+                _response.ErrorMessages = new List<string>() { ex.ToString() };
             }
 
-            return BadRequest();
+            return _response;
         }
 
     }
