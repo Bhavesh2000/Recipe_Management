@@ -253,7 +253,7 @@
                             <div class="row d-flex align-items-center">
                                 <input type="hidden" id="ingredientsList" name="ingredientsList" />
                                 <div class="col-sm-6 ">
-                                    <input type="text" class="form-control" id="ingredients" required />
+                                    <input type="text" class="form-control" id="ingredients"  />
                                 </div>
                                 <div class="col-sm-3">
                                     <button type="button" class="btn btn-primary my-2" minLength="2" onclick="addingredint()">
@@ -304,6 +304,8 @@
 
             document.getElementById("ingredientslist").innerHTML = null;
             document.getElementById("ingredientslist").appendChild(ingredientslist);
+            document.getElementById("ingredientsList").value = ingredients.join(",");
+         
         };
 
 
@@ -328,6 +330,7 @@
             if (ingredients.length == 0) {
                 document.getElementById("ingredients").required = true;
             }
+         
         };
     </script>
 </body>
