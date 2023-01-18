@@ -348,23 +348,19 @@ namespace Recipe_Management_System.Controllers
         [HttpPut]
         [Route("UpdateRecipe")]
         //[Authorize(AuthenticationSchemes = "Bearer", Roles = "User")]
-        public async Task<ActionResult<AddRecipeDto>> UpdateRecipe(int id, AddRecipeDto addRecipeDto)
+        public async Task<ActionResult<AddRecipeDto>> UpdateRecipe(AddRecipeDto addRecipeDto)
         {
 
-            if (id == 0)
-            {
-                return BadRequest("Id is not provided");
-            }
 
-            var user = uservice.GetAllAsync().FirstOrDefault(n => n.Id == addRecipeDto.UserId);
-            if (user == null)
-            {
-                return BadRequest("User doesn't exists");
-            }
-            
+
+            var user = service.GetAllAsync().Where(n => n.UserId == addRecipeDto.UserId).ToList();
+
+            int id = user.Find(n => n.Name == addRecipeDto.name).Id;
+
+
             var recipe = new Recipe()
             {
-                Id = id,
+
                 Name = addRecipeDto.name,
                 Ingredients = addRecipeDto.Ingredients,
                 Procedure = addRecipeDto.Procedure,
@@ -376,16 +372,15 @@ namespace Recipe_Management_System.Controllers
 
             try
             {
-
-
-                await service.UpdateAsync(id, recipe);
+                await service.DeleteRecipe(id);
+                await service.AddAsync(recipe);
 
             }
             catch (NullReferenceException ex)
             {
                 return BadRequest(ex.Message);
             }
-            
+
             return addRecipeDto;
         }
 
