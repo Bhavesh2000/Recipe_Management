@@ -152,8 +152,11 @@ background-size: cover; padding-top:10px; height:calc(100vh - 150px);">
         {
             return
         }
-        ingredients.push(document.getElementById("ingredients").value.toLowerCase());
-        ingredients = Array.from(new Set(ingredients));
+        const arr = document.getElementById("ingredients").value.split(",");
+        arr.forEach((e,i)=>{
+            ingredients.push(e.toLowerCase().trim());
+            ingredients = Array.from(new Set(ingredients));
+        })
         document.getElementById("ingredientsList").value = ingredients.join(",");
         console.log(ingredients);
         document.getElementById("ingredients").value = "";
