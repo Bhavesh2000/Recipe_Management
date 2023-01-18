@@ -130,7 +130,7 @@
                                                 </div>
 
                                                     <div class="col-sm-2 ms-sm-2 me-md-2 d-flex justify-content-between align-items-baseline  justify-content-sm-center">
-                                                        <button type="button" class="btn btn-outline-primary " data-bs-toggle="modal" data-bs-target="#editModal" onclick='openModal(  `@recipes[i].Name`,`@recipes[i].Category `,`@recipes[i].Ingredients`,`@recipes[i].Procedure`)'>
+                                                        <button type="button" class="btn btn-outline-primary " data-bs-toggle="modal" data-bs-target="#editModal" onclick='openModal(  `@recipes[i].Name`,`@recipes[i].Category `,`@recipes[i].Ingredients`,`@recipes[i].Procedure`,`@recipes[i].Id`)'>
                                                             Edit
                                                         </button>
                                                         <a class="btn btn-outline-danger mx-2" asp-action="DeleteRecipe" asp-route-id="@recipes[i].Id">Delete</a>
@@ -232,23 +232,36 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form class="p-1 pb-3" asp-action="EditRecipe" method="post" >
+                <form class="p-1 pb-3 "  id="form" asp-action="EditRecipe" method="post" >
+                        
                     <div class="mb-3">
                         <label for="recipeName" class="form-label">Recipe Name</label>
-                        <input type="text" class="form-control" id="recipeName" name="recipeName" disabled required>
+                        <input type="text" class="form-control" id="recipeName" name="recipeName"  required>
                     </div>
                     <div class="mb-3">
                         <label for="category" class="form-label">Category</label>
 
-                            <input type="text" class="form-control" id="category" name="category" disabled required>
+                            <select class="form-select" aria-label="category" id="category" name="category" required>
+                                <option value="" selected>Select category</option>
+                                <option value="Veg">Veg</option>
+                                <option value="Non-Veg">Non-Veg</option>
+                            </select>
                     </div>
-                    <div class="mb-3">
-                        <label for="ingredients" class="form-label">Ingredients</label>
-                        <div class="form-floating">
-                            <textarea class="form-control p-2" id="ingredients" name="ingredients" required></textarea>
+                        <div class="mb-3">
+                            <label for="exampleInputEmail1" class="form-label">Ingredients</label>
+                            <div id="ingredientslist"></div>
+                            <div class="row d-flex align-items-center">
+                                <input type="hidden" id="ingredientsList" name="ingredientsList" />
+                                <div class="col-sm-6 ">
+                                    <input type="text" class="form-control" id="ingredients" required />
+                                </div>
+                                <div class="col-sm-3">
+                                    <button type="button" class="btn btn-primary my-2" minLength="2" onclick="addingredint()">
+                                        Add Ingredient
+                                    </button>
+                                </div>
+                            </div>
                         </div>
-                        <span class="text-danger">*Please enter ingredient names seperated by comma</span>
-                    </div>
                     <div class="mb-3">
                         <label for="cookingProcess" class="form-label">Cooking Process</label>
                         <div class="form-floating">
@@ -262,12 +275,59 @@
     </div>
 </div>
 <script>
-        function openModal(name,category,ingredients,procedure) {
+
+        let ingredients;
+        function openModal(name,category,ingredients1,procedure) {
             document.getElementById("recipeName").value = "" +name  + ""
-            document.getElementById('category').value = category;
-            document.getElementById("ingredients").value = ""+ingredients+""
+            
             document.getElementById("cookingProcess").value = ""+procedure+""
-           
-        }
+        
+            ingredients = ingredients1.split(",");
+            createIngredientList();
+            
+            }
+
+        const createIngredientList = () => {
+            let ingredientslist = document.createElement("div");
+            ingredients.forEach((e, i) => {
+                let ingredient = document.createElement("span");
+                ingredient.setAttribute("class", "badge bg-success px-2 mb-2 me-2 text-capitalize");
+                ingredient.innerHTML = e;
+                let closebtn = document.createElement("button");
+                closebtn.setAttribute("class", "btn-close btn-close-white close-btn p-1 ms-1");
+                closebtn.setAttribute("type", "button");
+                closebtn.setAttribute("onclick", "deleteingredient(this)");
+                closebtn.setAttribute("id", e);
+                ingredient.appendChild(closebtn);
+                ingredientslist.appendChild(ingredient);
+            });
+
+            document.getElementById("ingredientslist").innerHTML = null;
+            document.getElementById("ingredientslist").appendChild(ingredientslist);
+        };
+
+
+        const addingredint = () => {
+            if (document.getElementById("ingredients").value.trim() === "") {
+                return
+            }
+            ingredients.push(document.getElementById("ingredients").value.toLowerCase());
+            ingredients = Array.from(new Set(ingredients));
+            document.getElementById("ingredientsList").value = ingredients.join(",");
+            console.log(ingredients);
+            document.getElementById("ingredients").value = "";
+            document.getElementById("ingredients").required = false;
+            createIngredientList();
+        };
+
+        const deleteingredient = (e) => {
+            ingredients = ingredients.filter((i) => i != e.getAttribute("id"));
+            console.log(ingredients);
+            createIngredientList();
+            document.getElementById("ingredientsList").value = ingredients.join(",");
+            if (ingredients.length == 0) {
+                document.getElementById("ingredients").required = true;
+            }
+        };
     </script>
 </body>

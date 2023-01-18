@@ -6,21 +6,26 @@ using System.Text.RegularExpressions;
 
 namespace Recipe_Management_Frontend.Controllers
 {
-    struct userToken
+    public struct userToken
     {
-        public string token { get; set;}
-        public string refreshtoken { get; set;}
-        public bool result { get; set;}
+        public string token { get; set; }
     }
-    struct cu
+    struct result
     {
         public userToken UserToken;
         public string user_Id;
-        public bool result;
         public string type;
-        public string message;
-        public string status;
-        public List<string> errors;
+        public string statusCode;
+    }
+
+
+    struct cu
+    {
+        public result Result;
+        public bool isSuccess;
+        public string displayMessage;
+        
+        public List<string> errorMessages;
     }
 
    
@@ -68,52 +73,45 @@ namespace Recipe_Management_Frontend.Controllers
                 client.BaseAddress = new Uri("https://localhost:7082");
                 HttpContent body = new StringContent(JsonConvert.SerializeObject(new { Name = r.Name, Email = r.Email, Password = r.Password }), System.Text.Encoding.UTF8, "application/json");
                 var response = client.PostAsync("/api/account/Register", body).Result;
+                var content = await response.Content.ReadAsStringAsync();
+                var objDeserializeObject = JsonConvert.DeserializeObject<cu>(content);
 
-                if (response.IsSuccessStatusCode)
+                if (objDeserializeObject.isSuccess)
                 {
-                    var content = await response.Content.ReadAsStringAsync();
-
-                    if (!string.IsNullOrEmpty(content))
-                    {
-                        var objDeserializeObject = JsonConvert.DeserializeObject<cu>(content);
-
-
-
+  
                         CookieOptions options = new CookieOptions();
                         
-                        Response.Cookies.Append("token", objDeserializeObject.UserToken.token);
+                        Response.Cookies.Append("token", objDeserializeObject.Result.UserToken.token);
 
-                        Response.Cookies.Append("type", objDeserializeObject.type);
+                        Response.Cookies.Append("type", objDeserializeObject.Result.type);
 
 
-                        Response.Cookies.Append("userId", objDeserializeObject.user_Id);
+                        Response.Cookies.Append("userId", objDeserializeObject.Result.user_Id);
                         //  Response.Cookies.Append("refreshtoken", objDeserializeObject.UserToken.refreshtoken);
                         TempData["message"] = "User registered successfully!!!";
                         TempData["type"] = "success";
                         return RedirectToAction("Index", "Home");
                     }
-                }
+                
                 else
                 {
-                    var content = await response.Content.ReadAsStringAsync();
-                    if (!string.IsNullOrEmpty(content))
-                    {
+                  
+                    
                         TempData["type"] = "error";
-                        var objDeserializeObject = JsonConvert.DeserializeObject<cu>(content);
-                        if (objDeserializeObject.errors != null)
+                      
+                        if (objDeserializeObject.errorMessages != null)
                         {
-                            TempData["message"] = objDeserializeObject.errors[0];
+                            TempData["message"] = objDeserializeObject.errorMessages[0];
                         }
-                        else if (objDeserializeObject.status != null)
+                        else if (objDeserializeObject.displayMessage != null)
                         {
-                            TempData["message"] = objDeserializeObject.message;
+                            TempData["message"] = objDeserializeObject.displayMessage;
                         }
 
                         return View("Register", r);
 
                     }
 
-                }
             }
             catch (Exception ex)
             {
@@ -121,8 +119,10 @@ namespace Recipe_Management_Frontend.Controllers
                 TempData["type"] = "error";
             }
             return View("Register", r);
-
         }
+           
+
+        
 
 
 
@@ -142,50 +142,42 @@ namespace Recipe_Management_Frontend.Controllers
                 client.BaseAddress = new Uri("https://localhost:7082");
                 HttpContent body = new StringContent(JsonConvert.SerializeObject(new { Email = email, Password = password }), System.Text.Encoding.UTF8, "application/json");
                 var response = client.PostAsync("/api/account/login", body).Result;
+                var content = await response.Content.ReadAsStringAsync();
+                var objDeserializeObject = JsonConvert.DeserializeObject<cu>(content);
 
-
-                if (response.IsSuccessStatusCode)
+                if (objDeserializeObject.isSuccess)
                 {
-                    var content = await response.Content.ReadAsStringAsync();
-                    if (!string.IsNullOrEmpty(content))
-                    {
-                        var objDeserializeObject = JsonConvert.DeserializeObject<cu>(content);
-
-
 
                         CookieOptions options = new CookieOptions();
-                        userToken u = objDeserializeObject.UserToken;
-                        Response.Cookies.Append("token", u.token);
+                        
+                        Response.Cookies.Append("token",objDeserializeObject.Result.UserToken.token);
 
-                        Response.Cookies.Append("type", objDeserializeObject.type);
+                        Response.Cookies.Append("type", objDeserializeObject.Result.type);
                         //      Response.Cookies.Append("refreshtoken", u.refreshtoken);
-                        Response.Cookies.Append("userId", objDeserializeObject.user_Id);
+                        Response.Cookies.Append("userId", objDeserializeObject.Result.user_Id);
                         TempData["message"] = "Logged in successfully!!!";
                         TempData["type"] = "success";
                         return RedirectToAction("Index", "Home");
-                    }
-                }
+                  }
+                
                 else
                 {
-                    var content = await response.Content.ReadAsStringAsync();
-                    if (!string.IsNullOrEmpty(content))
-                    {
+                    
                         TempData["type"] = "error";
 
-                        var objDeserializeObject = JsonConvert.DeserializeObject<cu>(content);
-                        if (objDeserializeObject.errors != null)
+                        if (objDeserializeObject.errorMessages != null)
                         {
-                            TempData["message"] = objDeserializeObject.errors[0];
+                            TempData["message"] = objDeserializeObject.errorMessages[0];
                         }
                         else
                         {
-                            TempData["message"] = "Invalid Email";
+                            TempData["message"] = objDeserializeObject.displayMessage;
                         }
 
                     }
 
 
-                }
+                
             }
             catch (Exception ex)
             {
