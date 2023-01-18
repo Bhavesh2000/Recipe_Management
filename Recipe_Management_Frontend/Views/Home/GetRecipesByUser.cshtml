@@ -62,10 +62,6 @@
                                                     </button>
                                                     <a class="btn btn-outline-danger mx-2" asp-action="DeleteRecipe" asp-route-id="@recipes[i].Id">Delete</a>
                                                 </div>
-
-
-
-
                                             </div>
                                         </div>
                                     </div>
@@ -323,11 +319,15 @@
 
 
         const addingredint = () => {
-            if (document.getElementById("ingredients").value.trim() === "") {
+            if (document.getElementById("ingredients").value.trim() === "")
+            {
                 return
             }
-            ingredients.push(document.getElementById("ingredients").value.toLowerCase());
-            ingredients = Array.from(new Set(ingredients));
+            const arr = document.getElementById("ingredients").value.split(",");
+            arr.forEach((e,i)=>{
+                ingredients.push(e.toLowerCase().trim());
+                ingredients = Array.from(new Set(ingredients));
+            })
             document.getElementById("ingredientsList").value = ingredients.join(",");
             console.log(ingredients);
             document.getElementById("ingredients").value = "";
