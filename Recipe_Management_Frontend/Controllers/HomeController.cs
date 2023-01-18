@@ -157,7 +157,7 @@ namespace Recipe_Management_Frontend.Controllers
                 client.DefaultRequestHeaders.Add("Authorization", "Bearer " + token);
                 HttpContent body = new StringContent(JsonConvert.SerializeObject(new { name = recipeName, ingredients = ingredientsList, procedure = cookingProcess, userId = userId, category = category}), System.Text.Encoding.UTF8, "application/json");
 
-                var response = client.PostAsync("Recipe/EditRecipe", body).Result;
+                var response = client.PutAsync("Recipe/UpdateRecipe", body).Result;
 
                 var content = await response.Content.ReadAsStringAsync();
                 if (response.IsSuccessStatusCode)
@@ -188,7 +188,7 @@ namespace Recipe_Management_Frontend.Controllers
             return RedirectToAction("LogOut", "Auth");
         }
 
-        [HttpDelete]
+        
         public IActionResult DeleteRecipe(int id)
         {
                 string userId = Request.Cookies["userId"];
