@@ -145,8 +145,8 @@ namespace Recipe_Management_Frontend.Controllers
             return RedirectToAction("LogOut","Auth");
         }
 
-        [HttpPost]
-        public async Task<IActionResult> EditRecipe(string recipeName, string category, string ingredientsList, string cookingProcess)
+
+        public async Task<IActionResult> EditRecipe(string recipeName, string category, string ingredientsList, string cookingProcess,int id)
         {
             try
             {
@@ -157,7 +157,7 @@ namespace Recipe_Management_Frontend.Controllers
                 client.DefaultRequestHeaders.Add("Authorization", "Bearer " + token);
                 HttpContent body = new StringContent(JsonConvert.SerializeObject(new { name = recipeName, ingredients = ingredientsList, procedure = cookingProcess, userId = userId, category = category}), System.Text.Encoding.UTF8, "application/json");
 
-                var response = client.PutAsync("Recipe/UpdateRecipe", body).Result;
+                var response = client.PutAsync("Recipe/UpdateRecipe?id="+id, body).Result;
 
                 var content = await response.Content.ReadAsStringAsync();
                 if (response.IsSuccessStatusCode)
