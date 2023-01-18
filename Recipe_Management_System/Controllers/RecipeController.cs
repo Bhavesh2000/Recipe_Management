@@ -60,6 +60,7 @@ namespace Recipe_Management_System.Controllers
 
         }
 
+
         [HttpGet]
         [Route("GetRecipeById")]
         [Authorize(AuthenticationSchemes = "Bearer")]
@@ -98,6 +99,7 @@ namespace Recipe_Management_System.Controllers
             }
 
         }
+
 
         [HttpGet]
         [Route("GetRecipeByUserId")]
@@ -146,6 +148,7 @@ namespace Recipe_Management_System.Controllers
 
 
         }
+
 
         [HttpGet]
         [Route("GetPendingRecipes")]
@@ -227,6 +230,7 @@ namespace Recipe_Management_System.Controllers
             return Ok(recipeDto);
         }
 
+
         [HttpPut]
         [Route("Update_Status_Accept_Recipe")]
         [Authorize(AuthenticationSchemes = "Bearer", Roles = "Admin")]
@@ -260,6 +264,7 @@ namespace Recipe_Management_System.Controllers
 
         }
 
+
         [HttpPut]
         [Route("Update_Status_Reject_Recipe")]
         [Authorize(AuthenticationSchemes = "Bearer", Roles = "Admin")]
@@ -290,6 +295,7 @@ namespace Recipe_Management_System.Controllers
             return Ok(result);
 
         }
+
 
         [HttpGet]
         [Route("GetAcceptedRecipes")]
@@ -332,7 +338,7 @@ namespace Recipe_Management_System.Controllers
 
         [HttpDelete]
         [Route("DeleteRecipe")]
-        //[Authorize(AuthenticationSchemes = "Bearer", Roles = "User")]
+        [Authorize(AuthenticationSchemes = "Bearer", Roles = "User")]
         public async Task<ActionResult<Recipe>> DeleteRecipe(int id)
         {
 
@@ -345,9 +351,11 @@ namespace Recipe_Management_System.Controllers
 
             return recipe;
         }
+
+
         [HttpPut]
         [Route("UpdateRecipe")]
-        //[Authorize(AuthenticationSchemes = "Bearer", Roles = "User")]
+        [Authorize(AuthenticationSchemes = "Bearer", Roles = "User")]
         public async Task<ActionResult<AddRecipeDto>> UpdateRecipe(AddRecipeDto addRecipeDto)
         {
 
