@@ -22,6 +22,8 @@ namespace Recipe_Management_System.Controllers
             uservice = _uservice;
         }
 
+        
+
         [HttpGet]
         [Route("GetAllRecipes")]
         [Authorize(AuthenticationSchemes = "Bearer")]
@@ -355,20 +357,18 @@ namespace Recipe_Management_System.Controllers
 
         [HttpPut]
         [Route("UpdateRecipe")]
-        [Authorize(AuthenticationSchemes = "Bearer", Roles = "User")]
-        public async Task<ActionResult<AddRecipeDto>> UpdateRecipe(AddRecipeDto addRecipeDto)
+        //[Authorize(AuthenticationSchemes = "Bearer", Roles = "User")]
+        public async Task<ActionResult<Recipe>> UpdateRecipe(int id, AddRecipeDto addRecipeDto)
         {
+            if (addRecipeDto == null)
+            {
+                return BadRequest("Required fields are not provided");
+            }
 
-
-
-            var user = service.GetAllAsync().Where(n => n.UserId == addRecipeDto.UserId).ToList();
-
-            int id = user.Find(n => n.Name == addRecipeDto.name).Id;
-
-
+            
             var recipe = new Recipe()
             {
-
+                Id = id,
                 Name = addRecipeDto.name,
                 Ingredients = addRecipeDto.Ingredients,
                 Procedure = addRecipeDto.Procedure,
@@ -380,8 +380,14 @@ namespace Recipe_Management_System.Controllers
 
             try
             {
-                await service.DeleteRecipe(id);
-                await service.AddAsync(recipe);
+                //var recipeDuplicateName = service.GetAllAsync().Where(n => n.UserId == addRecipeDto.UserId).ToList();
+
+                //if (recipeDuplicateName.Exists(n => n.Name.ToUpper() == addRecipeDto.name.ToUpper()))
+                //{
+                //    return BadRequest("Recipe already exists");
+                //}
+                
+                return await service.UpdateAsync(id, recipe);
 
             }
             catch (NullReferenceException ex)
@@ -389,7 +395,9 @@ namespace Recipe_Management_System.Controllers
                 return BadRequest(ex.Message);
             }
 
-            return addRecipeDto;
+            
+
+
         }
 
 
