@@ -358,7 +358,7 @@ namespace Recipe_Management_System.Controllers
         [HttpPut]
         [Route("UpdateRecipe")]
         //[Authorize(AuthenticationSchemes = "Bearer", Roles = "User")]
-        public async Task<ActionResult<Recipe>> UpdateRecipe(int id, AddRecipeDto addRecipeDto)
+        public async Task<ActionResult<Recipe>> UpdateRecipe(UpdateDto addRecipeDto)
         {
             if (addRecipeDto == null)
             {
@@ -368,7 +368,7 @@ namespace Recipe_Management_System.Controllers
             
             var recipe = new Recipe()
             {
-                Id = id,
+                Id = addRecipeDto.Id,
                 Name = addRecipeDto.name,
                 Ingredients = addRecipeDto.Ingredients,
                 Procedure = addRecipeDto.Procedure,
@@ -386,13 +386,13 @@ namespace Recipe_Management_System.Controllers
                 //{
                 //    return BadRequest("Recipe already exists");
                 //}
-                
-                return await service.UpdateAsync(id, recipe);
+
+                return await service.UpdateAsync(addRecipeDto.Id, recipe);
 
             }
-            catch (NullReferenceException ex)
+            catch (Exception )
             {
-                return BadRequest(ex.Message);
+                return BadRequest("Internal server error");
             }
 
             
