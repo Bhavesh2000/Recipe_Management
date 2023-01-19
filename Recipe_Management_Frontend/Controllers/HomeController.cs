@@ -476,6 +476,47 @@ namespace Recipe_Management_Frontend.Controllers
 
 
         }
+
+
+        public async Task<IActionResult> Search(string search)
+        {
+            try
+            {
+                var client = new HttpClient();
+                client.BaseAddress = new Uri("https://localhost:7082/api/");
+                var response =client.GetAsync("recipe/search?search=" + search).Result;
+                Console.WriteLine(response.StatusCode.ToString());
+                var content = await response.Content.ReadAsStringAsync();
+                if (response.IsSuccessStatusCode)
+                {
+                    
+                    List<Recipe> recipes = JsonConvert.DeserializeObject<List<Recipe>>(content);
+                    return View("Index", recipes);
+
+                }
+                else if(content=="Type to Search")
+                {
+                    TempData["message"] = content;
+                    TempData["type"] = "error";
+                    return RedirectToAction("Index");
+                }
+               
+                else if(response.StatusCode.ToString()=="NotFound")
+                {
+                    TempData["info"] = "No such recipes or username found!!!";
+                    
+                    
+                }
+
+            }
+            catch (Exception ex)
+            {
+
+                TempData["message"] = ex.Message;
+                TempData["type"] = "error";
+            }
+            return View("Index");
+        }
         public IActionResult Privacy()
         {
             return View();
