@@ -233,6 +233,10 @@ namespace Recipe_Management_System.Controllers
         [Authorize(AuthenticationSchemes = "Bearer")]
         public async Task<ActionResult<AddRecipeDto>> AddRecipe(AddRecipeDto recipeDto)
         {
+            if(recipeDto.Ingredients == null)
+            {
+                return BadRequest("Please add Ingredients");
+            }
             var user = uservice.GetAllAsync().FirstOrDefault(n => n.Id == recipeDto.UserId);
             if (user == null)
             {
