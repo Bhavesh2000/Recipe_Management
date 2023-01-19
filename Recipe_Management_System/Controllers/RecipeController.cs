@@ -62,6 +62,42 @@ namespace Recipe_Management_System.Controllers
 
         }
 
+        [HttpGet]
+        [Route("Search")]
+        public async Task<object> Search(string search)
+        {
+            try
+            {
+                if (search == null)
+                {
+                    return BadRequest("Type to Search");
+                }
+                List<RecipeDto> result = new List<RecipeDto>();
+                var resultInRecipe = await service.GetRecipesByName(search);
+                if (resultInRecipe != null)
+                {
+
+                    result.AddRange(resultInRecipe.Value);
+                }
+                var resultUsingUserName = await service.GetRecipesByUserName(search);
+                if (resultUsingUserName != null)
+                {
+                    result.AddRange(resultUsingUserName.Value);
+                }
+                if (result.Count() == 0)
+                {
+                    return NotFound();
+                }
+
+                return result;
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            
+        }
+
 
         [HttpGet]
         [Route("GetRecipeById")]
@@ -197,6 +233,10 @@ namespace Recipe_Management_System.Controllers
         [Authorize(AuthenticationSchemes = "Bearer")]
         public async Task<ActionResult<AddRecipeDto>> AddRecipe(AddRecipeDto recipeDto)
         {
+            if(recipeDto.Ingredients == null)
+            {
+                return BadRequest("Please add Ingredients");
+            }
             var user = uservice.GetAllAsync().FirstOrDefault(n => n.Id == recipeDto.UserId);
             if (user == null)
             {

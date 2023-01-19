@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Recipe_Management_System.AppDbContext;
 using Recipe_Management_System.Models;
-
+using Recipe_Management_System.Models.Dto;
 
 namespace Recipe_Management_System.Repository.Service
 {
@@ -15,7 +15,79 @@ namespace Recipe_Management_System.Repository.Service
             context = _context;
         }
 
+        public async Task<ActionResult<IEnumerable<RecipeDto>>> GetRecipesByName(string recipeName)
+        {
+            if (recipeName == null)
+            {
+                return new BadRequestObjectResult("Recipe name is not provided");
+            }
+            List<RecipeDto> result = new List<RecipeDto>();
 
+            var recipes = await context.Recipes.Where(r => r.Name.ToLower().Contains(recipeName.ToLower()) && r.Status == "Accepted").ToListAsync();
+            if (recipes == null)
+            {
+                return result;
+            }
+            var users = context.Users.ToList();
+
+            foreach (var recipe in recipes)
+            {
+                string Username = users.FirstOrDefault(n => n.Id == recipe.UserId).UserName;
+                result.Add(new RecipeDto()
+                {
+                    Id = recipe.Id,
+                    Ingredients = recipe.Ingredients,
+                    Procedure = recipe.Procedure,
+                    Username = Username,
+                    name = recipe.Name,
+                    Category = recipe.Category,
+                    Status = recipe.Status,
+                });
+            }
+
+            return result;
+        }
+
+
+
+        public async Task<ActionResult<IEnumerable<RecipeDto>>> GetRecipesByUserName(string userName)
+        {
+
+            if (userName == null)
+            {
+                return new BadRequestObjectResult("UserName is not provided");
+            }
+            List<RecipeDto> result = new List<RecipeDto>();
+            var users = context.Users.Where(x => x.UserName.ToLower().Contains(userName.ToLower()));
+            if (users == null)
+            {
+                return result;
+            }
+            //List<Recipe> recipes=new List<Recipe>();
+            foreach (var u in users)
+            {
+                var recipes = await context.Recipes.Where(r => r.UserId == u.Id && r.Status == "Accepted").ToListAsync();
+                foreach (var recipe in recipes)
+                {
+                    result.Add(new RecipeDto()
+                    {
+                        Id = recipe.Id,
+                        Ingredients = recipe.Ingredients,
+                        Procedure = recipe.Procedure,
+                        Username = u.UserName,
+                        name = recipe.Name,
+                        Category = recipe.Category,
+                        Status = recipe.Status,
+                    });
+                }
+            }
+
+
+
+
+
+            return result;
+        }
         public async Task<ActionResult<IEnumerable<Recipe>>> GetRecipeByUserId(string id)
         {
             var recipes = await context.Recipes.Where(x => x.UserId == id).ToListAsync();
