@@ -87,6 +87,7 @@ background-size: cover; padding-top:10px; height:calc(100vh - 150px);">
                     <div class="mb-3">
                         <label for="recipeName" class="form-label">Recipe Name</label>
                         <input type="text" class="form-control" id="recipeName" name="recipeName" minLength="3" required>
+                        <p class="text-muted" style="font-size: 12px">*Recipe Name should be minimum 3 characters</p>
                     </div>
                     <div class="mb-3">
                         <label for="category" class="form-label">Category</label>
@@ -95,7 +96,7 @@ background-size: cover; padding-top:10px; height:calc(100vh - 150px);">
                             <option value="Veg">Veg</option>
                             <option value="Non-Veg">Non-Veg</option>
                         </select>
-
+                        
                     </div>
                     <div class="mb-3">
                         <label for="ingredients" class="form-label">Ingredients</label>
@@ -103,7 +104,7 @@ background-size: cover; padding-top:10px; height:calc(100vh - 150px);">
                         <div class="row d-flex align-items-center">
                             <input type="hidden" id="ingredientsList" name="ingredientsList" />
                             <div class="col-sm-6 ">
-                                <input type="text" class="form-control" id="ingredients" required />
+                                <input type="text" class="form-control" id="ingredients" placeholder="Add Ingredient one by one" required />
                             </div>
                             <div class="col-sm-3">
                                 <button type="button" class="btn btn-primary my-2" onclick="addingredint()">
@@ -111,12 +112,14 @@ background-size: cover; padding-top:10px; height:calc(100vh - 150px);">
                                 </button>
                             </div>
                         </div>
+                        <p class="text-danger d-none" id="ingrdientExists">Ingredient already exists</p>
                     </div>
                     <div class="mb-3">
                         <label for="cookingProcess" class="form-label">Cooking Process</label>
                         <div class="form-floating">
-                            <textarea class="form-control p-2" id="cookingProcess" name="cookingProcess"  style="height: 150px" minLength="50" required></textarea>
+                            <textarea class="form-control p-2" id="cookingProcess" name="cookingProcess" style="height: 150px" minLength="50" required></textarea>
                         </div>
+                        <p class="text-muted" style="font-size: 12px">*Cooking process should be minimum 50 characters</p>
                     </div>
                     <button type="submit" class="btn btn-primary w-100">Submit</button>
                 </form>
@@ -127,6 +130,7 @@ background-size: cover; padding-top:10px; height:calc(100vh - 150px);">
 
 <script>
     let ingredients = [];
+    var regex = /^[A-Za-z0-9 ]+$/
 
     const createIngredientList = () => {
         let ingredientslist = document.createElement("div");
@@ -148,14 +152,25 @@ background-size: cover; padding-top:10px; height:calc(100vh - 150px);">
     };
 
     const addingredint = () => {
+        document.getElementById("ingrdientExists").setAttribute("class", "text-danger d-none");
         if (document.getElementById("ingredients").value.trim() === "")
         {
             return
         }
-        const arr = document.getElementById("ingredients").value.split(",");
+        const arr = document.getElementById("ingredients").value.trim().split(",");
         arr.forEach((e,i)=>{
-            ingredients.push(e.toLowerCase().trim());
-            ingredients = Array.from(new Set(ingredients));
+            let temp = e.toLowerCase().trim();
+            if(!regex.test(temp))
+                return
+
+            ingredients.push(temp);
+            const newIngredients = Array.from(new Set(ingredients));
+            if(ingredients.length !== newIngredients.length)
+            {
+                document.getElementById("ingrdientExists").setAttribute("class","text-danger d-block");
+            }
+            ingredients = newIngredients;
+
         })
         document.getElementById("ingredientsList").value = ingredients.join(",");
         console.log(ingredients);
@@ -169,7 +184,7 @@ background-size: cover; padding-top:10px; height:calc(100vh - 150px);">
         console.log(ingredients);
         createIngredientList();
         document.getElementById("ingredientsList").value = ingredients.join(",");
-        if(ingredients.length == 0)
+        if(ingredients.length === 0)
         {
             document.getElementById("ingredients").required = true;
         }
