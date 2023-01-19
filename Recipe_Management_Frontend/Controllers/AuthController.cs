@@ -76,7 +76,7 @@ namespace Recipe_Management_Frontend.Controllers
                 var content = await response.Content.ReadAsStringAsync();
                 var objDeserializeObject = JsonConvert.DeserializeObject<cu>(content);
 
-                if (objDeserializeObject.isSuccess)
+                if (objDeserializeObject.Result.user_Id != null)
                 {
   
                         CookieOptions options = new CookieOptions();
@@ -145,7 +145,7 @@ namespace Recipe_Management_Frontend.Controllers
                 var content = await response.Content.ReadAsStringAsync();
                 var objDeserializeObject = JsonConvert.DeserializeObject<cu>(content);
 
-                if (objDeserializeObject.isSuccess)
+                if (objDeserializeObject.Result.user_Id != null)
                 {
 
                         CookieOptions options = new CookieOptions();

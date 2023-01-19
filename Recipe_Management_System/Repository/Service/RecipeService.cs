@@ -63,8 +63,9 @@ namespace Recipe_Management_System.Repository.Service
 
             if (id != addRecipeDto.Id)
             {
-                return new BadRequestObjectResult("Not Found");
+                return new BadRequestObjectResult("Recipe not exists");
             }
+           
 
             context.Entry(addRecipeDto).State = EntityState.Modified;
             await context.SaveChangesAsync();
