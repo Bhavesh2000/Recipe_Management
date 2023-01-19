@@ -357,7 +357,7 @@ namespace Recipe_Management_System.Controllers
 
         [HttpPut]
         [Route("UpdateRecipe")]
-        //[Authorize(AuthenticationSchemes = "Bearer", Roles = "User")]
+        [Authorize(AuthenticationSchemes = "Bearer", Roles = "User")]
         public async Task<ActionResult<Recipe>> UpdateRecipe(UpdateDto addRecipeDto)
         {
             if (addRecipeDto == null)

@@ -10,6 +10,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using Recipe_Management_System.Repository.Service;
 using Microsoft.AspNetCore.Authorization;
+using System.Linq;
 
 namespace Recipe_Management_System.Controllers
 {
@@ -54,6 +55,12 @@ namespace Recipe_Management_System.Controllers
             {
                 if (ModelState.IsValid)
                 {
+                    if(request.Name.Contains(' ')) 
+                    {
+                        _response.IsSuccess = false;
+                        _response.Result = BadRequest();
+                        _response.DisplayMessage = "Name should not have spaces";
+                    }
 
                     var IsUserNamePresent = await _userManager.FindByNameAsync(request.Name);
                     var IsEmailPresent = await _userManager.FindByEmailAsync(request.Email);
