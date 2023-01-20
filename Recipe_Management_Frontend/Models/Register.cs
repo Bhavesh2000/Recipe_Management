@@ -11,7 +11,7 @@ namespace Recipe_Management_Frontend.Models
         [EmailAddress(ErrorMessage ="Enter valid email")]
         public string Email { get; set; }
 
-        [Required(ErrorMessage = "* Password Required")]
+        [Required(ErrorMessage = "* Password Required ")]
         public string Password { get; set; }
         [Required(ErrorMessage = "* Confirm Password Required")]
         [Compare("Password",ErrorMessage ="Password did not match")]

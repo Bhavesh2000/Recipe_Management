@@ -505,7 +505,6 @@ namespace Recipe_Management_Frontend.Controllers
                 {
                     TempData["info"] = "No such recipes or username found!!!";
                     
-                    
                 }
 
             }

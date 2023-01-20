@@ -4,15 +4,18 @@
 }
 
 
+<body>
 
 <div class="container d-flex justify-content-center align-items-center flex-column shadow  bg-white rounded py-3  " style="max-width:400px;margin-top:60px">
     <!-- Content here -->
     <h4 class="p-3 text-center">Recipe Management System</h4>
    
     <form method="post" asp-action="RegisterOne" class="w-75">
-
+        
         <div class="p-2  ">
-            <input type="text" placeholder="UserName" asp-for="Name" class="p-2 w-100 col-lg-4 " />
+            <input type="text" placeholder="UserName" asp-for="Name" class="p-2 w-100 col-lg-4 " onfocus='focusUser()' onblur="outFocusUser()"   id="username"/>
+           
+
             @Html.ValidationMessage("Name",new {@class="text-danger small"})
         </div>
     <div class="p-2 " >
@@ -20,7 +23,7 @@
             @Html.ValidationMessage("Email",new {@class="text-danger small"})
     </div>
         <div class="p-2  ">
-            <input type="password" placeholder="Password" asp-for="Password" class="p-2 w-100 col-lg-4 " />
+                <input type="password" placeholder="Password" asp-for="Password" class="p-2 w-100 col-lg-4 " id="password" onfocus='focusPassword()' onblur="outFocusPassword()" />
             @Html.ValidationMessage("Password",new {@class="text-danger small"})
         </div>
         <div class="p-2  ">
@@ -39,4 +42,53 @@
     </form>
     
 </div>
+    <script>
+        function focusUser() {
+            var p = document.createElement("p")
+            p.innerHTML = "* Username should not contain spaces"
+            p.setAttribute('id','usernote')
+            p.style["fontSize"]="small"
+            p.style["color"] = "#505050"
+            console.log(p)
+            document.getElementById("username").after(p)
+        }
+        function outFocusUser(){
+            const p=document.getElementById('usernote').remove()
 
+        }
+
+         function focusPassword() {
+             var div=document.createElement("div")
+               div.innerHTML = "* Password must contain the following:"
+            let note1 = "Atleast 1 uppercase letter"
+            let note2 = "Atleast 1 special character - #$%*!&^"
+            let note3 = "Must be atleast 8 characters long"
+            var ul = document.createElement("ul")
+           
+            var li1=document.createElement("li")
+            li1.innerHTML=note1
+            ul.appendChild(li1)
+            console.log(li1)
+            var li2 = document.createElement("li")
+            li2.innerHTML = note2
+            ul.appendChild(li2)
+
+            var li3 = document.createElement("li")
+            li3.innerHTML = note3
+            ul.appendChild(li3)
+
+            div.appendChild(ul)
+          
+            div.setAttribute('id','usernote')
+            div.style["fontSize"]="small"
+            div.style["color"] = "#505050"
+           
+            document.getElementById("password").after(div)
+        }
+        function outFocusPassword(){
+            const p=document.getElementById('usernote').remove()
+
+        }
+    </script>
+
+</body>
