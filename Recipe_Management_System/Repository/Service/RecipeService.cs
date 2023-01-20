@@ -23,7 +23,7 @@ namespace Recipe_Management_System.Repository.Service
             }
             List<RecipeDto> result = new List<RecipeDto>();
 
-            var recipes = await context.Recipes.Where(r => r.Name.ToLower().Contains(recipeName.ToLower()) && r.Status == "Accepted").ToListAsync();
+            var recipes = await context.Recipes.Where(r => r.Name.Replace(" ","").ToLower().Contains(recipeName.ToLower()) && r.Status == "Accepted").ToListAsync();
             if (recipes == null)
             {
                 return result;
