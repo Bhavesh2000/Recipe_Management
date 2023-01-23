@@ -233,6 +233,14 @@ namespace Recipe_Management_Frontend.Controllers
             return RedirectToAction("Index", "Auth");
         }
 
+        [Route("/{id}")]
+        public IActionResult Error(string id)
+        {
+            TempData["message"] = "Page not found!!";
+            TempData["type"] = "error";
+            return RedirectToAction("Index","Home");
+
+        }
 
         bool CheckPasswordStregth(string password)
         {
