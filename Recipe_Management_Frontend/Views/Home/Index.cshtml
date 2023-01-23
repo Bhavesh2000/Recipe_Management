@@ -55,11 +55,20 @@ background-size: cover; padding-top:10px; height:calc(100vh - 150px);">
 
                                             <div class="row">
                                                 <div class="col-12 d-flex">
-                                                    @recipe.Name
+                                                    @recipe.Name                                                       
                                                 </div>
 
                                                 <div class="col-12 d-flex text-muted" style="font-size:0.8rem">
-                                                    @recipe.Username
+                                                    @{
+                                                        if (recipe.UserId == ViewBag.userId)
+                                                        {
+                                                            <span>Me</span>
+                                                        }
+                                                        else
+                                                        {
+                                                            @recipe.Username
+                                                        }
+                                                    }
                                                 </div>
                                             </div>
 
