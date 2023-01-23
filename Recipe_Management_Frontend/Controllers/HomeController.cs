@@ -53,6 +53,7 @@ namespace Recipe_Management_Frontend.Controllers
         {
             IEnumerable<Recipe> recipes = null;
             string token = Request.Cookies["token"];
+            string userId = Request.Cookies["userId"];
 
             if (token != null)
             {
@@ -77,6 +78,7 @@ namespace Recipe_Management_Frontend.Controllers
                                 TempData["message"] = TempData["message"];
                                 TempData["type"] = TempData["type"];
                             }
+                            ViewBag.userId = userId;
                             return View(recipes);
                         }
                         else
