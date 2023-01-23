@@ -342,7 +342,7 @@ namespace Recipe_Management_System.Controllers
         [HttpGet]
         [Route("GetAcceptedRecipes")]
         [Authorize(AuthenticationSchemes = "Bearer")]
-        public async Task<ActionResult<IEnumerable<RecipeDto>>> GetAcceptedRecipes()
+        public async Task<ActionResult<IEnumerable<AcceptedDto>>> GetAcceptedRecipes()
         {
             try
             {
@@ -352,18 +352,19 @@ namespace Recipe_Management_System.Controllers
                     return NotFound();
                 }
                 var users = uservice.GetAllAsync();
-                List<RecipeDto> result = new List<RecipeDto>();
+                List<AcceptedDto> result = new List<AcceptedDto>();
                 foreach (var recipe in recipes.Value)
                 {
-                    result.Add(new RecipeDto()
+                    result.Add(new AcceptedDto()
                     {
                         Id = recipe.Id,
                         Ingredients = recipe.Ingredients,
                         Procedure = recipe.Procedure,
                         Username = users.FirstOrDefault(n => n.Id == recipe.UserId).UserName,
-                        name = recipe.Name,
+                        Name = recipe.Name,
                         Category = recipe.Category,
                         Status = recipe.Status,
+                        UserId = recipe.UserId
                     });
                 }
 

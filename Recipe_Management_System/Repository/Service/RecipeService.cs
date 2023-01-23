@@ -23,7 +23,11 @@ namespace Recipe_Management_System.Repository.Service
             }
             List<RecipeDto> result = new List<RecipeDto>();
 
-            var recipes = await context.Recipes.Where(r => r.Name.Replace(" ","").ToLower().Contains(recipeName.ToLower()) && r.Status == "Accepted").ToListAsync();
+            var recipes = await context.Recipes.Where(r => 
+                            r.Name.Replace(" ","").ToLower().Contains(recipeName.ToLower()) ||
+                            r.Name.ToLower().Contains(recipeName.ToLower()) &&
+                            r.Status == "Accepted"
+                            ).ToListAsync();
             if (recipes == null)
             {
                 return result;
@@ -47,8 +51,6 @@ namespace Recipe_Management_System.Repository.Service
 
             return result;
         }
-
-
 
         public async Task<ActionResult<IEnumerable<RecipeDto>>> GetRecipesByUserName(string userName)
         {
@@ -82,12 +84,9 @@ namespace Recipe_Management_System.Repository.Service
                 }
             }
 
-
-
-
-
             return result;
         }
+
         public async Task<ActionResult<IEnumerable<Recipe>>> GetRecipeByUserId(string id)
         {
             var recipes = await context.Recipes.Where(x => x.UserId == id).ToListAsync();
