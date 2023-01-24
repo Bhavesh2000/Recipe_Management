@@ -36,7 +36,10 @@ namespace Recipe_Management_Frontend.Controllers
         [Route("/LogIn")]
         public ActionResult Index()
         {
-
+            if (Request.Cookies["token"] != null)
+            {
+                return RedirectToAction("Index", "Home");
+            }
             return View();
         }
 
@@ -44,6 +47,10 @@ namespace Recipe_Management_Frontend.Controllers
         [Route("/Register")]
         public IActionResult Register()
         {
+            if (Request.Cookies["token"] != null)
+            {
+                return RedirectToAction("Index","Home");
+            }
             return View();
         }
 
