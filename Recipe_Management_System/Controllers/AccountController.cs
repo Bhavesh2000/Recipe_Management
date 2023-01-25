@@ -205,6 +205,7 @@ namespace Recipe_Management_System.Controllers
 
 
         //API method to register Admin 
+        [HttpPost]
         [Route("RegisterAdmin")]
    //     [Authorize(AuthenticationSchemes = "Bearer", Roles = "Admin")]
         public async Task<object> RegisterAdmin([FromBody] RegisterDto request)
