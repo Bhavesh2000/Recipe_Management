@@ -6,6 +6,7 @@ using Recipe_Management_System.AppDbContext;
 using Recipe_Management_System.Models;
 using Recipe_Management_System.Models.Dto;
 using Recipe_Management_System.Repository.Service;
+using System.Security.Claims;
 
 namespace Recipe_Management_System.Controllers
 {
@@ -15,11 +16,13 @@ namespace Recipe_Management_System.Controllers
     {
         private readonly IRecipeService service;
         private readonly IUserService uservice;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public RecipeController(IRecipeService _service, IUserService _uservice)
+        public RecipeController(IRecipeService _service, IUserService _uservice, IHttpContextAccessor httpContextAccessor)
         {
             service = _service;
             uservice = _uservice;
+            _httpContextAccessor = httpContextAccessor;
         }
 
         
@@ -142,20 +145,21 @@ namespace Recipe_Management_System.Controllers
         [HttpGet]
         [Route("GetRecipeByUserId")]
         [Authorize(AuthenticationSchemes = "Bearer")]
-        public async Task<ActionResult<IEnumerable<RecipeDto>>> GetRecipeByUserId(string UserId)
+        public async Task<ActionResult<IEnumerable<RecipeDto>>> GetRecipeByUserId()
         {
             try
             {
-                if (UserId == null)
+                var userId = _httpContextAccessor.HttpContext.User.Claims.First(i => i.Type == "Id").Value;
+                if(userId == null)
                 {
-                    return BadRequest("UserId is not provided");
+                    return NotFound();
                 }
-                var user = uservice.GetAllAsync().FirstOrDefault(n => n.Id == UserId);
+                var user = uservice.GetAllAsync().FirstOrDefault(n => n.Id == userId);
                 if (user == null)
                 {
                     return NotFound();
                 }
-                var recipes = await service.GetRecipeByUserId(UserId);
+                var recipes = await service.GetRecipeByUserId(userId);
                 if (recipes.Value == null)
                 {
                     return NotFound();
@@ -233,16 +237,22 @@ namespace Recipe_Management_System.Controllers
         [Authorize(AuthenticationSchemes = "Bearer")]
         public async Task<ActionResult<AddRecipeDto>> AddRecipe(AddRecipeDto recipeDto)
         {
-            if(recipeDto.Ingredients == null)
+            var userId = _httpContextAccessor.HttpContext.User.Claims.First(i => i.Type == "Id").Value;
+            if (userId == null)
+            {
+                return NotFound();
+            }
+
+            if (recipeDto.Ingredients == null)
             {
                 return BadRequest("Please add Ingredients");
             }
-            var user = uservice.GetAllAsync().FirstOrDefault(n => n.Id == recipeDto.UserId);
+            var user = uservice.GetAllAsync().FirstOrDefault(n => n.Id == userId);
             if (user == null)
             {
                 return BadRequest("User doesn't exists");
             }
-            var recipeDuplicateName = service.GetAllAsync().Where(n => n.UserId == recipeDto.UserId).ToList();
+            var recipeDuplicateName = service.GetAllAsync().Where(n => n.UserId == userId).ToList();
 
             if (recipeDuplicateName.Exists(n => n.Name.ToUpper() == recipeDto.name.ToUpper()))
             {
@@ -254,7 +264,7 @@ namespace Recipe_Management_System.Controllers
                 Name = recipeDto.name,
                 Ingredients = recipeDto.Ingredients,
                 Procedure = recipeDto.Procedure,
-                UserId = recipeDto.UserId,
+                UserId = userId,
                 Category = recipeDto.Category,
                 Status = recipeDto.Status,
             };
@@ -406,17 +416,21 @@ namespace Recipe_Management_System.Controllers
                 return BadRequest("Required fields are not provided");
             }
 
-            
+            var userId = _httpContextAccessor.HttpContext.User.Claims.First(i => i.Type == "Id").Value;
+            if (userId == null)
+            {
+                return NotFound();
+            }
+
             var recipe = new Recipe()
             {
                 Id = addRecipeDto.Id,
                 Name = addRecipeDto.name,
                 Ingredients = addRecipeDto.Ingredients,
                 Procedure = addRecipeDto.Procedure,
-                UserId = addRecipeDto.UserId,
+                UserId = userId,
                 Category = addRecipeDto.Category,
                 Status = "Pending",
-
             };
 
             try

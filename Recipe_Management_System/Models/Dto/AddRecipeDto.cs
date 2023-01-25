@@ -9,7 +9,6 @@ namespace Recipe_Management_System.Models.Dto
         public string Procedure { get; set; }
         [DefaultValue("Pending")]
         public string Status { get; set; }
-        public string UserId { get; set; }
         public string Category { get; set; }
     }
 }

@@ -37,11 +37,7 @@ namespace Recipe_Management_System.Controllers
 
         }
 
-
-
-        //We can add this attribute on top of our http methods to provide authorization.
-        //[Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
-
+        //API method to register the User into the system.
         [HttpPost]
         [Route("Register")]
         public async Task<object> Register([FromBody] RegisterDto request)
@@ -122,7 +118,7 @@ namespace Recipe_Management_System.Controllers
 
         }
 
-
+        //API Method to login the User into the system.
         [HttpPost]
         [Route("Login")]
         public async Task<object> Login([FromBody] LoginDto loginRequest)
@@ -180,6 +176,7 @@ namespace Recipe_Management_System.Controllers
 
         }
 
+        //API method to logout
         [HttpDelete]
         [Route("LogoutJWT")]
         [Authorize(AuthenticationSchemes = "Bearer")]
@@ -206,32 +203,10 @@ namespace Recipe_Management_System.Controllers
             });
         }
 
-        [HttpPost]
-        [Route("RefreshToken")]
-        //  [Authorize(AuthenticationSchemes = "Bearer")]
-        public async Task<IActionResult> RefreshToken(TokenDto tokenRequest)
-        {
-            if (ModelState.IsValid)
-            {
-                var result = await _tokenGenerator.VerifyAndGenerateToken(tokenRequest);
 
-                if (result == null)
-                {
-                    return BadRequest();
-                }
-                else
-                {
-                    return Ok(result);
-                }
-            }
-
-            return BadRequest();
-        }
-
-
-        [HttpPost]
+        //API method to register Admin 
         [Route("RegisterAdmin")]
-       // [Authorize(AuthenticationSchemes = "Bearer", Roles = "Admin")]
+        [Authorize(AuthenticationSchemes = "Bearer", Roles = "Admin")]
         public async Task<object> RegisterAdmin([FromBody] RegisterDto request)
         {
             if (!_roleManager.RoleExistsAsync(Helper.Helper.Admin).GetAwaiter().GetResult())

@@ -15,6 +15,7 @@ builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<ITokenGenerator, TokenGenerator>();
 
 builder.Services.AddControllers();
+builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
 //Adding service so that DbContext will have info of server and database to be connected.
 builder.Services.AddDbContext<ApplicationDbContext>(

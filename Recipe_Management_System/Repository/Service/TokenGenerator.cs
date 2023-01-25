@@ -66,50 +66,9 @@ namespace Recipe_Management_System.Repository.Service
                         }
                     };
                 }
-                //getting stored token from database
-                var storedToken = await _db.RefreshTokens.FirstOrDefaultAsync(x => x.Token == tokenRequest.RefreshToken);
-
-                if (storedToken == null)
-                {
-                    return new
-                    {
-                        Result = false,
-                        Errors = new List<string>()
-                        {
-                            "Invalid Tokens"
-                        }
-                    };
-                }
-
-                if (storedToken.IsUsed)
-                {
-                    return new
-                    {
-                        Result = false,
-                        Errors = new List<string>()
-                        {
-                            "Invalid Tokens"
-                        }
-                    };
-                }
-
-                if (storedToken.IsRevoked)
-                {
-                    return new
-                    {
-                        Result = false,
-                        Errors = new List<string>()
-                        {
-                            "Invalid Tokens"
-                        }
-                    };
-                }
-
-                //getting JWT token Id
-                var jti = tokenInVerification.Claims.FirstOrDefault(x =>
-                                       x.Type == JwtRegisteredClaimNames.Jti).Value;
-                //Verifing if jwt id and stored id is same
-                if (storedToken.JwtId != jti)
+                
+                var userID = tokenInVerification.Claims.FirstOrDefault(x => x.Type == "Id").Value; 
+                if (userID == null) 
                 {
                     return new
                     {
@@ -120,26 +79,11 @@ namespace Recipe_Management_System.Repository.Service
                         }
                     };
                 }
-                //if refresh token expired then returning false result
-                if (storedToken.ExpireDate < DateTime.Now)
+                return new
                 {
-                    return new
-                    {
-                        Result = false,
-                        Errors = new List<string>()
-                        {
-                            "Expired Token"
-                        }
-                    };
-                }
-
-                storedToken.IsUsed = true;
-                _db.RefreshTokens.Update(storedToken);
-                await _db.SaveChangesAsync();
-
-                var dbUser = await _db.Users.FindAsync(storedToken.UserId);
-
-                return await JwtTokenGenerator(dbUser);
+                    Result = false,
+                    UserId = userID
+                };
 
             }
             catch (Exception)
@@ -180,26 +124,9 @@ namespace Recipe_Management_System.Repository.Service
 
             var jwtToken = jwtTokenHandler.WriteToken(token);
 
-            //var refreshToken = new RefreshToken()
-            //{
-            //    JwtId = token.Id,     //Giving same Id as JWT token Id
-            //    Token = RandomStringGenerator(23),  //Actual RefreshToken generated
-            //    AddedDate = DateTime.Now,     //Refresh token Generated time
-            //    ExpireDate = DateTime.Now.AddHours(1),  //Expiry of refresh token
-            //    UserId = user.Id,   //User info for whom we generated this token
-            //    IsRevoked = false,
-            //    IsUsed = false,
-            //};
-
-         //   await _db.RefreshTokens.AddAsync(refreshToken);  //Added refresh token to database
-          //  await _db.SaveChangesAsync();
-
-
-
             var result = new
             {
-                Token = jwtToken,
-              //  RefreshToken = refreshToken.Token,
+                Token = jwtToken
             };
 
             return result;
@@ -208,6 +135,7 @@ namespace Recipe_Management_System.Repository.Service
 
         public async Task<string> VerifyJwtAndGetUserId(string jwt)
         {
+            
             var jwtTokenHandler = new JwtSecurityTokenHandler();
 
             var tokenInVerification = jwtTokenHandler.ValidateToken(jwt, _tokenValidationParameters, out var validatedToken);
@@ -237,7 +165,6 @@ namespace Recipe_Management_System.Repository.Service
 
         }
 
-
         private DateTime TimeStampToDateTime(long unixDateTime)
         {
             var dateTimeVal = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Local);
@@ -246,13 +173,5 @@ namespace Recipe_Management_System.Repository.Service
             return dateTimeVal;
         }
 
-
-        //To create actual Refresh Token
-        private string RandomStringGenerator(int length)
-        {
-            var random = new Random();
-            var chars = "ABCDEFGHIJKLMNOPQRSTWXYZabcdefghijklmnopqrstuvwxyz";
-            return new string(Enumerable.Repeat(chars, length).Select(s => s[random.Next(s.Length)]).ToArray());
-        }
     }
 }
