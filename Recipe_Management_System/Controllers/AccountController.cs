@@ -92,7 +92,8 @@ namespace Recipe_Management_System.Controllers
 
                             _response.Result = new
                             {
-                                UserToken = jwtToken,
+                                UserToken = jwtToken.Token,
+                                RefreshToken= jwtToken.RefreshToken,
                                 Type = new_user.Type,
                                 User_Id = user.Id,
                             };
@@ -157,7 +158,8 @@ namespace Recipe_Management_System.Controllers
 
                     _response.Result = new
                     {
-                        UserToken = jwtToken,
+                        UserToken = jwtToken.Token,
+                        RefreshToken= jwtToken.RefreshToken,
                         Type = user.Type,
                         User_name = user.UserName,
                         User_Id = user.Id,
@@ -278,5 +280,25 @@ namespace Recipe_Management_System.Controllers
             return _response;
         }
 
+        [HttpPost]
+        [Route("RefreshToken")]
+        public async Task<IActionResult> RefreshToken(TokenDto tokenRequest)
+        {
+            if (ModelState.IsValid)
+            {
+                var result = await _tokenGenerator.VerifyAndGenerateToken(tokenRequest);
+
+                if (result == null)
+                {
+                    return BadRequest();
+                }
+                else
+                {
+                    return Ok(result);
+                }
+            }
+
+            return BadRequest();
+        }
     }
 }

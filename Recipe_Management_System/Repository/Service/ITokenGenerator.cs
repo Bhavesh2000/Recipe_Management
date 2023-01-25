@@ -8,7 +8,7 @@ namespace Recipe_Management_System.Repository.Service
     {
         Task<object> VerifyAndGenerateToken(TokenDto tokenRequest);
 
-        Task<object> JwtTokenGenerator(User user);
+        Task<TokenDto> JwtTokenGenerator(User user);
 
         Task DeleteAllRefreshTokenForUser(string userId);
     }
