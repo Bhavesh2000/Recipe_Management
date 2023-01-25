@@ -243,9 +243,20 @@ namespace Recipe_Management_Frontend.Controllers
         [Route("/{id}")]
         public IActionResult Error(string id)
         {
-            TempData["message"] = "Page not found!!";
-            TempData["type"] = "error";
-            return RedirectToAction("Index","Home");
+            if (Request.Cookies["token"] != null)
+            {
+                TempData["message"] = "Page not found!!";
+                TempData["type"] = "error";
+                return RedirectToAction("Index", "Home");
+            }
+            else
+            {
+                TempData["message"] = "Please Login!!";
+                TempData["type"] = "error";
+                return RedirectToAction("Index");
+            }
+            
+           
 
         }
 
