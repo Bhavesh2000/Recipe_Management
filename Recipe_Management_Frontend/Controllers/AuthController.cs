@@ -93,7 +93,7 @@ namespace Recipe_Management_Frontend.Controllers
                         Response.Cookies.Append("type", objDeserializeObject.Result.type);
 
 
-                        Response.Cookies.Append("userId", objDeserializeObject.Result.user_Id);
+                     //   Response.Cookies.Append("userId", objDeserializeObject.Result.user_Id);
                         //  Response.Cookies.Append("refreshtoken", objDeserializeObject.UserToken.refreshtoken);
                         TempData["message"] = "User registered successfully!!!";
                         TempData["type"] = "success";
@@ -161,7 +161,7 @@ namespace Recipe_Management_Frontend.Controllers
 
                         Response.Cookies.Append("type", objDeserializeObject.Result.type);
                         //      Response.Cookies.Append("refreshtoken", u.refreshtoken);
-                        Response.Cookies.Append("userId", objDeserializeObject.Result.user_Id);
+                      //  Response.Cookies.Append("userId", objDeserializeObject.Result.user_Id);
                         TempData["message"] = "Logged in successfully!!!";
                         TempData["type"] = "success";
                         return RedirectToAction("Index", "Home");
@@ -227,7 +227,7 @@ namespace Recipe_Management_Frontend.Controllers
                 //            Response.Cookies.Delete("refreshtoken");
 
                 Response.Cookies.Delete("type");
-                Response.Cookies.Delete("userId");
+          //      Response.Cookies.Delete("userId");
 
 
             }
