@@ -55,7 +55,6 @@ namespace Recipe_Management_Frontend.Controllers
         public async Task<HttpResponseMessage> Apifunction(string route,string method,HttpContent body,int id =0)
         {
             string token = Request.Cookies["token"];
-            string userId = Request.Cookies["userId"];
 
             if (token != null)
             {
@@ -131,6 +130,8 @@ namespace Recipe_Management_Frontend.Controllers
            
                 try
                 {
+                    
+                        
 
                         var response = await Apifunction("GetAcceptedRecipes", "GET",null);
                         var content = await response.Content.ReadAsStringAsync();
