@@ -144,6 +144,7 @@ namespace Recipe_Management_Frontend.Controllers
                                 TempData["message"] = TempData["message"];
                                 TempData["type"] = TempData["type"];
                             }
+                    ViewBag.userName = Request.Cookies["userName"];
                             return View(recipes);
                         }
                         else
@@ -522,6 +523,7 @@ namespace Recipe_Management_Frontend.Controllers
                 {
                     
                     List<Recipe> recipes = JsonConvert.DeserializeObject<List<Recipe>>(content);
+
                     return View("Index", recipes);
 
                 }

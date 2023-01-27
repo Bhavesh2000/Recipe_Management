@@ -16,6 +16,7 @@ namespace Recipe_Management_Frontend.Controllers
         public string user_Id;
         public string type;
         public string statusCode;
+        public string user_name;
     }
 
 
@@ -91,7 +92,7 @@ namespace Recipe_Management_Frontend.Controllers
                         Response.Cookies.Append("token", objDeserializeObject.Result.UserToken.token);
 
                         Response.Cookies.Append("type", objDeserializeObject.Result.type);
-
+                    Response.Cookies.Append("userName", r.Name);
 
                      //   Response.Cookies.Append("userId", objDeserializeObject.Result.user_Id);
                         //  Response.Cookies.Append("refreshtoken", objDeserializeObject.UserToken.refreshtoken);
@@ -160,6 +161,7 @@ namespace Recipe_Management_Frontend.Controllers
                         Response.Cookies.Append("token",objDeserializeObject.Result.UserToken.token);
 
                         Response.Cookies.Append("type", objDeserializeObject.Result.type);
+                    Response.Cookies.Append("userName", objDeserializeObject.Result.user_name);
                         //      Response.Cookies.Append("refreshtoken", u.refreshtoken);
                       //  Response.Cookies.Append("userId", objDeserializeObject.Result.user_Id);
                         TempData["message"] = "Logged in successfully!!!";
