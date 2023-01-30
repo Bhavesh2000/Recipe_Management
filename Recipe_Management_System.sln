@@ -5,7 +5,7 @@ VisualStudioVersion = 17.4.33122.133
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Recipe_Management_System", "Recipe_Management_System\Recipe_Management_System.csproj", "{B1B39FAF-8DF8-4AE3-B4B8-1EF3762F516D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Recipe_Management_Frontend", "Recipe_Management_Frontend\Recipe_Management_Frontend.csproj", "{AB1E78F6-5AFF-49C0-8752-46BD0B8B3B06}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Recipe_Management_Frontend", "Recipe_Management_Frontend\Recipe_Management_Frontend.csproj", "{AB1E78F6-5AFF-49C0-8752-46BD0B8B3B06}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

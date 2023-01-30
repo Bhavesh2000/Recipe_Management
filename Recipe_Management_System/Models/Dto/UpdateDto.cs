@@ -11,5 +11,6 @@ namespace Recipe_Management_System.Models.Dto
         [DefaultValue("Pending")]
         public string Status { get; set; }
         public string Category { get; set; }
+       
     }
 }

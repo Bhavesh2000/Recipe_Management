@@ -51,7 +51,7 @@ namespace Recipe_Management_System.Controllers
                         Status = recipe.Status,
                     });
                 }
-
+                // if result contains null value it will return not found error message
                 if (result == null)
                 {
                     return NotFound();
@@ -73,22 +73,26 @@ namespace Recipe_Management_System.Controllers
         {
             try
             {
+                // Here it will return error messege if the parameter search contains null value
                 if (search == null)
                 {
                     return BadRequest("Type to Search");
                 }
                 List<RecipeDto> result = new List<RecipeDto>();
                 var resultInRecipe = await service.GetRecipesByName(search);
+                //Here it will add recipe by Recipe name to the list(result) if the following condition satisfies
                 if (resultInRecipe != null)
                 {
 
                     result.AddRange(resultInRecipe.Value);
                 }
                 var resultUsingUserName = await service.GetRecipesByUserName(search);
+                //Here it will add recipe by user name to the list(result) if the following condition satisfies
                 if (resultUsingUserName != null)
                 {
                     result.AddRange(resultUsingUserName.Value);
                 }
+                // here it will return not found error messege if the recipe objects in the result list is zero
                 if (result.Count() == 0)
                 {
                     return NotFound();
@@ -113,12 +117,14 @@ namespace Recipe_Management_System.Controllers
 
             try
             {
+                // Here it will return error messege if the parameter id is not provided
                 if (id == 0)
                 {
                     return BadRequest("Id is not provided");
                 }
 
                 var recipe = await service.GetByIdAsync(id);
+                // here it will return not found error messege if recipe is not exists for the provided Recipe Id
                 if (recipe.Value == null)
                 {
                     return NotFound();
@@ -154,16 +160,19 @@ namespace Recipe_Management_System.Controllers
             try
             {
                 var userId = _httpContextAccessor.HttpContext.User.Claims.First(i => i.Type == "Id").Value;
-                if(userId == null)
+                // Here it will return error messege if UserId is null
+                if (userId == null)
                 {
                     return NotFound();
                 }
                 var user = uservice.GetAllAsync().FirstOrDefault(n => n.Id == userId);
+                // here it will return not found error messege if user for the userId is not exists
                 if (user == null)
                 {
                     return NotFound();
                 }
                 var recipes = await service.GetRecipeByUserId(userId);
+                // here it will return not found error messege if recipes for the UserId is not exists
                 if (recipes.Value == null)
                 {
                     return NotFound();
@@ -205,6 +214,7 @@ namespace Recipe_Management_System.Controllers
             try
             {
                 var recipes = await service.GetPendingRecipes();
+                // here it will return not found error messege if no recipes are in pending state
                 if (recipes == null)
                 {
                     return NotFound();
@@ -244,22 +254,24 @@ namespace Recipe_Management_System.Controllers
         public async Task<ActionResult<AddRecipeDto>> AddRecipe(AddRecipeDto recipeDto)
         {
             var userId = _httpContextAccessor.HttpContext.User.Claims.First(i => i.Type == "Id").Value;
+            // Here it will return error messege if UserId is null
             if (userId == null)
             {
                 return NotFound();
             }
-
+            // Here it will return error messege if ingredients is null in recipeDto object
             if (recipeDto.Ingredients == null)
             {
                 return BadRequest("Please add Ingredients");
             }
             var user = uservice.GetAllAsync().FirstOrDefault(n => n.Id == userId);
+            // here it will return not found error messege if user not exists for userId provided in recipeDto object
             if (user == null)
             {
                 return BadRequest("User doesn't exists");
             }
             var recipeDuplicateName = service.GetAllAsync().Where(n => n.UserId == userId).ToList();
-
+            // Here it will return error messege if recipe already exist for the perticular user
             if (recipeDuplicateName.Exists(n => n.Name.ToUpper() == recipeDto.name.ToUpper()))
             {
                 return BadRequest("Recipe already exists");
@@ -295,13 +307,14 @@ namespace Recipe_Management_System.Controllers
         //Method to approve recipe posted by User. It is privileged only for Admin.
         public async Task<ActionResult<RecipeDto>> Update_Status_Accept_Recipe(int id)
         {
-
+            // Here it will return error messege if the parameter id is not provided
             if (id == 0)
             {
                 return BadRequest("Id is not provided");
             }
 
             var recipe = await service.Update_Status_Accept_Recipe(id);
+            // here it will return not found error messege if recipe is not exists for the provided recipe Id 
             if (recipe.Value == null)
             {
                 return NotFound();
@@ -330,12 +343,14 @@ namespace Recipe_Management_System.Controllers
         //Method to reject recipe posted by User. It is privileged only for Admin.
         public async Task<ActionResult<RecipeDto>> Update_Status_Reject_Recipe(int id)
         {
+            // Here it will return error messege if the parameter id is not provided
             if (id == 0)
             {
                 return BadRequest("Id is not provided");
             }
 
             var recipe = await service.Update_Status_Reject_Recipe(id);
+            // here it will return not found error messege if recipe is not exists for the provided recipe Id 
             if (recipe.Value == null)
             {
                 return NotFound();
@@ -366,6 +381,7 @@ namespace Recipe_Management_System.Controllers
             try
             {
                 var recipes = await service.GetAcceptedRecipes();
+                // Here it will return not found error messege if no recipes are in accepted state
                 if (recipes == null)
                 {
                     return NotFound();
@@ -404,7 +420,7 @@ namespace Recipe_Management_System.Controllers
         //Method to delete the recipe by User who posted it.
         public async Task<ActionResult<Recipe>> DeleteRecipe(int id)
         {
-
+            // Here it will return error messege if id is not provided
             if (id == 0)
             {
                 return new BadRequestObjectResult("Id not provided");
@@ -422,17 +438,23 @@ namespace Recipe_Management_System.Controllers
         //Method to update the recipe by User who posted it. The status of updated recipe will set to pending by default.
         public async Task<ActionResult<Recipe>> UpdateRecipe(UpdateDto addRecipeDto)
         {
+            // Here it will return error messege if updateRecipe parameter is not provided
             if (addRecipeDto == null)
             {
                 return BadRequest("Required fields are not provided");
             }
 
             var userId = _httpContextAccessor.HttpContext.User.Claims.First(i => i.Type == "Id").Value;
+            // Here it will return error messege if UserId is null
             if (userId == null)
             {
                 return NotFound();
             }
-
+            // Here it will return error messege if ingredients is null in recipeDto object
+            if (addRecipeDto.Ingredients == null)
+            {
+                return BadRequest("Please provide Ingredients");
+            }
             var recipe = new Recipe()
             {
                 Id = addRecipeDto.Id,
@@ -446,12 +468,7 @@ namespace Recipe_Management_System.Controllers
 
             try
             {
-                //var recipeDuplicateName = service.GetAllAsync().Where(n => n.UserId == addRecipeDto.UserId).ToList();
-
-                //if (recipeDuplicateName.Exists(n => n.Name.ToUpper() == addRecipeDto.name.ToUpper()))
-                //{
-                //    return BadRequest("Recipe already exists");
-                //}
+                
 
                 return await service.UpdateAsync(addRecipeDto.Id, recipe);
 
