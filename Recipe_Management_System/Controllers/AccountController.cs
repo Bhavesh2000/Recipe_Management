@@ -18,11 +18,11 @@ namespace Recipe_Management_System.Controllers
     [ApiController]
     public class AccountController : ControllerBase
     {
-        private readonly UserManager<IdentityUser> _userManager;
-        private readonly RoleManager<IdentityRole> _roleManager;
-        ResponseDto _response;
-        private readonly ITokenGenerator _tokenGenerator;
-        private readonly IUserService _userService;
+        private readonly UserManager<IdentityUser> _userManager; // Object of Identity package to manage User.
+        private readonly RoleManager<IdentityRole> _roleManager; // Object of Identity package to manage Role.
+        ResponseDto _response;                                   // Response object to send response in particular format.
+        private readonly ITokenGenerator _tokenGenerator;        // Object of ITokenGenerator to get access of method related to Token.
+        private readonly IUserService _userService;              // Object of IUserService to get access of method related to User.
 
         public AccountController(UserManager<IdentityUser> userManager,
             RoleManager<IdentityRole> roleManager,
@@ -51,7 +51,7 @@ namespace Recipe_Management_System.Controllers
             {
                 if (ModelState.IsValid)
                 {
-                    if(request.Name.Contains(' ')) 
+                    if (request.Name.Contains(' '))
                     {
                         _response.IsSuccess = false;
                         _response.Result = BadRequest();
@@ -68,7 +68,7 @@ namespace Recipe_Management_System.Controllers
                     }
                     else if (IsEmailPresent != null)
                     {
-                        _response.IsSuccess = false;    
+                        _response.IsSuccess = false;
                         _response.Result = BadRequest();
                         _response.DisplayMessage = "Email Already Present";
                     }
@@ -105,7 +105,6 @@ namespace Recipe_Management_System.Controllers
                     _response.IsSuccess = false;
                     _response.Result = BadRequest();
                     _response.DisplayMessage = "Invalid request";
-                    //_response.ErrorMessages = new List<string>() { ex.ToString() };
                 }
             }
             catch (Exception ex)
@@ -162,7 +161,6 @@ namespace Recipe_Management_System.Controllers
                         User_name = user.UserName,
                         User_Id = user.Id,
                         Result = true
-                        // UserId = existing_user.Id
                     };
                 }
             }
@@ -176,14 +174,12 @@ namespace Recipe_Management_System.Controllers
 
         }
 
-        //API method to logout
+        //API method to logout current user.
         [HttpDelete]
         [Route("LogoutJWT")]
         [Authorize(AuthenticationSchemes = "Bearer")]
         public async Task<object> Logout2()
         {
-
-            //var userId = id;
             var userId = User.FindFirstValue("id");
 
             if (userId == null)
@@ -204,10 +200,10 @@ namespace Recipe_Management_System.Controllers
         }
 
 
-        //API method to register Admin 
+        //API method to register Admin which is privileged to Admin only.
         [HttpPost]
         [Route("RegisterAdmin")]
-   //     [Authorize(AuthenticationSchemes = "Bearer", Roles = "Admin")]
+        [Authorize(AuthenticationSchemes = "Bearer", Roles = "Admin")]
         public async Task<object> RegisterAdmin([FromBody] RegisterDto request)
         {
             if (!_roleManager.RoleExistsAsync(Helper.Helper.Admin).GetAwaiter().GetResult())
@@ -266,7 +262,6 @@ namespace Recipe_Management_System.Controllers
                     _response.IsSuccess = false;
                     _response.Result = BadRequest();
                     _response.DisplayMessage = "Invalid request";
-                    //_response.ErrorMessages = new List<string>() { ex.ToString() };
                 }
             }
             catch (Exception ex)

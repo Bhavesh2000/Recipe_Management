@@ -42,7 +42,7 @@ namespace Recipe_Management_System.AppDbContext
         }
 
         public DbSet<RefreshToken> RefreshTokens { get; set; }
-        public DbSet<User> Users { get; set; }
+        public new DbSet<User> Users { get; set; }
         public DbSet<Recipe> Recipes { get; set; } 
     }
 }

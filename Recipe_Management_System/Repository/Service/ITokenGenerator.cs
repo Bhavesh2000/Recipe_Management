@@ -6,8 +6,6 @@ namespace Recipe_Management_System.Repository.Service
 {
     public interface ITokenGenerator
     {
-        Task<object> VerifyAndGenerateToken(TokenDto tokenRequest);
-
         Task<object> JwtTokenGenerator(User user);
 
         Task DeleteAllRefreshTokenForUser(string userId);

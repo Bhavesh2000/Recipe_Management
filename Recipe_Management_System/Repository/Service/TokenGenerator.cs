@@ -28,78 +28,6 @@ namespace Recipe_Management_System.Repository.Service
             _tokenValidationParameters = tokenValidationParameters;
             _userManager = userManager;
         }
-
-        public async Task<object> VerifyAndGenerateToken(TokenDto tokenRequest)
-        {
-            var jwtTokenHandler = new JwtSecurityTokenHandler();
-            try
-            {
-                _tokenValidationParameters.ValidateLifetime = false;
-
-
-                var tokenInVerification = jwtTokenHandler.ValidateToken(tokenRequest.Token, _tokenValidationParameters, out var validatedToken);
-                //Verifing Jwt token received
-                if (validatedToken is JwtSecurityToken jwtSecurityToken)
-                {
-                    var result = jwtSecurityToken.Header.Alg.Equals(SecurityAlgorithms.HmacSha256,
-                                    StringComparison.InvariantCultureIgnoreCase);
-
-                    if (result == false)
-                    {
-                        return null;
-                    }
-                }
-
-                var jwtExpiryDate = long.Parse(tokenInVerification.Claims.FirstOrDefault(x =>
-                                                        x.Type == JwtRegisteredClaimNames.Exp).Value);
-
-                var expiryDate = TimeStampToDateTime(jwtExpiryDate);
-
-                if (expiryDate > DateTime.Now)
-                {
-                    return new
-                    {
-                        Result = false,
-                        Errors = new List<string>()
-                        {
-                            "Expired token"
-                        }
-                    };
-                }
-                
-                var userID = tokenInVerification.Claims.FirstOrDefault(x => x.Type == "Id").Value; 
-                if (userID == null) 
-                {
-                    return new
-                    {
-                        Result = false,
-                        Errors = new List<string>()
-                        {
-                            "Invalid Token"
-                        }
-                    };
-                }
-                return new
-                {
-                    Result = false,
-                    UserId = userID
-                };
-
-            }
-            catch (Exception)
-            {
-                return new
-                {
-                    Result = false,
-                    Errors = new List<string>()
-                        {
-                            "Server Error"
-                        }
-                };
-            }
-        }
-
-
         public async Task<object> JwtTokenGenerator(User user)
         {
             var jwtTokenHandler = new JwtSecurityTokenHandler();
@@ -133,30 +61,6 @@ namespace Recipe_Management_System.Repository.Service
 
         }
 
-        public async Task<string> VerifyJwtAndGetUserId(string jwt)
-        {
-            
-            var jwtTokenHandler = new JwtSecurityTokenHandler();
-
-            var tokenInVerification = jwtTokenHandler.ValidateToken(jwt, _tokenValidationParameters, out var validatedToken);
-
-            if (validatedToken is JwtSecurityToken jwtSecurityToken)
-            {
-                var result = jwtSecurityToken.Header.Alg.Equals(SecurityAlgorithms.HmacSha256,
-                                StringComparison.InvariantCultureIgnoreCase);
-
-                if (result == false)
-                {
-                    return null;
-                }
-            }
-
-            string userId = validatedToken.Id.ToString();
-
-            return userId;
-        }
-
-
         public async Task DeleteAllRefreshTokenForUser(string userId)
         {
             var refreshTokens = await _db.RefreshTokens.Where(t => t.UserId == userId).ToListAsync();
@@ -165,13 +69,6 @@ namespace Recipe_Management_System.Repository.Service
 
         }
 
-        private DateTime TimeStampToDateTime(long unixDateTime)
-        {
-            var dateTimeVal = new DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Local);
-            dateTimeVal = dateTimeVal.AddSeconds(unixDateTime).ToLocalTime();
-
-            return dateTimeVal;
-        }
 
     }
 }

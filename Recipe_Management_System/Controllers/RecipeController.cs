@@ -14,7 +14,7 @@ namespace Recipe_Management_System.Controllers
     [ApiController]
     public class RecipeController : ControllerBase
     {
-        private readonly IRecipeService service;
+        private readonly IRecipeService service;  
         private readonly IUserService uservice;
         private readonly IHttpContextAccessor _httpContextAccessor;
 
@@ -30,6 +30,7 @@ namespace Recipe_Management_System.Controllers
         [HttpGet]
         [Route("GetAllRecipes")]
         [Authorize(AuthenticationSchemes = "Bearer")]
+        //Method to get all recipes from DB.
         public async Task<ActionResult<IEnumerable<RecipeDto>>> GetAllRecipes()
         {
             try
@@ -67,6 +68,7 @@ namespace Recipe_Management_System.Controllers
 
         [HttpGet]
         [Route("Search")]
+        //Method for search. It will get searched recipes or if searched by user will get user's recipes
         public async Task<object> Search(string search)
         {
             try
@@ -105,6 +107,7 @@ namespace Recipe_Management_System.Controllers
         [HttpGet]
         [Route("GetRecipeById")]
         [Authorize(AuthenticationSchemes = "Bearer")]
+        //Method to get recipe by id
         public async Task<ActionResult<RecipeDto>> GetRecipeById(int id)
         {
 
@@ -145,6 +148,7 @@ namespace Recipe_Management_System.Controllers
         [HttpGet]
         [Route("GetRecipeByUserId")]
         [Authorize(AuthenticationSchemes = "Bearer")]
+        //Method to get recipe related to User
         public async Task<ActionResult<IEnumerable<RecipeDto>>> GetRecipeByUserId()
         {
             try
@@ -195,6 +199,7 @@ namespace Recipe_Management_System.Controllers
         [HttpGet]
         [Route("GetPendingRecipes")]
         [Authorize(AuthenticationSchemes = "Bearer", Roles = "Admin")]
+        //Method to get pending recipes which need to be approved or rejected. It is privileged only for Admin.
         public async Task<ActionResult<IEnumerable<RecipeDto>>> GetPendingRecipes()
         {
             try
@@ -235,6 +240,7 @@ namespace Recipe_Management_System.Controllers
         [HttpPost]
         [Route("AddRecipe")]
         [Authorize(AuthenticationSchemes = "Bearer")]
+        //Method to add new recipe
         public async Task<ActionResult<AddRecipeDto>> AddRecipe(AddRecipeDto recipeDto)
         {
             var userId = _httpContextAccessor.HttpContext.User.Claims.First(i => i.Type == "Id").Value;
@@ -286,6 +292,7 @@ namespace Recipe_Management_System.Controllers
         [HttpPut]
         [Route("Update_Status_Accept_Recipe")]
         [Authorize(AuthenticationSchemes = "Bearer", Roles = "Admin")]
+        //Method to approve recipe posted by User. It is privileged only for Admin.
         public async Task<ActionResult<RecipeDto>> Update_Status_Accept_Recipe(int id)
         {
 
@@ -320,6 +327,7 @@ namespace Recipe_Management_System.Controllers
         [HttpPut]
         [Route("Update_Status_Reject_Recipe")]
         [Authorize(AuthenticationSchemes = "Bearer", Roles = "Admin")]
+        //Method to reject recipe posted by User. It is privileged only for Admin.
         public async Task<ActionResult<RecipeDto>> Update_Status_Reject_Recipe(int id)
         {
             if (id == 0)
@@ -352,6 +360,7 @@ namespace Recipe_Management_System.Controllers
         [HttpGet]
         [Route("GetAcceptedRecipes")]
         [Authorize(AuthenticationSchemes = "Bearer")]
+        //Method to get all approved recipes
         public async Task<ActionResult<IEnumerable<AcceptedDto>>> GetAcceptedRecipes()
         {
             try
@@ -392,10 +401,11 @@ namespace Recipe_Management_System.Controllers
         [HttpDelete]
         [Route("DeleteRecipe")]
         [Authorize(AuthenticationSchemes = "Bearer", Roles = "User")]
+        //Method to delete the recipe by User who posted it.
         public async Task<ActionResult<Recipe>> DeleteRecipe(int id)
         {
 
-            if (id == null)
+            if (id == 0)
             {
                 return new BadRequestObjectResult("Id not provided");
             }
@@ -409,6 +419,7 @@ namespace Recipe_Management_System.Controllers
         [HttpPut]
         [Route("UpdateRecipe")]
         [Authorize(AuthenticationSchemes = "Bearer", Roles = "User")]
+        //Method to update the recipe by User who posted it. The status of updated recipe will set to pending by default.
         public async Task<ActionResult<Recipe>> UpdateRecipe(UpdateDto addRecipeDto)
         {
             if (addRecipeDto == null)

@@ -9,7 +9,7 @@ using Recipe_Management_System.Repository.Service;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+// Adding Dependancy Injection so that we can achieve loose coupling.
 builder.Services.AddScoped<IRecipeService, RecipeService>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<ITokenGenerator, TokenGenerator>();
@@ -24,7 +24,7 @@ builder.Services.AddDbContext<ApplicationDbContext>(
 
 builder.Services.Configure<JwtConfig>(builder.Configuration.GetSection("JwtConfig"));
 
-
+// Services for JWT Token 
 var key = Encoding.ASCII.GetBytes(builder.Configuration.GetSection("JwtConfig:Secret").Value);
 
 var tokenValidationParameters = new TokenValidationParameters()
@@ -37,10 +37,10 @@ var tokenValidationParameters = new TokenValidationParameters()
     ValidateLifetime = true,
 };
 
+// This service will verify the JWT token at the time of request.
 builder.Services.AddAuthentication(options =>
 {
     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-  //  options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
     options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme; ;
 
 }).AddJwtBearer(jwt =>
@@ -57,17 +57,12 @@ builder.Services.AddSingleton(tokenValidationParameters);
 builder.Services.AddIdentity<IdentityUser,IdentityRole>(options => options.SignIn.RequireConfirmedAccount = false)
                 .AddEntityFrameworkStores<ApplicationDbContext>();
 
-//builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = false)
-//                .AddRoles<IdentityRole>()
-//                .AddEntityFrameworkStores<ApplicationDbContext>();
-
 builder.Services.AddSwaggerGen();
 
 builder.Services.AddEndpointsApiExplorer();
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
 //This will automatically create database if not present locally.
 using (var scope =
     app.Services.CreateScope())
